@@ -1,0 +1,35 @@
+import { Global, Module } from '@nestjs/common';
+import { DatabaseService } from './database.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
+import { PerfumeGroup } from 'src/perfume_group/entities/perfume_group.entity';
+import { Brand } from 'src/brand/entities/brand.entity';
+
+const folder = process.env.NODE_ENV !== 'development' ? 'dist' : 'src';
+const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
+
+@Global()
+@Module({
+  exports: [DatabaseService],
+  imports: [
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get<string>('POSTGRES_URL'),
+        port: config.get<number>('POSTGRES_PORT'),
+        database: config.get<string>('POSTGRES_DATABASE'),
+        username: config.get<string>('POSTGRES_USER'),
+        password: config.get<string>('POSTGRES_PASSWORD'),
+        synchronize: true,
+        entities: [join(process.cwd(), folder, '**', `*.entity.${extensions}`)],
+        retryAttempts: 0,
+      }),
+    }),
+    TypeOrmModule.forFeature([PerfumeGroup, Brand]),
+  ],
+  providers: [DatabaseService],
+})
+export class DatabaseModule {}
