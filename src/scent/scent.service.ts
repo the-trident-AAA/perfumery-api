@@ -27,7 +27,7 @@ export class ScentService {
     });
 
     if (!scent) {
-      throw new Error(`PerfumeGroup con ID ${id} no encontrado`);
+      throw new Error(`Scent con ID ${id} no encontrado`);
     }
 
     return scent;

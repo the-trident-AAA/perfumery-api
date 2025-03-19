@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PerfumeGroupModule } from './perfume-group/perfume-group.module';
 import { BrandModule } from './brand/brand.module';
 import { ScentModule } from './scent/scent.module';
+import { PerfumeModule } from './perfume/perfume.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ScentModule } from './scent/scent.module';
     PerfumeGroupModule,
     BrandModule,
     ScentModule,
+    PerfumeModule,
   ],
 })
 export class AppModule {}

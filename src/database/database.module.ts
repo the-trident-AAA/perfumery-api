@@ -6,6 +6,7 @@ import { join } from 'path';
 import { PerfumeGroup } from 'src/perfume-group/entities/perfume-group.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { Scent } from 'src/scent/entities/scent.entity';
+import { Perfume } from 'src/perfume/entities/perfume.entity';
 
 const folder = process.env.NODE_ENV !== 'development' ? 'dist' : 'src';
 const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
@@ -29,7 +30,7 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
         retryAttempts: 0,
       }),
     }),
-    TypeOrmModule.forFeature([PerfumeGroup, Brand, Scent]),
+    TypeOrmModule.forFeature([PerfumeGroup, Brand, Scent, Perfume]),
   ],
   providers: [DatabaseService],
 })

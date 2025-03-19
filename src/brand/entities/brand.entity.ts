@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Perfume } from 'src/perfume/entities/perfume.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'brand' })
 export class Brand {
@@ -7,4 +8,7 @@ export class Brand {
 
   @Column({ unique: true })
   name: string;
+
+  @OneToMany(() => Perfume, (perfume) => perfume.brand)
+  perfumes: Perfume;
 }
