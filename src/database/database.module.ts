@@ -3,8 +3,9 @@ import { DatabaseService } from './database.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { PerfumeGroup } from 'src/perfume_group/entities/perfume_group.entity';
+import { PerfumeGroup } from 'src/perfume-group/entities/perfume-group.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
+import { Scent } from 'src/scent/entities/scent.entity';
 
 const folder = process.env.NODE_ENV !== 'development' ? 'dist' : 'src';
 const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
@@ -28,7 +29,7 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
         retryAttempts: 0,
       }),
     }),
-    TypeOrmModule.forFeature([PerfumeGroup, Brand]),
+    TypeOrmModule.forFeature([PerfumeGroup, Brand, Scent]),
   ],
   providers: [DatabaseService],
 })

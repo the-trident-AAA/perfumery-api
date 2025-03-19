@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PerfumeGroupService } from './perfume_group.service';
-import { PerfumeGroupController } from './perfume_group.controller';
+import { PerfumeGroupService } from './perfume-group.service';
+import { PerfumeGroupController } from './perfume-group.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PerfumeGroup } from './entities/perfume_group.entity';
+import { PerfumeGroup } from './entities/perfume-group.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PerfumeGroup])],

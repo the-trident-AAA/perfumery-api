@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePerfumeGroupDto } from './dto/create-perfume_group.dto';
-import { UpdatePerfumeGroupDto } from './dto/update-perfume_group.dto';
+import { CreatePerfumeGroupDto } from './dto/create-perfume-group.dto';
+import { UpdatePerfumeGroupDto } from './dto/update-perfume-group.dto';
 import { Repository } from 'typeorm';
-import { PerfumeGroup } from './entities/perfume_group.entity';
+import { PerfumeGroup } from './entities/perfume-group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
