@@ -39,6 +39,9 @@ export class Perfume {
   @Column({ nullable: true })
   price: number;
 
+  @Column({})
+  cant: number;
+
   @ManyToOne(() => Brand, (brand) => brand.perfumes)
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
