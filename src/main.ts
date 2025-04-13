@@ -1,20 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const config = app.get<ConfigService>(ConfigService);
+  const port = config.get<number>('APP_PORT');
 
   //Swagger config
-  const config = new DocumentBuilder()
+  const swagger = new DocumentBuilder()
     .setTitle('Perfumery project')
     .setDescription('API perfumery project')
     .setVersion('1.0')
     .addTag('codification')
     .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  const documentFactory = () => SwaggerModule.createDocument(app, swagger);
   SwaggerModule.setup('swagger', app, documentFactory);
 
-  await app.listen(process.env.PORT ?? 4000);
+  await app.listen(port);
 }
 bootstrap();
