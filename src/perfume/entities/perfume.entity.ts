@@ -8,7 +8,7 @@ import {
 import { Gender } from './gender.enum';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { Scent } from 'src/scent/entities/scent.entity';
-import { PerfumeGroup } from 'src/perfume-group/entities/perfume-group.entity';
+import { PerfumeType } from 'src/perfume-type/entities/perfume-type.entity';
 
 @Entity({ name: 'perfume' })
 export class Perfume {
@@ -30,8 +30,8 @@ export class Perfume {
   @Column({ name: 'scent_id' })
   scentId: number;
 
-  @Column({ name: 'perfume_group_id' })
-  perfumeGroupId: number;
+  @Column({ name: 'perfume_type_id' })
+  perfumeTypeId: number;
 
   @Column()
   available: boolean;
@@ -50,7 +50,7 @@ export class Perfume {
   @JoinColumn({ name: 'scent_id' })
   scent: Scent;
 
-  @ManyToOne(() => PerfumeGroup, (perfumeGroup) => perfumeGroup.perfumes)
-  @JoinColumn({ name: 'perfume_group_id' })
-  perfumeGroup: PerfumeGroup;
+  @ManyToOne(() => PerfumeType, (perfumeType) => perfumeType.perfumes)
+  @JoinColumn({ name: 'perfume_type_id' })
+  perfumeType: PerfumeType;
 }
