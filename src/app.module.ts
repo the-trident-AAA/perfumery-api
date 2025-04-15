@@ -5,6 +5,7 @@ import { PerfumeGroupModule } from './perfume-group/perfume-group.module';
 import { BrandModule } from './brand/brand.module';
 import { ScentModule } from './scent/scent.module';
 import { PerfumeModule } from './perfume/perfume.module';
+import { OfferModule } from './offer/offer.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PerfumeModule } from './perfume/perfume.module';
     BrandModule,
     ScentModule,
     PerfumeModule,
+    OfferModule,
   ],
 })
 export class AppModule {}
