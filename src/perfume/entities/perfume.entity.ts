@@ -9,6 +9,7 @@ import { Gender } from './gender.enum';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { Scent } from 'src/scent/entities/scent.entity';
 import { PerfumeType } from 'src/perfume-type/entities/perfume-type.entity';
+import { Offer } from 'src/offer/entities/offer.entity';
 
 @Entity({ name: 'perfume' })
 export class Perfume {
@@ -18,7 +19,7 @@ export class Perfume {
   @Column()
   name: string;
 
-  @Column({ name: 'brand_id' })
+  @Column({ name: 'brand_id', nullable: true })
   brandId: number;
 
   @Column({ enum: Gender })
@@ -42,6 +43,9 @@ export class Perfume {
   @Column({})
   cant: number;
 
+  @Column({ name: 'offer_id', nullable: true })
+  offerId: number;
+
   @ManyToOne(() => Brand, (brand) => brand.perfumes)
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
@@ -53,4 +57,8 @@ export class Perfume {
   @ManyToOne(() => PerfumeType, (perfumeType) => perfumeType.perfumes)
   @JoinColumn({ name: 'perfume_type_id' })
   perfumeType: PerfumeType;
+
+  @ManyToOne(() => Offer, (offer) => offer.perfumes)
+  @JoinColumn({ name: 'offer_id' })
+  offer: Offer;
 }
