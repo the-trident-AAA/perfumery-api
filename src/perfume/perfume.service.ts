@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Perfume } from './entities/perfume.entity';
+import { PerfumeEntity } from './entities/perfume.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class PerfumeService {
   constructor(
-    @InjectRepository(Perfume)
-    private readonly perfumeRepository: Repository<Perfume>,
+    @InjectRepository(PerfumeEntity)
+    private readonly perfumeRepository: Repository<PerfumeEntity>,
   ) {}
 
   async create(dto: CreatePerfumeDto) {

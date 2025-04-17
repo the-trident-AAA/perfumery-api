@@ -6,13 +6,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Gender } from './gender.enum';
-import { Brand } from 'src/brand/entities/brand.entity';
-import { Scent } from 'src/scent/entities/scent.entity';
-import { PerfumeType } from 'src/perfume-type/entities/perfume-type.entity';
-import { Offer } from 'src/offer/entities/offer.entity';
+import { BrandEntity } from 'src/brand/entities/brand.entity';
+import { ScentEntity } from 'src/scent/entities/scent.entity';
+import { PerfumeTypeEntity } from 'src/perfume-type/entities/perfume-type.entity';
+import { OfferEntity } from 'src/offer/entities/offer.entity';
 
 @Entity({ name: 'perfume' })
-export class Perfume {
+export class PerfumeEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
@@ -46,19 +46,19 @@ export class Perfume {
   @Column({ name: 'offer_id', nullable: true })
   offerId: number;
 
-  @ManyToOne(() => Brand, (brand) => brand.perfumes)
+  @ManyToOne(() => BrandEntity, (brand) => brand.perfumes)
   @JoinColumn({ name: 'brand_id' })
-  brand: Brand;
+  brand: BrandEntity;
 
-  @ManyToOne(() => Scent, (scent) => scent.perfumes)
+  @ManyToOne(() => ScentEntity, (scent) => scent.perfumes)
   @JoinColumn({ name: 'scent_id' })
-  scent: Scent;
+  scent: ScentEntity;
 
-  @ManyToOne(() => PerfumeType, (perfumeType) => perfumeType.perfumes)
+  @ManyToOne(() => PerfumeTypeEntity, (perfumeType) => perfumeType.perfumes)
   @JoinColumn({ name: 'perfume_type_id' })
-  perfumeType: PerfumeType;
+  perfumeType: PerfumeTypeEntity;
 
-  @ManyToOne(() => Offer, (offer) => offer.perfumes)
+  @ManyToOne(() => OfferEntity, (offer) => offer.perfumes)
   @JoinColumn({ name: 'offer_id' })
-  offer: Offer;
+  offer: OfferEntity;
 }

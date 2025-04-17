@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brand } from './entities/brand.entity';
+import { BrandEntity } from './entities/brand.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class BrandService {
   constructor(
-    @InjectRepository(Brand)
-    private readonly brandRepository: Repository<Brand>,
+    @InjectRepository(BrandEntity)
+    private readonly brandRepository: Repository<BrandEntity>,
   ) {}
 
   async create(dto: CreateBrandDto) {
@@ -42,6 +42,6 @@ export class BrandService {
 
   async remove(id: number) {
     const brand = await this.findOne(id);
-    return await this.brandRepository.delete(id);
+    return await this.brandRepository.delete(brand);
   }
 }

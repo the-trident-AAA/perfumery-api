@@ -3,11 +3,11 @@ import { DatabaseService } from './database.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { PerfumeType } from 'src/perfume-type/entities/perfume-type.entity';
-import { Brand } from 'src/brand/entities/brand.entity';
-import { Scent } from 'src/scent/entities/scent.entity';
-import { Perfume } from 'src/perfume/entities/perfume.entity';
-import { Offer } from 'src/offer/entities/offer.entity';
+import { PerfumeTypeEntity } from 'src/perfume-type/entities/perfume-type.entity';
+import { BrandEntity } from 'src/brand/entities/brand.entity';
+import { ScentEntity } from 'src/scent/entities/scent.entity';
+import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
+import { OfferEntity } from 'src/offer/entities/offer.entity';
 
 const folder = process.env.NODE_ENV !== 'development' ? 'dist' : 'src';
 const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
@@ -31,7 +31,13 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
         retryAttempts: 0,
       }),
     }),
-    TypeOrmModule.forFeature([PerfumeType, Brand, Scent, Perfume, Offer]),
+    TypeOrmModule.forFeature([
+      PerfumeTypeEntity,
+      BrandEntity,
+      ScentEntity,
+      PerfumeEntity,
+      OfferEntity,
+    ]),
   ],
   providers: [DatabaseService],
 })

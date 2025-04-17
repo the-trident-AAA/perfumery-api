@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreatePerfumeTypeDto } from './dto/create-perfume-type.dto';
 import { UpdatePerfumeTypeDto } from './dto/update-perfume-type.dto';
 import { Repository } from 'typeorm';
-import { PerfumeType } from './entities/perfume-type.entity';
+import { PerfumeTypeEntity } from './entities/perfume-type.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PerfumeTypeService {
   constructor(
-    @InjectRepository(PerfumeType)
-    private readonly perfumeTypeRepository: Repository<PerfumeType>,
+    @InjectRepository(PerfumeTypeEntity)
+    private readonly perfumeTypeRepository: Repository<PerfumeTypeEntity>,
   ) {}
 
   async create(dto: CreatePerfumeTypeDto) {

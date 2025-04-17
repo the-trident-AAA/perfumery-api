@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Offer } from './entities/offer.entity';
+import { OfferEntity } from './entities/offer.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class OfferService {
   constructor(
-    @InjectRepository(Offer)
-    private readonly offerRepository: Repository<Offer>,
+    @InjectRepository(OfferEntity)
+    private readonly offerRepository: Repository<OfferEntity>,
   ) {}
 
   async create(dto: CreateOfferDto) {
