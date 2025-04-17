@@ -21,7 +21,7 @@ export class OfferService {
     return await this.offerRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const offer = await this.offerRepository.findOne({
       where: { id },
     });
@@ -33,14 +33,14 @@ export class OfferService {
     return offer;
   }
 
-  async update(id: number, dto: UpdateOfferDto) {
+  async update(id: string, dto: UpdateOfferDto) {
     const offer = await this.findOne(id);
     Object.assign(offer, dto);
 
     return await this.offerRepository.save(offer);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const offer = await this.findOne(id);
     return await this.offerRepository.delete(offer);
   }

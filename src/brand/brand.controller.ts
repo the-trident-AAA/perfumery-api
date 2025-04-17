@@ -63,7 +63,7 @@ export class BrandController {
     description: 'Ocurrió un error en el proceso de obtener la marca',
   })
   findOne(@Param('id') id: string) {
-    return this.brandService.findOne(+id);
+    return this.brandService.findOne(id);
   }
 
   @Patch(':id')
@@ -76,7 +76,7 @@ export class BrandController {
     description: 'Ocurrió un error en el proceso de edición de la marca',
   })
   update(@Param('id') id: string, @Body() updateBrandDto: UpdateBrandDto) {
-    return this.brandService.update(+id, updateBrandDto);
+    return this.brandService.update(id, updateBrandDto);
   }
 
   @Delete(':id')
@@ -89,6 +89,6 @@ export class BrandController {
     description: 'Ocurrió un error en el proceso de edición de la marca',
   })
   remove(@Param('id') id: string) {
-    return this.brandService.remove(+id);
+    return this.brandService.remove(id);
   }
 }

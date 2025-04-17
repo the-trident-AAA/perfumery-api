@@ -21,7 +21,7 @@ export class PerfumeTypeService {
     return await this.perfumeTypeRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const perfumeType = await this.perfumeTypeRepository.findOne({
       where: { id },
     });
@@ -33,14 +33,14 @@ export class PerfumeTypeService {
     return perfumeType;
   }
 
-  async update(id: number, dto: UpdatePerfumeTypeDto) {
+  async update(id: string, dto: UpdatePerfumeTypeDto) {
     const perfumeType = await this.findOne(id);
     Object.assign(perfumeType, dto);
 
     return await this.perfumeTypeRepository.save(perfumeType);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const perfumeType = await this.findOne(id);
     return await this.perfumeTypeRepository.delete(perfumeType);
   }

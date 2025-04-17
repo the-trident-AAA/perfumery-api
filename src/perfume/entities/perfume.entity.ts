@@ -14,7 +14,7 @@ import { OfferEntity } from 'src/offer/entities/offer.entity';
 @Entity({ name: 'perfume' })
 export class PerfumeEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;

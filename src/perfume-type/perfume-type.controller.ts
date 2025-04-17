@@ -69,7 +69,7 @@ export class PerfumeTypeController {
     description: 'Ocurrió un error en el proceso de obtener el tipo de perfume',
   })
   findOne(@Param('id') id: string) {
-    return this.perfumeTypeService.findOne(+id);
+    return this.perfumeTypeService.findOne(id);
   }
 
   @Patch(':id')
@@ -89,7 +89,7 @@ export class PerfumeTypeController {
     @Param('id') id: string,
     @Body() updatePerfumeTypeDto: UpdatePerfumeTypeDto,
   ) {
-    return this.perfumeTypeService.update(+id, updatePerfumeTypeDto);
+    return this.perfumeTypeService.update(id, updatePerfumeTypeDto);
   }
 
   @Delete(':id')
@@ -106,6 +106,6 @@ export class PerfumeTypeController {
       'Ocurrió un error en el proceso de eliminación del tipo de perfume',
   })
   remove(@Param('id') id: string) {
-    return this.perfumeTypeService.remove(+id);
+    return this.perfumeTypeService.remove(id);
   }
 }

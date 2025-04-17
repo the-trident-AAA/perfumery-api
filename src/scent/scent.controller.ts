@@ -62,7 +62,7 @@ export class ScentController {
     description: 'Ocurrió un error en el proceso de obtener el aroma',
   })
   findOne(@Param('id') id: string) {
-    return this.scentService.findOne(+id);
+    return this.scentService.findOne(id);
   }
 
   @Patch(':id')
@@ -75,7 +75,7 @@ export class ScentController {
     description: 'Ocurrió un error en el proceso de edición del aroma',
   })
   update(@Param('id') id: string, @Body() updateScentDto: UpdateScentDto) {
-    return this.scentService.update(+id, updateScentDto);
+    return this.scentService.update(id, updateScentDto);
   }
 
   @Delete(':id')
@@ -88,6 +88,6 @@ export class ScentController {
     description: 'Ocurrió un error en el proceso de eliminación del aroma',
   })
   remove(@Param('id') id: string) {
-    return this.scentService.remove(+id);
+    return this.scentService.remove(id);
   }
 }

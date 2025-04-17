@@ -21,7 +21,7 @@ export class BrandService {
     return await this.brandRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const brand = await this.brandRepository.findOne({
       where: { id },
     });
@@ -33,14 +33,14 @@ export class BrandService {
     return brand;
   }
 
-  async update(id: number, dto: UpdateBrandDto) {
+  async update(id: string, dto: UpdateBrandDto) {
     const brand = await this.findOne(id);
     Object.assign(brand, dto);
 
     return await this.brandRepository.save(brand);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const brand = await this.findOne(id);
     return await this.brandRepository.delete(brand);
   }

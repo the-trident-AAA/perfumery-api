@@ -64,7 +64,7 @@ export class OfferController {
     description: 'Ocurrió un error en el proceso de obtener la oferta',
   })
   findOne(@Param('id') id: string) {
-    return this.offerService.findOne(+id);
+    return this.offerService.findOne(id);
   }
 
   @Patch(':id')
@@ -77,7 +77,7 @@ export class OfferController {
     description: 'Ocurrió un error en el proceso de edición de la oferta',
   })
   update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto) {
-    return this.offerService.update(+id, updateOfferDto);
+    return this.offerService.update(id, updateOfferDto);
   }
 
   @Delete(':id')
@@ -90,6 +90,6 @@ export class OfferController {
     description: 'Ocurrió un error en el proceso de edición de la oferta',
   })
   remove(@Param('id') id: string) {
-    return this.offerService.remove(+id);
+    return this.offerService.remove(id);
   }
 }

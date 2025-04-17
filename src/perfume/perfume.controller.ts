@@ -63,7 +63,7 @@ export class PerfumeController {
     description: 'Ocurrió un error en el proceso de obtener el perfume',
   })
   findOne(@Param('id') id: string) {
-    return this.perfumeService.findOne(+id);
+    return this.perfumeService.findOne(id);
   }
 
   @Patch(':id')
@@ -76,7 +76,7 @@ export class PerfumeController {
     description: 'Ocurrió un error en el proceso de edición del perfume',
   })
   update(@Param('id') id: string, @Body() updatePerfumeDto: UpdatePerfumeDto) {
-    return this.perfumeService.update(+id, updatePerfumeDto);
+    return this.perfumeService.update(id, updatePerfumeDto);
   }
 
   @Delete(':id')
@@ -89,6 +89,6 @@ export class PerfumeController {
     description: 'Ocurrió un error en el proceso de eliminación del perfume',
   })
   remove(@Param('id') id: string) {
-    return this.perfumeService.remove(+id);
+    return this.perfumeService.remove(id);
   }
 }
