@@ -33,9 +33,10 @@ export class CreatePerfumeDto {
   @ApiProperty({
     description: 'Representa los aromas del perfume',
     type: 'string',
+    isArray: true,
     required: true,
   })
-  scentId: string;
+  scentsId: string[];
 
   @ApiProperty({
     description: 'Representa el tipo de perfume al que pertenece el perfume',

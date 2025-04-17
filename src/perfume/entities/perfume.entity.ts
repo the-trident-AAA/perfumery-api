@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -28,9 +29,6 @@ export class PerfumeEntity {
   @Column({ nullable: true })
   liters: number;
 
-  @Column({ name: 'scent_id' })
-  scentId: string;
-
   @Column({ name: 'perfume_type_id' })
   perfumeTypeId: string;
 
@@ -50,9 +48,9 @@ export class PerfumeEntity {
   @JoinColumn({ name: 'brand_id' })
   brand: BrandEntity;
 
-  @ManyToOne(() => ScentEntity, (scent) => scent.perfumes)
-  @JoinColumn({ name: 'scent_id' })
-  scent: ScentEntity;
+  @ManyToMany(() => ScentEntity, (scents) => scents.perfumes)
+  @JoinColumn()
+  scents: ScentEntity[];
 
   @ManyToOne(() => PerfumeTypeEntity, (perfumeType) => perfumeType.perfumes)
   @JoinColumn({ name: 'perfume_type_id' })
