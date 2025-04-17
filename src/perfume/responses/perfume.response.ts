@@ -4,10 +4,10 @@ import { Gender } from '../entities/gender.enum';
 export class PerfumeResponse {
   @ApiProperty({
     description: 'Representa el identificador único del perfume',
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: 'Representa el nombre del perfume',
@@ -18,10 +18,10 @@ export class PerfumeResponse {
 
   @ApiProperty({
     description: 'Representa el nombre de la marca del perfume',
-    type: 'number',
+    type: 'string',
     required: false,
   })
-  brandId: number;
+  brandId: string;
 
   @ApiProperty({
     description: 'Representa el género del perfume',
@@ -39,17 +39,17 @@ export class PerfumeResponse {
 
   @ApiProperty({
     description: 'Representa los aromas del perfume',
-    type: 'array',
+    type: 'string',
     required: true,
   })
-  scentId: number;
+  scentId: string;
 
   @ApiProperty({
     description: 'Representa el tipo de perfume al que pertenece el perfume',
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  perfumeTypeId: number;
+  perfumeTypeId: string;
 
   @ApiProperty({
     description: 'Representa si el perfume está disponible o no',
@@ -74,8 +74,8 @@ export class PerfumeResponse {
 
   @ApiProperty({
     description: 'Representa al grupo de oferta al cual pertenece el perfume',
-    type: 'number',
+    type: 'string',
     required: false,
   })
-  offerId: number;
+  offerId: string;
 }

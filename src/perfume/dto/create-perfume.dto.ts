@@ -11,10 +11,10 @@ export class CreatePerfumeDto {
 
   @ApiProperty({
     description: 'Representa el nombre de la marca del perfume',
-    type: 'number',
+    type: 'string',
     required: false,
   })
-  brandId: number;
+  brandId: string;
 
   @ApiProperty({
     description: 'Representa el género del perfume',
@@ -32,17 +32,17 @@ export class CreatePerfumeDto {
 
   @ApiProperty({
     description: 'Representa los aromas del perfume',
-    type: 'array',
+    type: 'string',
     required: true,
   })
-  scentId: number;
+  scentId: string;
 
   @ApiProperty({
     description: 'Representa el tipo de perfume al que pertenece el perfume',
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  perfumeTypeId: number;
+  perfumeTypeId: string;
 
   @ApiProperty({
     description: 'Representa si el perfume está disponible o no',
@@ -67,8 +67,8 @@ export class CreatePerfumeDto {
 
   @ApiProperty({
     description: 'Representa al grupo de oferta al cual pertenece el perfume',
-    type: 'number',
+    type: 'string',
     required: false,
   })
-  offerId: number;
+  offerId: string;
 }

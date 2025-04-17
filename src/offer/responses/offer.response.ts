@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 export class OfferResponse {
   @ApiProperty({
     description: 'Representa el identificador único de la oferta',
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: 'Representa el descuento de la oferta en porcentaje',

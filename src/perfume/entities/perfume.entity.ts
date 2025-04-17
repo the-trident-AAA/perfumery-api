@@ -20,7 +20,7 @@ export class PerfumeEntity {
   name: string;
 
   @Column({ name: 'brand_id', nullable: true })
-  brandId: number;
+  brandId: string;
 
   @Column({ enum: Gender })
   gender: Gender;
@@ -29,10 +29,10 @@ export class PerfumeEntity {
   liters: number;
 
   @Column({ name: 'scent_id' })
-  scentId: number;
+  scentId: string;
 
   @Column({ name: 'perfume_type_id' })
-  perfumeTypeId: number;
+  perfumeTypeId: string;
 
   @Column()
   available: boolean;
@@ -44,7 +44,7 @@ export class PerfumeEntity {
   cant: number;
 
   @Column({ name: 'offer_id', nullable: true })
-  offerId: number;
+  offerId: string;
 
   @ManyToOne(() => BrandEntity, (brand) => brand.perfumes)
   @JoinColumn({ name: 'brand_id' })
