@@ -11,6 +11,7 @@ import { PerfumeTypeService } from './perfume-type.service';
 import { CreatePerfumeTypeDto } from './dto/create-perfume-type.dto';
 import { UpdatePerfumeTypeDto } from './dto/update-perfume-type.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { PerfumeTypeResponse } from './responses/perfume-type.response';
 
 @Controller('perfume-type')
 export class PerfumeTypeController {
@@ -41,6 +42,8 @@ export class PerfumeTypeController {
   @ApiResponse({
     status: 200,
     description: 'Lista de tipo de perfumes obtenida exitosamente',
+    type: PerfumeTypeResponse,
+    isArray: true,
   })
   @ApiResponse({
     status: 500,
@@ -59,6 +62,7 @@ export class PerfumeTypeController {
   @ApiResponse({
     status: 200,
     description: 'Tipo de perfume obtenido exitosamente',
+    type: PerfumeTypeResponse,
   })
   @ApiResponse({
     status: 500,

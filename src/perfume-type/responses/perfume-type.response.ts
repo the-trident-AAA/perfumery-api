@@ -1,0 +1,17 @@
+import { ApiProperty } from '@nestjs/swagger';
+
+export class PerfumeTypeResponse {
+  @ApiProperty({
+    description: 'Representa el identificador único del tipo de perfume',
+    type: 'number',
+    required: true,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: 'Representa el nombre del tipo de perfume',
+    type: 'string',
+    required: true,
+  })
+  name: string;
+}

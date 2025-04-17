@@ -11,6 +11,7 @@ import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { BrandResponse } from './responses/brand.response';
 
 @Controller('brand')
 export class BrandController {
@@ -36,6 +37,8 @@ export class BrandController {
   @ApiResponse({
     status: 200,
     description: 'Lista de marcas obtenida exitosamente',
+    type: BrandResponse,
+    isArray: true,
   })
   @ApiResponse({
     status: 500,
@@ -50,7 +53,11 @@ export class BrandController {
     summary:
       'Este endpoint obtiene una marca en específico de la base de datos',
   })
-  @ApiResponse({ status: 200, description: 'Marca obtenida exitosamente' })
+  @ApiResponse({
+    status: 200,
+    description: 'Marca obtenida exitosamente',
+    type: BrandResponse,
+  })
   @ApiResponse({
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener la marca',

@@ -11,6 +11,7 @@ import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { PerfumeResponse } from './responses/perfume.response';
 
 @Controller('perfume')
 export class PerfumeController {
@@ -36,6 +37,8 @@ export class PerfumeController {
   @ApiResponse({
     status: 200,
     description: 'Lista de perfumes obtenidos exitosamente',
+    type: PerfumeResponse,
+    isArray: true,
   })
   @ApiResponse({
     status: 500,
@@ -50,7 +53,11 @@ export class PerfumeController {
     summary:
       'Este endpoint obtiene un perfume en específico de la base de datos',
   })
-  @ApiResponse({ status: 200, description: 'Perfume obtenido exitosamente' })
+  @ApiResponse({
+    status: 200,
+    description: 'Perfume obtenido exitosamente',
+    type: PerfumeResponse,
+  })
   @ApiResponse({
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener el perfume',

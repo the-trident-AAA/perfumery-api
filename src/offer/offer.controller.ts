@@ -11,6 +11,7 @@ import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { OfferResponse } from './responses/offer.response';
 
 @Controller('offer')
 export class OfferController {
@@ -36,6 +37,8 @@ export class OfferController {
   @ApiResponse({
     status: 200,
     description: 'Lista de ofertas obtenida exitosamente',
+    type: OfferResponse,
+    isArray: true,
   })
   @ApiResponse({
     status: 500,
@@ -51,7 +54,11 @@ export class OfferController {
     summary:
       'Este endpoint obtiene una oferta en específico de la base de datos',
   })
-  @ApiResponse({ status: 200, description: 'Oferta obtenida exitosamente' })
+  @ApiResponse({
+    status: 200,
+    description: 'Oferta obtenida exitosamente',
+    type: OfferResponse,
+  })
   @ApiResponse({
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener la oferta',

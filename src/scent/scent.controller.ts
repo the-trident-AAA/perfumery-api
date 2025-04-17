@@ -11,6 +11,7 @@ import { ScentService } from './scent.service';
 import { CreateScentDto } from './dto/create-scent.dto';
 import { UpdateScentDto } from './dto/update-scent.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ScentResponse } from './responses/scent.response';
 
 @Controller('scent')
 export class ScentController {
@@ -36,6 +37,8 @@ export class ScentController {
   @ApiResponse({
     status: 200,
     description: 'Lista de aromas obtenida exitosamente',
+    type: ScentResponse,
+    isArray: true,
   })
   @ApiResponse({
     status: 500,
@@ -49,7 +52,11 @@ export class ScentController {
   @ApiOperation({
     summary: 'Este endpoint obtiene un aroma en específico de la base de datos',
   })
-  @ApiResponse({ status: 200, description: 'Aroma obtenido exitosamente' })
+  @ApiResponse({
+    status: 200,
+    description: 'Aroma obtenido exitosamente',
+    type: ScentResponse,
+  })
   @ApiResponse({
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener el aroma',
