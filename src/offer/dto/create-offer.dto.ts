@@ -13,5 +13,5 @@ export class CreateOfferDto {
     type: 'string',
     required: true,
   })
-  typeOfOffer: string;
+  offerType: string;
 }

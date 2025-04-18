@@ -4,6 +4,7 @@ import { UpdateBrandDto } from './dto/update-brand.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BrandEntity } from './entities/brand.entity';
 import { Repository } from 'typeorm';
+import { BrandResponse } from './responses/brand.response';
 
 @Injectable()
 export class BrandService {
@@ -17,11 +18,12 @@ export class BrandService {
     return await this.brandRepository.save(brand);
   }
 
-  async findAll() {
-    return await this.brandRepository.find();
+  async findAll(): Promise<BrandResponse[]> {
+    const brands = await this.brandRepository.find();
+    return brands.map((brand) => new BrandResponse(brand.id, brand.name));
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<BrandResponse> {
     const brand = await this.brandRepository.findOne({
       where: { id },
     });
@@ -30,7 +32,7 @@ export class BrandService {
       throw new Error(`PerfumeGroup con ID ${id} no encontrado`);
     }
 
-    return brand;
+    return new BrandResponse(brand.id, brand.name);
   }
 
   async update(id: string, dto: UpdateBrandDto) {

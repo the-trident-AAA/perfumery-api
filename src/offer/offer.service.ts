@@ -4,6 +4,7 @@ import { UpdateOfferDto } from './dto/update-offer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OfferEntity } from './entities/offer.entity';
 import { Repository } from 'typeorm';
+import { OfferResponse } from './responses/offer.response';
 
 @Injectable()
 export class OfferService {
@@ -17,11 +18,14 @@ export class OfferService {
     return await this.offerRepository.save(offer);
   }
 
-  async findAll() {
-    return await this.offerRepository.find();
+  async findAll(): Promise<OfferResponse[]> {
+    const offers = await this.offerRepository.find();
+    return offers.map(
+      (offer) => new OfferResponse(offer.id, offer.discount, offer.offerType),
+    );
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<OfferResponse> {
     const offer = await this.offerRepository.findOne({
       where: { id },
     });
@@ -30,7 +34,7 @@ export class OfferService {
       throw new Error(`offer con ID ${id} no encontrado`);
     }
 
-    return offer;
+    return new OfferResponse(offer.id, offer.discount, offer.offerType);
   }
 
   async update(id: string, dto: UpdateOfferDto) {

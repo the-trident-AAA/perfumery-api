@@ -4,6 +4,7 @@ import { UpdatePerfumeTypeDto } from './dto/update-perfume-type.dto';
 import { Repository } from 'typeorm';
 import { PerfumeTypeEntity } from './entities/perfume-type.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PerfumeTypeResponse } from './responses/perfume-type.response';
 
 @Injectable()
 export class PerfumeTypeService {
@@ -17,8 +18,12 @@ export class PerfumeTypeService {
     return await this.perfumeTypeRepository.save(perfumeType);
   }
 
-  async findAll() {
-    return await this.perfumeTypeRepository.find();
+  async findAll(): Promise<PerfumeTypeResponse[]> {
+    const perfumeTypes = await this.perfumeTypeRepository.find();
+    return perfumeTypes.map(
+      (perfumeType) =>
+        new PerfumeTypeResponse(perfumeType.id, perfumeType.name),
+    );
   }
 
   async findOne(id: string) {

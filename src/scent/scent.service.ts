@@ -4,6 +4,7 @@ import { UpdateScentDto } from './dto/update-scent.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ScentEntity } from './entities/scent.entity';
 import { Repository } from 'typeorm';
+import { ScentResponse } from './responses/scent.response';
 
 @Injectable()
 export class ScentService {
@@ -17,11 +18,12 @@ export class ScentService {
     return await this.scentRepository.save(scent);
   }
 
-  async findAll() {
-    return await this.scentRepository.find();
+  async findAll(): Promise<ScentResponse[]> {
+    const scents = await this.scentRepository.find();
+    return scents.map((scent) => new ScentResponse(scent.id, scent.name));
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<ScentResponse> {
     const scent = await this.scentRepository.findOne({
       where: { id },
     });
@@ -30,7 +32,7 @@ export class ScentService {
       throw new Error(`Scent con ID ${id} no encontrado`);
     }
 
-    return scent;
+    return new ScentResponse(scent.id, scent.name);
   }
 
   async update(id: string, dto: UpdateScentDto) {

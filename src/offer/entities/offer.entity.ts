@@ -10,7 +10,7 @@ export class OfferEntity {
   discount: number;
 
   @Column()
-  typeOfOffer: string;
+  offerType: string;
 
   @OneToMany(() => PerfumeEntity, (perfume) => perfume.offer)
   perfumes: PerfumeEntity;

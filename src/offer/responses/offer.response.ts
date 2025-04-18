@@ -20,5 +20,11 @@ export class OfferResponse {
     type: 'string',
     required: true,
   })
-  typeOfOffer: string;
+  offerType: string;
+
+  constructor(id: string, discount: number, offerType: string) {
+    this.id = id;
+    this.discount = discount;
+    this.offerType = offerType;
+  }
 }
