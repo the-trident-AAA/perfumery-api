@@ -4,6 +4,8 @@ import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PerfumeEntity } from './entities/perfume.entity';
 import { Repository } from 'typeorm';
+import { error } from 'console';
+import { PerfumeResponse } from './responses/perfume.response';
 
 @Injectable()
 export class PerfumeService {
@@ -17,8 +19,24 @@ export class PerfumeService {
     return await this.perfumeRepository.save(perfume);
   }
 
-  async findAll() {
-    return await this.perfumeRepository.find();
+  async findAll(): Promise<PerfumeResponse[]> {
+    const perfumes = await this.perfumeRepository.find({
+      relations: ['brand', 'perfumeType'],
+    });
+    return perfumes.map(
+      (perfume) =>
+        new PerfumeResponse(
+          perfume.id,
+          perfume.name,
+          perfume.brand.name,
+          perfume.gender,
+          perfume.liters,
+          perfume.perfumeType.name,
+          perfume.available,
+          perfume.price,
+          perfume.cant,
+        ),
+    );
   }
 
   async findOne(id: string) {
@@ -42,6 +60,7 @@ export class PerfumeService {
 
   async remove(id: string) {
     const perfume = await this.findOne(id);
-    return await this.perfumeRepository.delete(perfume);
+    if (!perfume) throw new error();
+    return await this.perfumeRepository.delete(id);
   }
 }

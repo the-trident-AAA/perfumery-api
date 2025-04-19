@@ -21,7 +21,7 @@ export class PerfumeResponse {
     type: 'string',
     required: false,
   })
-  brandId: string;
+  brand: string;
 
   @ApiProperty({
     description: 'Representa el género del perfume',
@@ -38,19 +38,11 @@ export class PerfumeResponse {
   liters: number;
 
   @ApiProperty({
-    description: 'Representa los aromas del perfume',
-    type: 'string',
-    isArray: true,
-    required: true,
-  })
-  scentsId: string[];
-
-  @ApiProperty({
     description: 'Representa el tipo de perfume al que pertenece el perfume',
     type: 'string',
     required: true,
   })
-  perfumeTypeId: string;
+  perfumeType: string;
 
   @ApiProperty({
     description: 'Representa si el perfume está disponible o no',
@@ -73,10 +65,25 @@ export class PerfumeResponse {
   })
   cant: number;
 
-  @ApiProperty({
-    description: 'Representa al grupo de oferta al cual pertenece el perfume',
-    type: 'string',
-    required: false,
-  })
-  offerId: string;
+  constructor(
+    id: string,
+    name: string,
+    brand: string,
+    gender: Gender,
+    liters: number,
+    perfumeType: string,
+    available: boolean,
+    price: number,
+    cant: number,
+  ) {
+    this.id = id;
+    this.name = name;
+    this.brand = brand;
+    this.gender = gender;
+    this.liters = liters;
+    this.perfumeType = perfumeType;
+    this.available = available;
+    this.price = price;
+    this.cant = cant;
+  }
 }

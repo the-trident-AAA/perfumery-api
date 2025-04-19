@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -49,7 +50,7 @@ export class PerfumeEntity {
   brand: BrandEntity;
 
   @ManyToMany(() => ScentEntity, (scents) => scents.perfumes)
-  @JoinColumn()
+  @JoinTable()
   scents: ScentEntity[];
 
   @ManyToOne(() => PerfumeTypeEntity, (perfumeType) => perfumeType.perfumes)
