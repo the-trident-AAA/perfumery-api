@@ -50,7 +50,19 @@ export class PerfumeEntity {
   brand: BrandEntity;
 
   @ManyToMany(() => ScentEntity, (scents) => scents.perfumes)
-  @JoinTable()
+  @JoinTable({
+    name: 'perfume_scent',
+    joinColumn: {
+      name: 'perfume_id',
+      referencedColumnName: 'id',
+      foreignKeyConstraintName: 'perfume_scents_perfume_id',
+    },
+    inverseJoinColumn: {
+      name: 'scent_id',
+      referencedColumnName: 'id',
+      foreignKeyConstraintName: 'perfume_scents_scent_id',
+    },
+  })
   scents: ScentEntity[];
 
   @ManyToOne(() => PerfumeTypeEntity, (perfumeType) => perfumeType.perfumes)

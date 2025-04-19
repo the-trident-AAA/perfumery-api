@@ -24,6 +24,14 @@ export class CreatePerfumeDto {
   gender: Gender;
 
   @ApiProperty({
+    description: 'Representa el nombre de la marca del perfume',
+    type: 'string',
+    isArray: true,
+    required: true,
+  })
+  scentsId: string[];
+
+  @ApiProperty({
     description: 'Representa los mililitros que contiene el perfume',
     type: 'number',
     required: false,

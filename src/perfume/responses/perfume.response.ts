@@ -31,6 +31,14 @@ export class PerfumeResponse {
   gender: Gender;
 
   @ApiProperty({
+    description: 'Representa el tipo de perfume al que pertenece el perfume',
+    type: 'string',
+    isArray: true,
+    required: true,
+  })
+  scents: string[];
+
+  @ApiProperty({
     description: 'Representa los mililitros que contiene el perfume',
     type: 'number',
     required: false,
@@ -70,6 +78,7 @@ export class PerfumeResponse {
     name: string,
     brand: string,
     gender: Gender,
+    scents: string[],
     liters: number,
     perfumeType: string,
     available: boolean,
@@ -80,6 +89,7 @@ export class PerfumeResponse {
     this.name = name;
     this.brand = brand;
     this.gender = gender;
+    this.scents = scents;
     this.liters = liters;
     this.perfumeType = perfumeType;
     this.available = available;
