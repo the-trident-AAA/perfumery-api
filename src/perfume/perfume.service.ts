@@ -39,7 +39,7 @@ export class PerfumeService {
 
   async findAll(): Promise<PerfumeResponse[]> {
     const perfumes = await this.perfumeRepository.find({
-      relations: ['brand', 'perfumeType', 'scents'],
+      relations: ['brand', 'perfumeType', 'scents', 'offer'],
     });
     return perfumes.map(
       (perfume) =>
@@ -62,7 +62,7 @@ export class PerfumeService {
   async findOne(id: string) {
     const perfume = await this.perfumeRepository.findOne({
       where: { id },
-      relations: ['brand', 'perfumeType', 'scents'],
+      relations: ['brand', 'perfumeType', 'scents', 'offer'],
     });
 
     if (!perfume) {
