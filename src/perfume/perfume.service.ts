@@ -94,6 +94,11 @@ export class PerfumeService {
     const perfume = await this.findOne(id);
     Object.assign(perfume, dto);
 
+    //removed defined relations marked as "undefined"
+    if (!dto.offerId) {
+      perfume.offer = null;
+    }
+
     return await this.perfumeRepository.save(perfume);
   }
 
