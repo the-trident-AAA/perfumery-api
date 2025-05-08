@@ -91,12 +91,12 @@ export class PerfumeService {
   }
 
   async update(id: string, dto: UpdatePerfumeDto) {
-    const perfume = await this.findOne(id);
+    const perfume = await this.perfumeRepository.findOne({ where: { id } });
     Object.assign(perfume, dto);
 
     //removed defined relations marked as "undefined"
     if (!dto.offerId) {
-      perfume.offer = null;
+      perfume.offerId = null;
     }
 
     return await this.perfumeRepository.save(perfume);

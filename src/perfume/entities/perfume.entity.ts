@@ -43,7 +43,7 @@ export class PerfumeEntity {
   cant: number;
 
   @Column({ name: 'offer_id', nullable: true })
-  offerId: string;
+  offerId?: string;
 
   @ManyToOne(() => BrandEntity, (brand) => brand.perfumes)
   @JoinColumn({ name: 'brand_id' })
