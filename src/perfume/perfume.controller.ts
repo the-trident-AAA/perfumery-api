@@ -12,6 +12,7 @@ import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PerfumeResponse } from './responses/perfume.response';
+import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 
 @Controller('perfume')
 export class PerfumeController {
@@ -56,7 +57,7 @@ export class PerfumeController {
   @ApiResponse({
     status: 200,
     description: 'Perfume obtenido exitosamente',
-    type: PerfumeResponse,
+    type: PerfumeDetailsResponse,
   })
   @ApiResponse({
     status: 500,

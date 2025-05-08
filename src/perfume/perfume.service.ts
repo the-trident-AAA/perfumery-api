@@ -7,6 +7,10 @@ import { In, Repository } from 'typeorm';
 import { error } from 'console';
 import { PerfumeResponse } from './responses/perfume.response';
 import { ScentEntity } from 'src/scent/entities/scent.entity';
+import { PerfumeDetailsResponse } from './responses/perfume-details.response';
+import { BrandResponse } from 'src/brand/responses/brand.response';
+import { ScentResponse } from 'src/scent/responses/scent.response';
+import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
 
 @Injectable()
 export class PerfumeService {
@@ -56,13 +60,25 @@ export class PerfumeService {
   async findOne(id: string) {
     const perfume = await this.perfumeRepository.findOne({
       where: { id },
+      relations: ['brand', 'perfumeType', 'scents'],
     });
 
     if (!perfume) {
       throw new Error(`Perfume con ID ${id} no encontrado`);
     }
 
-    return perfume;
+    return new PerfumeDetailsResponse(
+      perfume.id,
+      perfume.name,
+      new BrandResponse(perfume.brand.id, perfume.brand.name),
+      perfume.gender,
+      perfume.scents.map((scent) => new ScentResponse(scent.id, scent.name)),
+      perfume.liters,
+      new PerfumeTypeResponse(perfume.perfumeType.id, perfume.perfumeType.name),
+      perfume.available,
+      perfume.price,
+      perfume.cant,
+    );
   }
 
   async update(id: string, dto: UpdatePerfumeDto) {
