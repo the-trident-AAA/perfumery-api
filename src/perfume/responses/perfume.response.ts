@@ -51,6 +51,13 @@ export class PerfumeResponse {
     required: true,
   })
   perfumeType: string;
+  @ApiProperty({
+    description:
+      'Representa el descuento de la posible oferta seleccionada para el perfume',
+    type: 'number',
+    required: true,
+  })
+  discountOffer?: number;
 
   @ApiProperty({
     description: 'Representa si el perfume está disponible o no',
@@ -84,6 +91,7 @@ export class PerfumeResponse {
     available: boolean,
     price: number,
     cant: number,
+    discountOffer?: number,
   ) {
     this.id = id;
     this.name = name;
@@ -95,5 +103,6 @@ export class PerfumeResponse {
     this.available = available;
     this.price = price;
     this.cant = cant;
+    this.discountOffer = discountOffer;
   }
 }

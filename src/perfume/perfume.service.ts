@@ -11,6 +11,7 @@ import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { BrandResponse } from 'src/brand/responses/brand.response';
 import { ScentResponse } from 'src/scent/responses/scent.response';
 import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
+import { OfferResponse } from 'src/offer/responses/offer.response';
 
 @Injectable()
 export class PerfumeService {
@@ -53,6 +54,7 @@ export class PerfumeService {
           perfume.available,
           perfume.price,
           perfume.cant,
+          perfume.offer ? perfume.offer.discount : null,
         ),
     );
   }
@@ -78,6 +80,13 @@ export class PerfumeService {
       perfume.available,
       perfume.price,
       perfume.cant,
+      perfume.offer
+        ? new OfferResponse(
+            perfume.offer.id,
+            perfume.offer.discount,
+            perfume.offer.offerType,
+          )
+        : null,
     );
   }
 

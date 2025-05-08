@@ -3,6 +3,7 @@ import { Gender } from '../entities/gender.enum';
 import { BrandResponse } from 'src/brand/responses/brand.response';
 import { ScentResponse } from 'src/scent/responses/scent.response';
 import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
+import { OfferResponse } from 'src/offer/responses/offer.response';
 
 export class PerfumeDetailsResponse {
   @ApiProperty({
@@ -54,6 +55,12 @@ export class PerfumeDetailsResponse {
     required: true,
   })
   perfumeType: PerfumeTypeResponse;
+  @ApiProperty({
+    description: 'Representa la posible oferta seleccionada para el perfume',
+    type: OfferResponse,
+    required: true,
+  })
+  offer?: OfferResponse;
 
   @ApiProperty({
     description: 'Representa si el perfume está disponible o no',
@@ -87,6 +94,7 @@ export class PerfumeDetailsResponse {
     available: boolean,
     price: number,
     cant: number,
+    offer?: OfferResponse,
   ) {
     this.id = id;
     this.name = name;
@@ -98,5 +106,6 @@ export class PerfumeDetailsResponse {
     this.available = available;
     this.price = price;
     this.cant = cant;
+    this.offer = offer;
   }
 }
