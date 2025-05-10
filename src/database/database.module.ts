@@ -27,6 +27,12 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
         username: config.get<string>('POSTGRES_USER'),
         password: config.get<string>('POSTGRES_PASSWORD'),
         synchronize: true,
+        ssl: config.get<boolean>('POSTGRES_SSL'), 
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
         entities: [join(process.cwd(), folder, '**', `*.entity.${extensions}`)],
         retryAttempts: 0,
       }),
