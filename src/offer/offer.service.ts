@@ -21,7 +21,15 @@ export class OfferService {
   async findAll(): Promise<OfferResponse[]> {
     const offers = await this.offerRepository.find();
     return offers.map(
-      (offer) => new OfferResponse(offer.id, offer.discount, offer.offerType),
+      (offer) =>
+        new OfferResponse(
+          offer.id,
+          offer.discount,
+          offer.offerType,
+          offer.name,
+          offer.description,
+          offer.scope,
+        ),
     );
   }
 
@@ -34,7 +42,14 @@ export class OfferService {
       throw new Error(`offer con ID ${id} no encontrado`);
     }
 
-    return new OfferResponse(offer.id, offer.discount, offer.offerType);
+    return new OfferResponse(
+      offer.id,
+      offer.discount,
+      offer.offerType,
+      offer.name,
+      offer.description,
+      offer.scope,
+    );
   }
 
   async update(id: string, dto: UpdateOfferDto) {

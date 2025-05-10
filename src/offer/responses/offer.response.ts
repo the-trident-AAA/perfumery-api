@@ -7,6 +7,24 @@ export class OfferResponse {
     required: true,
   })
   id: string;
+  @ApiProperty({
+    description: 'Representa el nombre de la oferta',
+    type: 'string',
+    required: true,
+  })
+  name: string;
+  @ApiProperty({
+    description: 'Representa la descripción de la oferta',
+    type: 'string',
+    required: true,
+  })
+  description: string;
+  @ApiProperty({
+    description: 'Representa el alcance de la oferta',
+    type: 'string',
+    required: true,
+  })
+  scope: string;
 
   @ApiProperty({
     description: 'Representa el descuento de la oferta en porcentaje',
@@ -22,9 +40,19 @@ export class OfferResponse {
   })
   offerType: string;
 
-  constructor(id: string, discount: number, offerType: string) {
+  constructor(
+    id: string,
+    discount: number,
+    offerType: string,
+    name: string,
+    description: string,
+    scope: string,
+  ) {
     this.id = id;
     this.discount = discount;
     this.offerType = offerType;
+    this.name = name;
+    this.description = description;
+    this.scope = scope;
   }
 }

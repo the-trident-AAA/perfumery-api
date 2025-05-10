@@ -5,10 +5,14 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 export class OfferEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
+  @Column()
+  name: string;
+  @Column()
+  description: string;
+  @Column()
+  scope: string;
   @Column()
   discount: number;
-
   @Column()
   offerType: string;
 
