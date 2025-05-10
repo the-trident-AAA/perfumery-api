@@ -21,6 +21,9 @@ export class PerfumeEntity {
   @Column()
   name: string;
 
+  @Column()
+  description: string;
+
   @Column({ name: 'brand_id', nullable: true })
   brandId: string;
 

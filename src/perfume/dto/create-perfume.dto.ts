@@ -10,6 +10,13 @@ export class CreatePerfumeDto {
   name: string;
 
   @ApiProperty({
+    description: 'Representa la descripción del perfume',
+    type: 'string',
+    required: true,
+  })
+  description: string;
+
+  @ApiProperty({
     description: 'Representa el nombre de la marca del perfume',
     type: 'string',
     required: false,

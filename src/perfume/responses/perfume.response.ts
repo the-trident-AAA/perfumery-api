@@ -17,6 +17,13 @@ export class PerfumeResponse {
   name: string;
 
   @ApiProperty({
+    description: 'Representa la descripción del perfume',
+    type: 'string',
+    required: true,
+  })
+  description: string;
+
+  @ApiProperty({
     description: 'Representa el nombre de la marca del perfume',
     type: 'string',
     required: false,
@@ -83,6 +90,7 @@ export class PerfumeResponse {
   constructor(
     id: string,
     name: string,
+    description: string,
     brand: string,
     gender: Gender,
     scents: string[],
@@ -104,5 +112,6 @@ export class PerfumeResponse {
     this.price = price;
     this.cant = cant;
     this.discountOffer = discountOffer;
+    this.description = description;
   }
 }

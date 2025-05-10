@@ -47,6 +47,7 @@ export class PerfumeService {
           perfume.id,
           perfume.name,
           perfume.brand.name,
+          perfume.description,
           perfume.gender,
           perfume.scents.map((scent) => scent.name),
           perfume.liters,
@@ -72,6 +73,7 @@ export class PerfumeService {
     return new PerfumeDetailsResponse(
       perfume.id,
       perfume.name,
+      perfume.description,
       new BrandResponse(perfume.brand.id, perfume.brand.name),
       perfume.gender,
       perfume.scents.map((scent) => new ScentResponse(scent.id, scent.name)),
@@ -85,6 +87,9 @@ export class PerfumeService {
             perfume.offer.id,
             perfume.offer.discount,
             perfume.offer.offerType,
+            perfume.offer.name,
+            perfume.offer.description,
+            perfume.offer.scope,
           )
         : null,
     );
