@@ -11,7 +11,7 @@ export class OfferEntity {
   description: string;
   @Column()
   scope: string;
-  @Column()
+  @Column({ type: 'double precision' })
   discount: number;
   @Column()
   offerType: string;
