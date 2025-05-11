@@ -46,8 +46,8 @@ export class PerfumeService {
         new PerfumeResponse(
           perfume.id,
           perfume.name,
-          perfume.brand.name,
           perfume.description,
+          perfume.brand.name,
           perfume.gender,
           perfume.scents.map((scent) => scent.name),
           perfume.liters,
