@@ -30,7 +30,9 @@ export class CreatePerfumeDto {
     description: 'Representa el nombre de la marca del perfume',
     required: false,
   })
+  @IsOptional()
   @IsUUID()
+  @Transform(({ value }) => (value === '' ? null : value))
   brandId?: string;
 
   @ApiProperty({
@@ -63,9 +65,10 @@ export class CreatePerfumeDto {
     description: 'Representa los mililitros que contiene el perfume',
     required: false,
   })
+  @IsOptional()
   @IsNumber()
   @Transform(({ value }) => Number(value))
-  liters?: number;
+  milliliters?: number;
 
   @ApiProperty({
     description: 'Representa el tipo de perfume al que pertenece el perfume',
@@ -103,9 +106,9 @@ export class CreatePerfumeDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
+  @IsUUID()
   @Transform(({ value }) => (value === '' ? null : value)) // Converts "" to null
-  offerId?: string | null;
+  offerId?: string;
 
   @ApiProperty({
     description: 'Representa la imagen del perfume',

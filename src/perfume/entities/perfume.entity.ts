@@ -31,7 +31,7 @@ export class PerfumeEntity {
   gender: Gender;
 
   @Column({ nullable: true })
-  liters: number;
+  milliliters: number;
 
   @Column({ name: 'perfume_type_id' })
   perfumeTypeId: string;
