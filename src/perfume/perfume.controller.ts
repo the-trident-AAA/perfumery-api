@@ -6,19 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  UploadedFile,
+  UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
-
+import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('perfume')
 export class PerfumeController {
   constructor(private readonly perfumeService: PerfumeService) {}
 
   @Post()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({
     summary: 'Este endpoint agrega un perfume a la base de datos',
   })
@@ -27,8 +33,12 @@ export class PerfumeController {
     status: 500,
     description: 'Ocurrió un error en el proceso de creación de perfume',
   })
-  create(@Body() createPerfumeDto: CreatePerfumeDto) {
-    return this.perfumeService.create(createPerfumeDto);
+  create(
+    @Body(new ValidationPipe({ transform: true })) dto: CreatePerfumeDto,
+    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+  ) {
+    dto.image = image;
+    return this.perfumeService.create(dto);
   }
 
   @Get()

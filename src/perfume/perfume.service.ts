@@ -12,6 +12,7 @@ import { BrandResponse } from 'src/brand/responses/brand.response';
 import { ScentResponse } from 'src/scent/responses/scent.response';
 import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
 import { OfferResponse } from 'src/offer/responses/offer.response';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class PerfumeService {
@@ -21,6 +22,8 @@ export class PerfumeService {
 
     @InjectRepository(ScentEntity)
     private readonly scentRepository: Repository<ScentEntity>,
+
+    private readonly minioService: MinioService,
   ) {}
 
   async create(dto: CreatePerfumeDto) {
@@ -29,9 +32,18 @@ export class PerfumeService {
       id: In(dto.scentsId),
     });
 
+    // Upload the image of the perfume
+    const image = await this.minioService.uploadFile(
+      undefined,
+      dto.image.buffer,
+      dto.image.originalname.split('.').pop(),
+      dto.image.mimetype,
+    );
+
     const perfume = this.perfumeRepository.create({
       ...dto,
       scents,
+      image,
     });
 
     return await this.perfumeRepository.save(perfume);

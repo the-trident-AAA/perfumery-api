@@ -1,12 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entities/gender.enum';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreatePerfumeDto {
   @ApiProperty({
     description: 'Representa el nombre del perfume',
-    type: 'string',
     required: true,
   })
+  @IsString()
   name: string;
 
   @ApiProperty({
@@ -18,65 +28,90 @@ export class CreatePerfumeDto {
 
   @ApiProperty({
     description: 'Representa el nombre de la marca del perfume',
-    type: 'string',
     required: false,
   })
-  brandId: string;
+  @IsUUID()
+  brandId?: string;
 
   @ApiProperty({
     description: 'Representa el género del perfume',
-    type: 'string',
+    enum: Gender,
     required: true,
   })
+  @IsEnum(Gender)
   gender: Gender;
 
   @ApiProperty({
-    description: 'Representa el nombre de la marca del perfume',
-    type: 'string',
-    isArray: true,
+    description: 'Representa los IDs de los aromas del perfume',
     required: true,
+    type: [String],
   })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value
+        .split(',')
+        .map((id) => id.trim())
+        .filter((id) => id.length > 0);
+    }
+    return value;
+  })
+  @IsArray()
+  @IsUUID('4', { each: true })
   scentsId: string[];
 
   @ApiProperty({
     description: 'Representa los mililitros que contiene el perfume',
-    type: 'number',
     required: false,
   })
-  liters: number;
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
+  liters?: number;
 
   @ApiProperty({
     description: 'Representa el tipo de perfume al que pertenece el perfume',
-    type: 'string',
     required: true,
   })
+  @IsString()
   perfumeTypeId: string;
 
   @ApiProperty({
     description: 'Representa si el perfume está disponible o no',
-    type: 'boolean',
     required: true,
   })
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
   available: boolean;
 
   @ApiProperty({
     description: 'Representa el precio del perfume',
-    type: 'number',
     required: true,
   })
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
   price: number;
 
   @ApiProperty({
     description: 'Representa la cantidad de perfumes disponibles',
-    type: 'number',
     required: true,
   })
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
   cant: number;
 
   @ApiProperty({
     description: 'Representa al grupo de oferta al cual pertenece el perfume',
-    type: 'string',
     required: false,
   })
-  offerId: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (value === '' ? null : value)) // Converts "" to null
+  offerId?: string | null;
+
+  @ApiProperty({
+    description: 'Representa la imagen del perfume',
+    type: 'string',
+    format: 'binary',
+    required: true,
+  })
+  image: Express.Multer.File;
 }
