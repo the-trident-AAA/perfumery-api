@@ -34,7 +34,7 @@ export class PerfumeController {
     description: 'Ocurrió un error en el proceso de creación de perfume',
   })
   create(
-    @Body(new ValidationPipe({ transform: true })) dto: CreatePerfumeDto,
+    @Body() dto: CreatePerfumeDto,
     @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
   ) {
     dto.image = image;

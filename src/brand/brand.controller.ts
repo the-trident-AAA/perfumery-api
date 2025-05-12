@@ -26,8 +26,8 @@ export class BrandController {
     status: 500,
     description: 'Ocurrió un error en el proceso de creación de la marca',
   })
-  create(@Body() createBrandDto: CreateBrandDto) {
-    return this.brandService.create(createBrandDto);
+  create(@Body() dto: CreateBrandDto) {
+    return this.brandService.create(dto);
   }
 
   @Get()
@@ -75,8 +75,8 @@ export class BrandController {
     status: 500,
     description: 'Ocurrió un error en el proceso de edición de la marca',
   })
-  update(@Param('id') id: string, @Body() updateBrandDto: UpdateBrandDto) {
-    return this.brandService.update(id, updateBrandDto);
+  update(@Param('id') id: string, @Body() dto: UpdateBrandDto) {
+    return this.brandService.update(id, dto);
   }
 
   @Delete(':id')

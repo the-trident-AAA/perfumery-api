@@ -62,7 +62,7 @@ export class PerfumeService {
           perfume.brand.name,
           perfume.gender,
           perfume.scents.map((scent) => scent.name),
-          perfume.liters,
+          perfume.milliliters,
           perfume.perfumeType.name,
           perfume.available,
           perfume.price,
