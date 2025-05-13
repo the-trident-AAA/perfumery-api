@@ -7,6 +7,7 @@ import { ScentModule } from './scent/scent.module';
 import { PerfumeModule } from './perfume/perfume.module';
 import { OfferModule } from './offer/offer.module';
 import { MinioModule } from './minio/minio.module';
+import { HomeBannerModule } from './home-banner/home-banner.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MinioModule } from './minio/minio.module';
     PerfumeModule,
     OfferModule,
     MinioModule,
+    HomeBannerModule,
   ],
 })
 export class AppModule {}
