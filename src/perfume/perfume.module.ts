@@ -12,5 +12,6 @@ import { MinioService } from 'src/minio/minio.service';
   ],
   controllers: [PerfumeController],
   providers: [PerfumeService, MinioService],
+  exports: [PerfumeService]
 })
 export class PerfumeModule {}

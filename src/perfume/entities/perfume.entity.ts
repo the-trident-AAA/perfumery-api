@@ -12,6 +12,7 @@ import { BrandEntity } from 'src/brand/entities/brand.entity';
 import { ScentEntity } from 'src/scent/entities/scent.entity';
 import { PerfumeTypeEntity } from 'src/perfume-type/entities/perfume-type.entity';
 import { OfferEntity } from 'src/offer/entities/offer.entity';
+import { HomeBannerEntity } from 'src/home-banner/entities/home-banner.entity';
 
 @Entity({ name: 'perfume' })
 export class PerfumeEntity {
@@ -48,7 +49,7 @@ export class PerfumeEntity {
   @Column({ name: 'offer_id', nullable: true })
   offerId?: string;
 
-  @Column({ name: 'image' })
+  @Column({ name: 'image', nullable: true })
   image: string;
 
   @ManyToOne(() => BrandEntity, (brand) => brand.perfumes)
@@ -76,4 +77,6 @@ export class PerfumeEntity {
   @ManyToOne(() => OfferEntity, (offer) => offer.perfumes)
   @JoinColumn({ name: 'offer_id' })
   offer: OfferEntity;
+  @ManyToMany(() => HomeBannerEntity, (homeBanner) => homeBanner.perfumes)
+  homeBanners: HomeBannerEntity[];
 }

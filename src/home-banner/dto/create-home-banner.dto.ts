@@ -19,4 +19,12 @@ export class CreateHomeBannerDto {
     required: true,
   })
   image?: string;
+  @ApiProperty({
+    description:
+      'Representa la lista con los identificadores de los perfumes a los que hará referencia dicho banner',
+    type: 'string',
+    required: true,
+    isArray: true,
+  })
+  perfumes: string[];
 }

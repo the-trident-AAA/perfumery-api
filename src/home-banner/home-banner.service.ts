@@ -6,15 +6,22 @@ import { HomeBannerEntity } from './entities/home-banner.entity';
 import { Repository } from 'typeorm';
 import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
+import { PerfumeService } from 'src/perfume/perfume.service';
 
 @Injectable()
 export class HomeBannerService {
   constructor(
     @InjectRepository(HomeBannerEntity)
     private readonly homeBannerRepository: Repository<HomeBannerEntity>,
+    private readonly perfumeService: PerfumeService,
   ) {}
   async create(createHomeBannerDto: CreateHomeBannerDto) {
-    const homeBanner = this.homeBannerRepository.create(createHomeBannerDto);
+    const homeBanner = this.homeBannerRepository.create({
+      ...createHomeBannerDto,
+      perfumes: createHomeBannerDto.perfumes.map((perfume) => ({
+        id: perfume,
+      })),
+    });
     return await this.homeBannerRepository.save(homeBanner);
   }
 
@@ -34,6 +41,7 @@ export class HomeBannerService {
   async findOne(id: string) {
     const homeBanner = await this.homeBannerRepository.findOne({
       where: { id },
+      relations: ['perfumes'],
     });
     if (!homeBanner)
       throw new BadRequestException(
@@ -44,6 +52,11 @@ export class HomeBannerService {
       homeBanner.title,
       homeBanner.description,
       homeBanner.image,
+      await Promise.all(
+        homeBanner.perfumes.map(
+          async (perfume) => await this.perfumeService.findOne(perfume.id),
+        ),
+      ),
     );
   }
 
