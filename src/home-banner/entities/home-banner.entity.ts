@@ -1,5 +1,5 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+@Entity({ name: 'home_banner' })
 export class HomeBannerEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
