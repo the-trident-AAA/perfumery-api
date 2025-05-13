@@ -41,7 +41,6 @@ export class ScentService {
   }
 
   async remove(id: string) {
-    const scent = await this.findOne(id);
-    return await this.db.scentRepository.save(scent);
+    return await this.db.scentRepository.delete({ id });
   }
 }
