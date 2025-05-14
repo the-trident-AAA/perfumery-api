@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
 import { PerfumeService } from 'src/perfume/perfume.service';
+import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 
 @Injectable()
 export class HomeBannerService {
@@ -65,7 +66,12 @@ export class HomeBannerService {
       where: { id },
     });
     Object.assign(homeBanner, updateHomeBannerDto);
-
+    homeBanner.perfumes = updateHomeBannerDto.perfumes.map(
+      (perfume) =>
+        ({
+          id: perfume,
+        }) as PerfumeEntity,
+    );
     return await this.homeBannerRepository.save(homeBanner);
   }
 
