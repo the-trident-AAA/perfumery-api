@@ -118,6 +118,18 @@ export class PerfumeService {
     if (!dto.offerId) {
       perfume.offerId = null;
     }
+    if (dto.image) {
+      // delete the old image from Minio
+      await this.minioService.deleteFile(perfume.image.split('/').pop());
+      // upload the new image
+      const image = await this.minioService.uploadFile(
+        undefined,
+        dto.image.buffer,
+        dto.image.originalname.split('.').pop(),
+        dto.image.mimetype,
+      );
+      perfume.image = this.minioService.getMinioURL() + image;
+    }
 
     return await this.db.perfumeRepository.save(perfume);
   }

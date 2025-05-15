@@ -78,6 +78,8 @@ export class PerfumeController {
   }
 
   @Patch(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({
     summary: 'Este endpoint edita un perfume de la base de datos',
   })
@@ -86,7 +88,12 @@ export class PerfumeController {
     status: 500,
     description: 'Ocurrió un error en el proceso de edición del perfume',
   })
-  update(@Param('id') id: string, @Body() updatePerfumeDto: UpdatePerfumeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePerfumeDto: UpdatePerfumeDto,
+    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+  ) {
+    updatePerfumeDto.image = image;
     return this.perfumeService.update(id, updatePerfumeDto);
   }
 
