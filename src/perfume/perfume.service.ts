@@ -23,7 +23,6 @@ export class PerfumeService {
     const scents = await this.db.scentRepository.findBy({
       id: In(dto.scentsId),
     });
-
     // Upload the image of the perfume
     const image = await this.minioService.uploadFile(
       undefined,
@@ -35,7 +34,7 @@ export class PerfumeService {
     const perfume = this.db.perfumeRepository.create({
       ...dto,
       scents,
-      image,
+      image: this.minioService.getMinioURL() + image,
     });
 
     return await this.db.perfumeRepository.save(perfume);
