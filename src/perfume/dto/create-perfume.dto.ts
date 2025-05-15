@@ -48,9 +48,19 @@ export class CreatePerfumeDto {
     required: true,
     type: [String],
   })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value
+        .split(',')
+        .map((id) => id.trim())
+        .filter((id) => id.length > 0);
+    }
+    return value;
+  })
   @IsArray()
   @IsUUID('4', { each: true })
   scentsId: string[];
+
   @ApiProperty({
     description: 'Representa los mililitros que contiene el perfume',
     required: false,
@@ -99,4 +109,12 @@ export class CreatePerfumeDto {
   @IsUUID()
   @Transform(({ value }) => (value === '' ? null : value)) // Converts "" to null
   offerId?: string;
+
+  @ApiProperty({
+    description: 'Representa la imagen del perfume',
+    type: 'string',
+    format: 'binary',
+    required: true,
+  })
+  image: Express.Multer.File;
 }
