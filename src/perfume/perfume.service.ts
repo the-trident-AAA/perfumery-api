@@ -111,24 +111,25 @@ export class PerfumeService {
   }
 
   async update(id: string, dto: UpdatePerfumeDto) {
+    const { image, ...restDTO } = dto;
     const perfume = await this.db.perfumeRepository.findOne({ where: { id } });
-    Object.assign(perfume, dto);
+    Object.assign(perfume, restDTO);
 
     // removed defined relations marked as "undefined"
     if (!dto.offerId) {
       perfume.offerId = null;
     }
-    if (dto.image) {
+    if (image) {
       // delete the old image from Minio
       await this.minioService.deleteFile(perfume.image.split('/').pop());
       // upload the new image
-      const image = await this.minioService.uploadFile(
+      const minioImage = await this.minioService.uploadFile(
         undefined,
-        dto.image.buffer,
-        dto.image.originalname.split('.').pop(),
-        dto.image.mimetype,
+        image.buffer,
+        image.originalname.split('.').pop(),
+        image.mimetype,
       );
-      perfume.image = this.minioService.getMinioURL() + image;
+      perfume.image = this.minioService.getMinioURL() + minioImage;
     }
 
     return await this.db.perfumeRepository.save(perfume);
