@@ -84,6 +84,7 @@ export class MinioService {
     return fileName;
   }
 
+
   async getPresignedUrl(objectName: string): Promise<string> {
     try {
       const expiryTime = 10 * 60;
@@ -98,11 +99,37 @@ export class MinioService {
     }
   }
 
-  async deleteFile(fileName: string) {
-    this.logger.log(`Deleted file ${fileName}`);
-    await this.minioClient.removeObject(
-      this.config.get<string>('MINIO_BUCKET'),
-      fileName,
-    );
+   async checkIfExist(path: string) {
+    try {
+      await this.minioClient.statObject(
+        this.config.get<string>('MINIO_BUCKET'),
+        path,
+      );
+      return true;
+    } catch {
+      return false;
+    }
   }
+
+  async deleteFile(fileName: string): Promise<boolean> {
+    try {
+      const exists = await this.checkIfExist(fileName);
+      if (!exists) {
+        this.logger.warn(`El archivo ${fileName} no existe en el bucket`);
+        return false;
+      }
+
+      await this.minioClient.removeObject(
+        this.config.get<string>('MINIO_BUCKET'),
+        fileName,
+      );
+
+      this.logger.log(`Archivo ${fileName} eliminado correctamente`);
+      return true;
+    } catch (error) {
+      this.logger.error(`Error al eliminar el archivo ${fileName}`, error);
+      throw error;
+    }
+  }
+
 }
