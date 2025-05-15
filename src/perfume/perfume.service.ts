@@ -137,9 +137,11 @@ export class PerfumeService {
 
   async remove(id: string) {
     const perfume = await this.findOne(id);
+
     if (!perfume) throw new Error('Perfume no encontrado');
 
-    await this.minioService.deleteFile(perfume.image);
+    // delete the image from Minio
+    await this.minioService.deleteFile(perfume.image.split('/').pop());
 
     // delete relationships in the intermediate table perfume_scent
     await this.db.perfumeRepository.query(
