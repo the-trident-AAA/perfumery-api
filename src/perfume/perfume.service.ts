@@ -25,16 +25,17 @@ export class PerfumeService {
     });
 
     // Upload the image of the perfume
-    /*const image = await this.minioService.uploadFile(
+    const image = await this.minioService.uploadFile(
       undefined,
       dto.image.buffer,
       dto.image.originalname.split('.').pop(),
       dto.image.mimetype,
-    );*/
+    );
 
     const perfume = this.db.perfumeRepository.create({
       ...dto,
       scents,
+      image,
     });
 
     return await this.db.perfumeRepository.save(perfume);
@@ -55,6 +56,7 @@ export class PerfumeService {
           perfume.id,
           perfume.name,
           perfume.description,
+          perfume.image,
           perfume.brand.name,
           perfume.gender,
           perfume.scents.map((scent) => scent.name),
@@ -86,6 +88,7 @@ export class PerfumeService {
       perfume.id,
       perfume.name,
       perfume.description,
+      perfume.image,
       new BrandResponse(perfume.brand.id, perfume.brand.name),
       perfume.gender,
       perfume.scents.map((scent) => new ScentResponse(scent.id, scent.name)),

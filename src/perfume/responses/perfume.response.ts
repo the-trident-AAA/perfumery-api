@@ -22,6 +22,12 @@ export class PerfumeResponse {
     required: true,
   })
   description: string;
+  @ApiProperty({
+    description: 'Representa la url de la imagen del perfume',
+    type: 'string',
+    required: true,
+  })
+  image: string;
 
   @ApiProperty({
     description: 'Representa el nombre de la marca del perfume',
@@ -98,6 +104,7 @@ export class PerfumeResponse {
     id: string,
     name: string,
     description: string,
+    image: string,
     brand: string,
     gender: Gender,
     scents: string[],
@@ -111,6 +118,7 @@ export class PerfumeResponse {
   ) {
     this.id = id;
     this.name = name;
+    this.image = image;
     this.brand = brand;
     this.gender = gender;
     this.scents = scents;
