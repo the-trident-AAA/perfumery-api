@@ -106,8 +106,8 @@ export class PerfumeService {
             perfume.offer.offerType,
             perfume.offer.name,
             perfume.offer.description,
-            perfume.offer.image,
             perfume.offer.scope,
+            perfume.offer.image,
           )
         : null,
     );

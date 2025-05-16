@@ -42,8 +42,8 @@ export class OfferService {
           offer.offerType,
           offer.name,
           offer.description,
-          offer.image,
           offer.scope,
+          offer.image,
         ),
     );
   }
@@ -63,8 +63,8 @@ export class OfferService {
       offer.offerType,
       offer.name,
       offer.description,
-      offer.image,
       offer.scope,
+      offer.image,
     );
   }
 
