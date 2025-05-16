@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { OfferResponse } from './responses/offer.response';
@@ -29,7 +29,6 @@ export class OfferService {
     });
 
     return await this.db.offerRepository.save(offer);
-
   }
 
   async findAll(): Promise<OfferResponse[]> {
@@ -95,6 +94,14 @@ export class OfferService {
 
   async remove(id: string) {
     const offer = await this.findOne(id);
+
+    if (!offer)
+      throw new BadRequestException('No se encontró una oferta con ese ID');
+
+    if (offer.image)
+      // delete the image from Minio
+      await this.minioService.deleteFile(offer.image.split('/').pop());
+
     return await this.db.offerRepository.delete(offer);
   }
 }
