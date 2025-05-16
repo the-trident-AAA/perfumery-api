@@ -73,9 +73,11 @@ export class OfferService {
     const offer = await this.findOne(id);
     Object.assign(offer, restDTO);
 
-    if (image) {
+    if (offer.image)
       // delete the old image from Minio
       await this.minioService.deleteFile(offer.image.split('/').pop());
+
+    if (image) {
       // upload the new image
       const minioImage = await this.minioService.uploadFile(
         undefined,
@@ -84,6 +86,8 @@ export class OfferService {
         image.mimetype,
       );
       offer.image = this.minioService.getMinioURL() + minioImage;
+    } else {
+      offer.image = null;
     }
 
     return await this.db.offerRepository.save(offer);
