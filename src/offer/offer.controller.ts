@@ -78,6 +78,8 @@ export class OfferController {
   }
 
   @Patch(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({
     summary: 'Este endpoint edita una oferta de la base de datos',
   })
@@ -86,7 +88,12 @@ export class OfferController {
     status: 500,
     description: 'Ocurrió un error en el proceso de edición de la oferta',
   })
-  update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateOfferDto: UpdateOfferDto,
+    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+  ) {
+    updateOfferDto.image = image;
     return this.offerService.update(id, updateOfferDto);
   }
 

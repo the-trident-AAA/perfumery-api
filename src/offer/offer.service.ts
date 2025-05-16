@@ -69,8 +69,22 @@ export class OfferService {
   }
 
   async update(id: string, dto: UpdateOfferDto) {
+    const { image, ...restDTO } = dto;
     const offer = await this.findOne(id);
-    Object.assign(offer, dto);
+    Object.assign(offer, restDTO);
+
+    if (image) {
+      // delete the old image from Minio
+      await this.minioService.deleteFile(offer.image.split('/').pop());
+      // upload the new image
+      const minioImage = await this.minioService.uploadFile(
+        undefined,
+        image.buffer,
+        image.originalname.split('.').pop(),
+        image.mimetype,
+      );
+      offer.image = this.minioService.getMinioURL() + minioImage;
+    }
 
     return await this.db.offerRepository.save(offer);
   }
