@@ -8,6 +8,7 @@ import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
 import { PerfumeService } from 'src/perfume/perfume.service';
 import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class HomeBannerService {
@@ -15,14 +16,25 @@ export class HomeBannerService {
     @InjectRepository(HomeBannerEntity)
     private readonly homeBannerRepository: Repository<HomeBannerEntity>,
     private readonly perfumeService: PerfumeService,
+    private readonly minioService: MinioService,
   ) {}
   async create(createHomeBannerDto: CreateHomeBannerDto) {
+    // Upload the image of the perfume
+    const image = await this.minioService.uploadFile(
+      undefined,
+      createHomeBannerDto.image.buffer,
+      createHomeBannerDto.image.originalname.split('.').pop(),
+      createHomeBannerDto.image.mimetype,
+    );
+
     const homeBanner = this.homeBannerRepository.create({
       ...createHomeBannerDto,
       perfumes: createHomeBannerDto.perfumes.map((perfume) => ({
         id: perfume,
       })),
+      image: this.minioService.getMinioURL() + image,
     });
+
     return await this.homeBannerRepository.save(homeBanner);
   }
 

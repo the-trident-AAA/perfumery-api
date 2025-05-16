@@ -6,19 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { HomeBannerService } from './home-banner.service';
 import { CreateHomeBannerDto } from './dto/create-home-banner.dto';
 import { UpdateHomeBannerDto } from './dto/update-home-banner.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 
 @Controller('home-banner')
 export class HomeBannerController {
   constructor(private readonly homeBannerService: HomeBannerService) {}
 
   @Post()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({
     summary: 'Este endpoint agrega un banner del home a la base de datos',
   })
@@ -30,7 +36,11 @@ export class HomeBannerController {
     status: 500,
     description: 'Ocurrió un error en el proceso de creación de la oferta',
   })
-  create(@Body() createHomeBannerDto: CreateHomeBannerDto) {
+  create(
+    @Body() createHomeBannerDto: CreateHomeBannerDto,
+    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+  ) {
+    createHomeBannerDto.image = image;
     return this.homeBannerService.create(createHomeBannerDto);
   }
 
