@@ -107,6 +107,15 @@ export class HomeBannerService {
   }
 
   async remove(id: string) {
+    const homeBanner = await this.homeBannerRepository.findOne({
+      where: { id },
+    });
+
+    if (!homeBanner)
+      throw new BadRequestException('No existe un home banner con ese id');
+
+    // delete the image from Minio
+    await this.minioService.deleteFile(homeBanner.image.split('/').pop());
     return await this.homeBannerRepository.delete({ id });
   }
 }
