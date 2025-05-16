@@ -1,25 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePerfumeTypeDto } from './dto/create-perfume-type.dto';
 import { UpdatePerfumeTypeDto } from './dto/update-perfume-type.dto';
-import { Repository } from 'typeorm';
-import { PerfumeTypeEntity } from './entities/perfume-type.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { PerfumeTypeResponse } from './responses/perfume-type.response';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class PerfumeTypeService {
-  constructor(
-    @InjectRepository(PerfumeTypeEntity)
-    private readonly perfumeTypeRepository: Repository<PerfumeTypeEntity>,
-  ) {}
+  constructor(private readonly db: DatabaseService) {}
 
   async create(dto: CreatePerfumeTypeDto) {
-    const perfumeType = this.perfumeTypeRepository.create(dto);
-    return await this.perfumeTypeRepository.save(perfumeType);
+    const perfumeType = this.db.perfumeTypeRepository.create(dto);
+    return await this.db.perfumeTypeRepository.save(perfumeType);
   }
 
   async findAll(): Promise<PerfumeTypeResponse[]> {
-    const perfumeTypes = await this.perfumeTypeRepository.find();
+    const perfumeTypes = await this.db.perfumeTypeRepository.find();
     return perfumeTypes.map(
       (perfumeType) =>
         new PerfumeTypeResponse(perfumeType.id, perfumeType.name),
@@ -27,7 +22,7 @@ export class PerfumeTypeService {
   }
 
   async findOne(id: string) {
-    const perfumeType = await this.perfumeTypeRepository.findOne({
+    const perfumeType = await this.db.perfumeTypeRepository.findOne({
       where: { id },
     });
 
@@ -42,11 +37,11 @@ export class PerfumeTypeService {
     const perfumeType = await this.findOne(id);
     Object.assign(perfumeType, dto);
 
-    return await this.perfumeTypeRepository.save(perfumeType);
+    return await this.db.perfumeTypeRepository.save(perfumeType);
   }
 
   async remove(id: string) {
     const perfumeType = await this.findOne(id);
-    return await this.perfumeTypeRepository.delete(perfumeType);
+    return await this.db.perfumeTypeRepository.delete(perfumeType);
   }
 }

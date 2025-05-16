@@ -1,25 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { OfferEntity } from './entities/offer.entity';
-import { Repository } from 'typeorm';
 import { OfferResponse } from './responses/offer.response';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class OfferService {
-  constructor(
-    @InjectRepository(OfferEntity)
-    private readonly offerRepository: Repository<OfferEntity>,
-  ) {}
+  constructor(private readonly db: DatabaseService) {}
 
   async create(dto: CreateOfferDto) {
-    const offer = this.offerRepository.create(dto);
-    return await this.offerRepository.save(offer);
+    const offer = this.db.offerRepository.create(dto);
+    return await this.db.offerRepository.save(offer);
   }
 
   async findAll(): Promise<OfferResponse[]> {
-    const offers = await this.offerRepository.find();
+    const offers = await this.db.offerRepository.find();
     return offers.map(
       (offer) =>
         new OfferResponse(
@@ -34,7 +29,7 @@ export class OfferService {
   }
 
   async findOne(id: string): Promise<OfferResponse> {
-    const offer = await this.offerRepository.findOne({
+    const offer = await this.db.offerRepository.findOne({
       where: { id },
     });
 
@@ -56,11 +51,11 @@ export class OfferService {
     const offer = await this.findOne(id);
     Object.assign(offer, dto);
 
-    return await this.offerRepository.save(offer);
+    return await this.db.offerRepository.save(offer);
   }
 
   async remove(id: string) {
     const offer = await this.findOne(id);
-    return await this.offerRepository.delete(offer);
+    return await this.db.offerRepository.delete(offer);
   }
 }

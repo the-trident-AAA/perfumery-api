@@ -8,7 +8,6 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
-  ValidationPipe,
 } from '@nestjs/common';
 import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';

@@ -11,14 +11,14 @@ import { Repository } from 'typeorm';
 export class DatabaseService {
   constructor(
     @InjectRepository(PerfumeTypeEntity)
-    public readonly affectedPerfumeType: Repository<PerfumeTypeEntity>,
+    public readonly perfumeTypeRepository: Repository<PerfumeTypeEntity>,
     @InjectRepository(BrandEntity)
-    public readonly affectedBrand: Repository<BrandEntity>,
+    public readonly brandRepository: Repository<BrandEntity>,
     @InjectRepository(ScentEntity)
-    public readonly affectedScent: Repository<ScentEntity>,
+    public readonly scentRepository: Repository<ScentEntity>,
     @InjectRepository(PerfumeEntity)
-    public readonly affectedPerfume: Repository<PerfumeEntity>,
+    public readonly perfumeRepository: Repository<PerfumeEntity>,
     @InjectRepository(OfferEntity)
-    public readonly affectedOffer: Repository<OfferEntity>,
+    public readonly offerRepository: Repository<OfferEntity>,
   ) {}
 }

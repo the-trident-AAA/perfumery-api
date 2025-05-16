@@ -1,34 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PerfumeEntity } from './entities/perfume.entity';
-import { In, Repository } from 'typeorm';
+import { In } from 'typeorm';
 import { error } from 'console';
 import { PerfumeResponse } from './responses/perfume.response';
-import { ScentEntity } from 'src/scent/entities/scent.entity';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { BrandResponse } from 'src/brand/responses/brand.response';
 import { ScentResponse } from 'src/scent/responses/scent.response';
 import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
 import { OfferResponse } from 'src/offer/responses/offer.response';
 import { MinioService } from 'src/minio/minio.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class PerfumeService {
   constructor(
-    @InjectRepository(PerfumeEntity)
-    private readonly perfumeRepository: Repository<PerfumeEntity>,
-
-    @InjectRepository(ScentEntity)
-    private readonly scentRepository: Repository<ScentEntity>,
-
+    private readonly db: DatabaseService,
     private readonly minioService: MinioService,
   ) {}
 
   async create(dto: CreatePerfumeDto) {
     // Search for ScentEntity objects from the received IDs
-    const scents = await this.scentRepository.findBy({
+    const scents = await this.db.scentRepository.findBy({
       id: In(dto.scentsId),
     });
 
@@ -40,17 +33,17 @@ export class PerfumeService {
       dto.image.mimetype,
     );
 
-    const perfume = this.perfumeRepository.create({
+    const perfume = this.db.perfumeRepository.create({
       ...dto,
       scents,
       image,
     });
 
-    return await this.perfumeRepository.save(perfume);
+    return await this.db.perfumeRepository.save(perfume);
   }
 
   async findAll(): Promise<PerfumeResponse[]> {
-    const perfumes = await this.perfumeRepository.find({
+    const perfumes = await this.db.perfumeRepository.find({
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
     });
     return perfumes.map(
@@ -73,7 +66,7 @@ export class PerfumeService {
   }
 
   async findOne(id: string) {
-    const perfume = await this.perfumeRepository.findOne({
+    const perfume = await this.db.perfumeRepository.findOne({
       where: { id },
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
     });
@@ -108,7 +101,7 @@ export class PerfumeService {
   }
 
   async update(id: string, dto: UpdatePerfumeDto) {
-    const perfume = await this.perfumeRepository.findOne({ where: { id } });
+    const perfume = await this.db.perfumeRepository.findOne({ where: { id } });
     Object.assign(perfume, dto);
 
     //removed defined relations marked as "undefined"
@@ -116,12 +109,12 @@ export class PerfumeService {
       perfume.offerId = null;
     }
 
-    return await this.perfumeRepository.save(perfume);
+    return await this.db.perfumeRepository.save(perfume);
   }
 
   async remove(id: string) {
     const perfume = await this.findOne(id);
     if (!perfume) throw new error();
-    return await this.perfumeRepository.delete(id);
+    return await this.db.perfumeRepository.delete(id);
   }
 }

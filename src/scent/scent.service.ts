@@ -5,26 +5,24 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ScentEntity } from './entities/scent.entity';
 import { Repository } from 'typeorm';
 import { ScentResponse } from './responses/scent.response';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class ScentService {
-  constructor(
-    @InjectRepository(ScentEntity)
-    private readonly scentRepository: Repository<ScentEntity>,
-  ) {}
+  constructor(private readonly db: DatabaseService) {}
 
   async create(dto: CreateScentDto) {
-    const scent = this.scentRepository.create(dto);
-    return await this.scentRepository.save(scent);
+    const scent = this.db.scentRepository.create(dto);
+    return await this.db.scentRepository.save(scent);
   }
 
   async findAll(): Promise<ScentResponse[]> {
-    const scents = await this.scentRepository.find();
+    const scents = await this.db.scentRepository.find();
     return scents.map((scent) => new ScentResponse(scent.id, scent.name));
   }
 
   async findOne(id: string): Promise<ScentResponse> {
-    const scent = await this.scentRepository.findOne({
+    const scent = await this.db.scentRepository.findOne({
       where: { id },
     });
 
@@ -39,11 +37,11 @@ export class ScentService {
     const scent = await this.findOne(id);
     Object.assign(scent, dto);
 
-    return await this.scentRepository.save(scent);
+    return await this.db.scentRepository.save(scent);
   }
 
   async remove(id: string) {
     const scent = await this.findOne(id);
-    return await this.scentRepository.save(scent);
+    return await this.db.scentRepository.save(scent);
   }
 }
