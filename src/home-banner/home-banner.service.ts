@@ -29,9 +29,11 @@ export class HomeBannerService {
 
     const homeBanner = this.homeBannerRepository.create({
       ...createHomeBannerDto,
-      perfumes: createHomeBannerDto.perfumes.map((perfume) => ({
-        id: perfume,
-      })),
+      perfumes: createHomeBannerDto.perfumes
+        ? createHomeBannerDto.perfumes.map((perfume) => ({
+            id: perfume,
+          }))
+        : [],
       image: this.minioService.getMinioURL() + image,
     });
 

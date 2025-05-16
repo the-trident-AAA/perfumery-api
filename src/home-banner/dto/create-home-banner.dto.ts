@@ -42,5 +42,5 @@ export class CreateHomeBannerDto {
   })
   @IsArray()
   @IsOptional()
-  perfumes: string[];
+  perfumes?: string[];
 }
