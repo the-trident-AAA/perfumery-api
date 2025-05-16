@@ -6,18 +6,24 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OfferResponse } from './responses/offer.response';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 
 @Controller('offer')
 export class OfferController {
   constructor(private readonly offerService: OfferService) {}
 
   @Post()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({
     summary: 'Este endpoint agrega una oferta a la base de datos',
   })
@@ -26,7 +32,11 @@ export class OfferController {
     status: 500,
     description: 'Ocurrió un error en el proceso de creación de la oferta',
   })
-  create(@Body() createOfferDto: CreateOfferDto) {
+  create(
+    @Body() createOfferDto: CreateOfferDto,
+    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+  ) {
+    createOfferDto.image = image;
     return this.offerService.create(createOfferDto);
   }
 

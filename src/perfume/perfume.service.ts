@@ -10,6 +10,8 @@ import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.res
 import { OfferResponse } from 'src/offer/responses/offer.response';
 import { MinioService } from 'src/minio/minio.service';
 import { DatabaseService } from 'src/database/database.service';
+import { OfferDetailsResponse } from 'src/offer/responses/offer-details.response';
+
 
 @Injectable()
 export class PerfumeService {
@@ -98,12 +100,13 @@ export class PerfumeService {
       perfume.cant,
       (perfume.image = await this.minioService.getPresignedUrl(perfume.image)),
       perfume.offer
-        ? new OfferResponse(
+        ? new OfferDetailsResponse(
             perfume.offer.id,
             perfume.offer.discount,
             perfume.offer.offerType,
             perfume.offer.name,
             perfume.offer.description,
+            perfume.offer.image,
             perfume.offer.scope,
           )
         : null,

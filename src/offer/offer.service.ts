@@ -2,15 +2,34 @@ import { Injectable } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { OfferResponse } from './responses/offer.response';
+
+import { OfferDetailsResponse } from './responses/offer-details.response';
 import { DatabaseService } from 'src/database/database.service';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class OfferService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly minioService: MinioService,
+  ) {}
 
   async create(dto: CreateOfferDto) {
-    const offer = this.db.offerRepository.create(dto);
+    const offer = this.db.offerRepository.create({
+      ...dto,
+      image: dto.image
+        ? this.minioService.getMinioURL() +
+          (await this.minioService.uploadFile(
+            undefined,
+            dto.image.buffer,
+            dto.image.originalname.split('.').pop(),
+            dto.image.mimetype,
+          ))
+        : null,
+    });
+
     return await this.db.offerRepository.save(offer);
+
   }
 
   async findAll(): Promise<OfferResponse[]> {
@@ -23,12 +42,13 @@ export class OfferService {
           offer.offerType,
           offer.name,
           offer.description,
+          offer.image,
           offer.scope,
         ),
     );
   }
 
-  async findOne(id: string): Promise<OfferResponse> {
+  async findOne(id: string): Promise<OfferDetailsResponse> {
     const offer = await this.db.offerRepository.findOne({
       where: { id },
     });
@@ -37,12 +57,13 @@ export class OfferService {
       throw new Error(`offer con ID ${id} no encontrado`);
     }
 
-    return new OfferResponse(
+    return new OfferDetailsResponse(
       offer.id,
       offer.discount,
       offer.offerType,
       offer.name,
       offer.description,
+      offer.image,
       offer.scope,
     );
   }

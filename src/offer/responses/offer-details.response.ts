@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class OfferResponse {
+export class OfferDetailsResponse {
   @ApiProperty({
     description: 'Representa el identificador único de la oferta',
     type: 'string',

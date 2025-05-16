@@ -9,13 +9,14 @@ export class OfferEntity {
   name: string;
   @Column()
   description: string;
+  @Column({ nullable: true })
+  image?: string;
   @Column()
   scope: string;
   @Column({ type: 'double precision' })
   discount: number;
   @Column()
   offerType: string;
-
   @OneToMany(() => PerfumeEntity, (perfume) => perfume.offer)
   perfumes: PerfumeEntity;
 }

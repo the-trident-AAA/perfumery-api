@@ -32,4 +32,12 @@ export class CreateOfferDto {
     required: true,
   })
   offerType: string;
+
+  @ApiProperty({
+    description: 'Representa la imagen de la oferta',
+    type: 'string',
+    format: 'binary',
+    required: false,
+  })
+  image?: Express.Multer.File;
 }
