@@ -83,6 +83,8 @@ export class HomeBannerController {
   }
 
   @Patch(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({
     summary: 'Este endpoint edita un banner del home de la base de datos',
   })
@@ -98,7 +100,9 @@ export class HomeBannerController {
   update(
     @Param('id') id: string,
     @Body() updateHomeBannerDto: UpdateHomeBannerDto,
+    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
   ) {
+    updateHomeBannerDto.image = image;
     return this.homeBannerService.update(id, updateHomeBannerDto);
   }
 

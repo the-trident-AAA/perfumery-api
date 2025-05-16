@@ -76,16 +76,33 @@ export class HomeBannerService {
   }
 
   async update(id: string, updateHomeBannerDto: UpdateHomeBannerDto) {
+    const { image, ...restDTO } = updateHomeBannerDto;
     const homeBanner = await this.homeBannerRepository.findOne({
       where: { id },
     });
-    Object.assign(homeBanner, updateHomeBannerDto);
-    homeBanner.perfumes = updateHomeBannerDto.perfumes.map(
-      (perfume) =>
-        ({
-          id: perfume,
-        }) as PerfumeEntity,
-    );
+    Object.assign(homeBanner, restDTO);
+    homeBanner.perfumes = updateHomeBannerDto.perfumes
+      ? updateHomeBannerDto.perfumes.map(
+          (perfume) =>
+            ({
+              id: perfume,
+            }) as PerfumeEntity,
+        )
+      : [];
+
+    if (image) {
+      // delete the old image from Minio
+      await this.minioService.deleteFile(homeBanner.image.split('/').pop());
+      // upload the new image
+      const minioImage = await this.minioService.uploadFile(
+        undefined,
+        image.buffer,
+        image.originalname.split('.').pop(),
+        image.mimetype,
+      );
+      homeBanner.image = this.minioService.getMinioURL() + minioImage;
+    }
+
     return await this.homeBannerRepository.save(homeBanner);
   }
 
