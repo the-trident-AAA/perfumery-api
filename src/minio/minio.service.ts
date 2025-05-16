@@ -82,4 +82,18 @@ export class MinioService {
     this.logger.log(`Uploaded file ${fileName} with MIME type ${mimeType}`);
     return fileName;
   }
+
+  async getPresignedUrl(objectName: string): Promise<string> {
+    try {
+      const expiryTime = 10 * 60;
+      return await this.minioClient.presignedGetObject(
+        this.config.get<string>('MINIO_BUCKET'),
+        objectName,
+        expiryTime,
+      );
+    } catch (error) {
+      this.logger.error(error);
+      return null;
+    }
+  }
 }

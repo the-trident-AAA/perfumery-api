@@ -46,9 +46,14 @@ export class PerfumeService {
     const perfumes = await this.db.perfumeRepository.find({
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
     });
-    return perfumes.map(
-      (perfume) =>
-        new PerfumeResponse(
+
+    const data = await Promise.all(
+      perfumes.map(async (perfume) => {
+        const image = perfume.image
+          ? await this.minioService.getPresignedUrl(perfume.image)
+          : null;
+
+        return new PerfumeResponse(
           perfume.id,
           perfume.name,
           perfume.description,
@@ -60,9 +65,13 @@ export class PerfumeService {
           perfume.available,
           perfume.price,
           perfume.cant,
+          image,
           perfume.offer ? perfume.offer.discount : null,
-        ),
+        );
+      }),
     );
+
+    return data;
   }
 
   async findOne(id: string) {
