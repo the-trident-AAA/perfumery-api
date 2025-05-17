@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePerfumeTypeDto } from './dto/create-perfume-type.dto';
 import { UpdatePerfumeTypeDto } from './dto/update-perfume-type.dto';
 import { PerfumeTypeResponse } from './responses/perfume-type.response';
@@ -42,6 +42,12 @@ export class PerfumeTypeService {
 
   async remove(id: string) {
     const perfumeType = await this.findOne(id);
-    return await this.db.perfumeTypeRepository.delete(perfumeType);
+
+    if (!perfumeType)
+      throw new BadRequestException(
+        'No existe un tipo de perfume con ese identificador',
+      );
+
+    return await this.db.perfumeTypeRepository.delete({ id });
   }
 }
