@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HomeBannerEntity } from './entities/home-banner.entity';
 import { PerfumeModule } from 'src/perfume/perfume.module';
 import { MinioModule } from 'src/minio/minio.module';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([HomeBannerEntity]),
     PerfumeModule,
     MinioModule,
+    DatabaseModule
   ],
   controllers: [HomeBannerController],
   providers: [HomeBannerService],

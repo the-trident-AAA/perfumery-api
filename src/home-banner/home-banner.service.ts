@@ -1,20 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateHomeBannerDto } from './dto/create-home-banner.dto';
 import { UpdateHomeBannerDto } from './dto/update-home-banner.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { HomeBannerEntity } from './entities/home-banner.entity';
-import { Repository } from 'typeorm';
 import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
 import { PerfumeService } from 'src/perfume/perfume.service';
 import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 import { MinioService } from 'src/minio/minio.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class HomeBannerService {
   constructor(
-    @InjectRepository(HomeBannerEntity)
-    private readonly homeBannerRepository: Repository<HomeBannerEntity>,
+    private readonly db: DatabaseService,
     private readonly perfumeService: PerfumeService,
     private readonly minioService: MinioService,
   ) {}
@@ -27,7 +24,7 @@ export class HomeBannerService {
       createHomeBannerDto.image.mimetype,
     );
 
-    const homeBanner = this.homeBannerRepository.create({
+    const homeBanner = this.db.homeBannerRepository.create({
       ...createHomeBannerDto,
       perfumes: createHomeBannerDto.perfumes
         ? createHomeBannerDto.perfumes.map((perfume) => ({
@@ -37,11 +34,11 @@ export class HomeBannerService {
       image: image,
     });
 
-    return await this.homeBannerRepository.save(homeBanner);
+    return await this.db.homeBannerRepository.save(homeBanner);
   }
 
   async findAll() {
-    const homeBanners = await this.homeBannerRepository.find();
+    const homeBanners = await this.db.homeBannerRepository.find();
     return Promise.all(
       homeBanners.map(async (homeBanner) => {
         const image = homeBanner.image
@@ -58,7 +55,7 @@ export class HomeBannerService {
   }
 
   async findOne(id: string) {
-    const homeBanner = await this.homeBannerRepository.findOne({
+    const homeBanner = await this.db.homeBannerRepository.findOne({
       where: { id },
       relations: ['perfumes'],
     });
@@ -86,7 +83,7 @@ export class HomeBannerService {
 
   async update(id: string, updateHomeBannerDto: UpdateHomeBannerDto) {
     const { image, ...restDTO } = updateHomeBannerDto;
-    const homeBanner = await this.homeBannerRepository.findOne({
+    const homeBanner = await this.db.homeBannerRepository.findOne({
       where: { id },
     });
     Object.assign(homeBanner, restDTO);
@@ -112,11 +109,11 @@ export class HomeBannerService {
       homeBanner.image = minioImage;
     }
 
-    return await this.homeBannerRepository.save(homeBanner);
+    return await this.db.homeBannerRepository.save(homeBanner);
   }
 
   async remove(id: string) {
-    const homeBanner = await this.homeBannerRepository.findOne({
+    const homeBanner = await this.db.homeBannerRepository.findOne({
       where: { id },
     });
 
@@ -125,6 +122,6 @@ export class HomeBannerService {
 
     // delete the image from Minio
     await this.minioService.deleteFile(homeBanner.image);
-    return await this.homeBannerRepository.delete({ id });
+    return await this.db.homeBannerRepository.delete({ id });
   }
 }
