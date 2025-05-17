@@ -34,7 +34,7 @@ export class HomeBannerService {
             id: perfume,
           }))
         : [],
-      image: this.minioService.getMinioURL() + image,
+      image: image,
     });
 
     return await this.homeBannerRepository.save(homeBanner);
@@ -42,14 +42,18 @@ export class HomeBannerService {
 
   async findAll() {
     const homeBanners = await this.homeBannerRepository.find();
-    return homeBanners.map(
-      (homeBanner) =>
-        new HomeBannerResponse(
+    return Promise.all(
+      homeBanners.map(async (homeBanner) => {
+        const image = homeBanner.image
+          ? await this.minioService.getPresignedUrl(homeBanner.image)
+          : null;
+        return new HomeBannerResponse(
           homeBanner.id,
           homeBanner.title,
           homeBanner.description,
-          homeBanner.image,
-        ),
+          image,
+        );
+      }),
     );
   }
 
@@ -62,11 +66,16 @@ export class HomeBannerService {
       throw new BadRequestException(
         'No existe un home banner con ese identificador',
       );
+
+    const image = homeBanner.image
+      ? await this.minioService.getPresignedUrl(homeBanner.image)
+      : null;
+
     return new HomeBannerDetailsResponse(
       homeBanner.id,
       homeBanner.title,
       homeBanner.description,
-      homeBanner.image,
+      image,
       await Promise.all(
         homeBanner.perfumes.map(
           async (perfume) => await this.perfumeService.findOne(perfume.id),
@@ -92,7 +101,7 @@ export class HomeBannerService {
 
     if (image) {
       // delete the old image from Minio
-      await this.minioService.deleteFile(homeBanner.image.split('/').pop());
+      await this.minioService.deleteFile(homeBanner.image);
       // upload the new image
       const minioImage = await this.minioService.uploadFile(
         undefined,
@@ -100,7 +109,7 @@ export class HomeBannerService {
         image.originalname.split('.').pop(),
         image.mimetype,
       );
-      homeBanner.image = this.minioService.getMinioURL() + minioImage;
+      homeBanner.image = minioImage;
     }
 
     return await this.homeBannerRepository.save(homeBanner);
@@ -115,7 +124,7 @@ export class HomeBannerService {
       throw new BadRequestException('No existe un home banner con ese id');
 
     // delete the image from Minio
-    await this.minioService.deleteFile(homeBanner.image.split('/').pop());
+    await this.minioService.deleteFile(homeBanner.image);
     return await this.homeBannerRepository.delete({ id });
   }
 }

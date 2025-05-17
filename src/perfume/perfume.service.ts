@@ -7,11 +7,9 @@ import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { BrandResponse } from 'src/brand/responses/brand.response';
 import { ScentResponse } from 'src/scent/responses/scent.response';
 import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
-import { OfferResponse } from 'src/offer/responses/offer.response';
 import { MinioService } from 'src/minio/minio.service';
 import { DatabaseService } from 'src/database/database.service';
 import { OfferDetailsResponse } from 'src/offer/responses/offer-details.response';
-
 
 @Injectable()
 export class PerfumeService {
@@ -36,7 +34,7 @@ export class PerfumeService {
     const perfume = this.db.perfumeRepository.create({
       ...dto,
       scents,
-      image: this.minioService.getMinioURL() + image,
+      image,
     });
 
     return await this.db.perfumeRepository.save(perfume);
@@ -57,7 +55,7 @@ export class PerfumeService {
           perfume.id,
           perfume.name,
           perfume.description,
-          perfume.image,
+          image,
           perfume.brand.name,
           perfume.gender,
           perfume.scents.map((scent) => scent.name),
@@ -66,7 +64,6 @@ export class PerfumeService {
           perfume.available,
           perfume.price,
           perfume.cant,
-          image,
           perfume.offer ? perfume.offer.discount : null,
         );
       }),
@@ -85,11 +82,15 @@ export class PerfumeService {
       throw new Error(`Perfume con ID ${id} no encontrado`);
     }
 
+    const image = perfume.image
+      ? await this.minioService.getPresignedUrl(perfume.image)
+      : null;
+
     return new PerfumeDetailsResponse(
       perfume.id,
       perfume.name,
       perfume.description,
-      perfume.image,
+      image,
       new BrandResponse(perfume.brand.id, perfume.brand.name),
       perfume.gender,
       perfume.scents.map((scent) => new ScentResponse(scent.id, scent.name)),
@@ -98,7 +99,6 @@ export class PerfumeService {
       perfume.available,
       perfume.price,
       perfume.cant,
-      (perfume.image = await this.minioService.getPresignedUrl(perfume.image)),
       perfume.offer
         ? new OfferDetailsResponse(
             perfume.offer.id,
@@ -107,7 +107,9 @@ export class PerfumeService {
             perfume.offer.name,
             perfume.offer.description,
             perfume.offer.scope,
-            perfume.offer.image,
+            perfume.offer.image
+              ? await this.minioService.getPresignedUrl(perfume.offer.image)
+              : null,
           )
         : null,
     );
@@ -124,7 +126,7 @@ export class PerfumeService {
     }
     if (image) {
       // delete the old image from Minio
-      await this.minioService.deleteFile(perfume.image.split('/').pop());
+      await this.minioService.deleteFile(perfume.image);
       // upload the new image
       const minioImage = await this.minioService.uploadFile(
         undefined,
@@ -132,7 +134,7 @@ export class PerfumeService {
         image.originalname.split('.').pop(),
         image.mimetype,
       );
-      perfume.image = this.minioService.getMinioURL() + minioImage;
+      perfume.image = minioImage;
     }
 
     return await this.db.perfumeRepository.save(perfume);
@@ -144,7 +146,7 @@ export class PerfumeService {
     if (!perfume) throw new Error('Perfume no encontrado');
 
     // delete the image from Minio
-    await this.minioService.deleteFile(perfume.image.split('/').pop());
+    await this.minioService.deleteFile(perfume.image);
 
     // delete relationships in the intermediate table perfume_scent
     await this.db.perfumeRepository.query(

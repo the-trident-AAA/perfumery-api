@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { OfferResponse } from './responses/offer.response';
-
 import { OfferDetailsResponse } from './responses/offer-details.response';
 import { DatabaseService } from 'src/database/database.service';
 import { MinioService } from 'src/minio/minio.service';
@@ -18,13 +17,12 @@ export class OfferService {
     const offer = this.db.offerRepository.create({
       ...dto,
       image: dto.image
-        ? this.minioService.getMinioURL() +
-          (await this.minioService.uploadFile(
+        ? await this.minioService.uploadFile(
             undefined,
             dto.image.buffer,
             dto.image.originalname.split('.').pop(),
             dto.image.mimetype,
-          ))
+          )
         : null,
     });
 
@@ -33,17 +31,21 @@ export class OfferService {
 
   async findAll(): Promise<OfferResponse[]> {
     const offers = await this.db.offerRepository.find();
-    return offers.map(
-      (offer) =>
-        new OfferResponse(
+    return Promise.all(
+      offers.map(async (offer) => {
+        const image = offer.image
+          ? await this.minioService.getPresignedUrl(offer.image)
+          : null;
+        return new OfferResponse(
           offer.id,
           offer.discount,
           offer.offerType,
           offer.name,
           offer.description,
           offer.scope,
-          offer.image,
-        ),
+          image,
+        );
+      }),
     );
   }
 
@@ -56,6 +58,10 @@ export class OfferService {
       throw new Error(`offer con ID ${id} no encontrado`);
     }
 
+    const image = offer.image
+      ? await this.minioService.getPresignedUrl(offer.image)
+      : null;
+
     return new OfferDetailsResponse(
       offer.id,
       offer.discount,
@@ -63,7 +69,7 @@ export class OfferService {
       offer.name,
       offer.description,
       offer.scope,
-      offer.image,
+      image,
     );
   }
 
@@ -74,7 +80,7 @@ export class OfferService {
 
     if (offer.image)
       // delete the old image from Minio
-      await this.minioService.deleteFile(offer.image.split('/').pop());
+      await this.minioService.deleteFile(offer.image);
 
     if (image) {
       // upload the new image
@@ -84,7 +90,7 @@ export class OfferService {
         image.originalname.split('.').pop(),
         image.mimetype,
       );
-      offer.image = this.minioService.getMinioURL() + minioImage;
+      offer.image = minioImage;
     } else {
       offer.image = null;
     }
@@ -100,7 +106,7 @@ export class OfferService {
 
     if (offer.image)
       // delete the image from Minio
-      await this.minioService.deleteFile(offer.image.split('/').pop());
+      await this.minioService.deleteFile(offer.image);
 
     return await this.db.offerRepository.delete(offer);
   }

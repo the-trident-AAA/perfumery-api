@@ -93,12 +93,6 @@ export class PerfumeResponse {
   })
   cant: number;
 
-  @ApiProperty({
-    description: 'Representa la imagen del perfume',
-    type: 'string',
-    required: true,
-  })
-  image: string;
 
   constructor(
     id: string,
@@ -113,7 +107,6 @@ export class PerfumeResponse {
     available: boolean,
     price: number,
     cant: number,
-    image: string,
     discountOffer?: number,
   ) {
     this.id = id;
