@@ -154,6 +154,6 @@ export class PerfumeService {
       [id],
     );
 
-    return await this.db.perfumeRepository.delete(id);
+    return await this.db.perfumeRepository.delete({ id });
   }
 }
