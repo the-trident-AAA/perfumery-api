@@ -108,6 +108,6 @@ export class OfferService {
       // delete the image from Minio
       await this.minioService.deleteFile(offer.image);
 
-    return await this.db.offerRepository.delete(offer);
+    return await this.db.offerRepository.delete({ id });
   }
 }
