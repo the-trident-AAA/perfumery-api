@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { BrandResponse } from './responses/brand.response';
@@ -39,6 +39,12 @@ export class BrandService {
 
   async remove(id: string) {
     const brand = await this.findOne(id);
-    return await this.db.brandRepository.delete(brand);
+
+    if (!brand)
+      throw new BadRequestException(
+        'No existe una marca con ese identificador',
+      );
+
+    return await this.db.brandRepository.delete({ id });
   }
 }
