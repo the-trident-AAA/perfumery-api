@@ -10,6 +10,13 @@ export class MinioService {
 
   constructor(private readonly config: ConfigService) {}
 
+  /**
+   * Initializes the MinIO client upon module startup and checks for the existence of the bucket:
+   * - Configures the MinIO client with credentials obtained from environment variables.
+   * - Checks to see if the specified bucket already exists on the server.
+   * - If the bucket doesn't exist, one is created with the 'en-us' location.
+   * - Error handling is performed to ensure any connection or bucket creation issues are logged.
+   */
   async onModuleInit() {
     try {
       this.minioClient = new Client({
@@ -34,27 +41,6 @@ export class MinioService {
       this.logger.error('No se pudo establecer la conexión');
       this.logger.error(ex);
     }
-  }
-
-  async checkIfExist(path: string) {
-    try {
-      await this.minioClient.statObject(
-        this.config.get<string>('MINIO_BUCKET'),
-        path,
-      );
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  async copy(oldName: string, newName: string) {
-    return this.minioClient.copyObject(
-      this.config.get<string>('MINIO_BUCKET'),
-      newName,
-      this.config.get<string>('MINIO_BUCKET') + '/' + oldName,
-      null,
-    );
   }
 
   async uploadFile(
@@ -95,5 +81,13 @@ export class MinioService {
       this.logger.error(error);
       return null;
     }
+  }
+
+  async deleteFile(fileName: string) {
+    this.logger.log(`Deleted file ${fileName}`);
+    await this.minioClient.removeObject(
+      this.config.get<string>('MINIO_BUCKET'),
+      fileName,
+    );
   }
 }

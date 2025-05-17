@@ -62,6 +62,7 @@ export class PerfumeDetailsResponse {
     required: true,
   })
   perfumeType: PerfumeTypeResponse;
+
   @ApiProperty({
     description: 'Representa la posible oferta seleccionada para el perfume',
     type: OfferResponse,
@@ -90,6 +91,13 @@ export class PerfumeDetailsResponse {
   })
   cant: number;
 
+  @ApiProperty({
+    description: 'Representa la imagen del perfume',
+    type: 'string',
+    required: true,
+  })
+  image: string;
+
   constructor(
     id: string,
     name: string,
@@ -102,6 +110,7 @@ export class PerfumeDetailsResponse {
     available: boolean,
     price: number,
     cant: number,
+    image: string,
     offer?: OfferResponse,
   ) {
     this.id = id;
@@ -114,6 +123,7 @@ export class PerfumeDetailsResponse {
     this.available = available;
     this.price = price;
     this.cant = cant;
+    this.image = image;
     this.offer = offer;
     this.description = description;
   }

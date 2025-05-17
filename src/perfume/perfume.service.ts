@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import { In } from 'typeorm';
-import { error } from 'console';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { BrandResponse } from 'src/brand/responses/brand.response';
@@ -96,6 +95,7 @@ export class PerfumeService {
       perfume.available,
       perfume.price,
       perfume.cant,
+      (perfume.image = await this.minioService.getPresignedUrl(perfume.image)),
       perfume.offer
         ? new OfferResponse(
             perfume.offer.id,
@@ -113,7 +113,7 @@ export class PerfumeService {
     const perfume = await this.db.perfumeRepository.findOne({ where: { id } });
     Object.assign(perfume, dto);
 
-    //removed defined relations marked as "undefined"
+    // removed defined relations marked as "undefined"
     if (!dto.offerId) {
       perfume.offerId = null;
     }
@@ -123,7 +123,16 @@ export class PerfumeService {
 
   async remove(id: string) {
     const perfume = await this.findOne(id);
-    if (!perfume) throw new error();
+    if (!perfume) throw new Error('Perfume no encontrado');
+
+    await this.minioService.deleteFile(perfume.image);
+
+    // delete relationships in the intermediate table perfume_scent
+    await this.db.perfumeRepository.query(
+      `DELETE FROM perfume_scent WHERE perfume_id = $1`,
+      [id],
+    );
+
     return await this.db.perfumeRepository.delete(id);
   }
 }

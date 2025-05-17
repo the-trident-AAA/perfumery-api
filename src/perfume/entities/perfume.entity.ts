@@ -61,12 +61,10 @@ export class PerfumeEntity {
     joinColumn: {
       name: 'perfume_id',
       referencedColumnName: 'id',
-      foreignKeyConstraintName: 'perfume_scents_perfume_id',
     },
     inverseJoinColumn: {
       name: 'scent_id',
       referencedColumnName: 'id',
-      foreignKeyConstraintName: 'perfume_scents_scent_id',
     },
   })
   scents: ScentEntity[];
