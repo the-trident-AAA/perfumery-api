@@ -5,10 +5,10 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 export class PerfumeTypeEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
   @Column({ unique: true })
   name: string;
-
+  @Column({ nullable: true })
+  image?: string;
   @OneToMany(() => PerfumeEntity, (perfume) => perfume.perfumeType)
   perfumes: PerfumeEntity;
 }

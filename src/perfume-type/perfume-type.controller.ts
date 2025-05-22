@@ -6,18 +6,24 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { PerfumeTypeService } from './perfume-type.service';
 import { CreatePerfumeTypeDto } from './dto/create-perfume-type.dto';
 import { UpdatePerfumeTypeDto } from './dto/update-perfume-type.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PerfumeTypeResponse } from './responses/perfume-type.response';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 
 @Controller('perfume-type')
 export class PerfumeTypeController {
   constructor(private readonly perfumeTypeService: PerfumeTypeService) {}
 
   @Post()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({
     summary: 'Este endpoint agrega un tipo de perfume a la base de datos',
   })
@@ -30,7 +36,11 @@ export class PerfumeTypeController {
     description:
       'Ocurrió un error en el proceso de creación de tipo de perfume',
   })
-  create(@Body() createPerfumeTypeDto: CreatePerfumeTypeDto) {
+  create(
+    @Body() createPerfumeTypeDto: CreatePerfumeTypeDto,
+    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+  ) {
+    createPerfumeTypeDto.image = image;
     return this.perfumeTypeService.create(createPerfumeTypeDto);
   }
 
@@ -73,6 +83,8 @@ export class PerfumeTypeController {
   }
 
   @Patch(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({
     summary: 'Este endpoint edita un tipo de perfume de la base de datos',
   })
@@ -88,7 +100,9 @@ export class PerfumeTypeController {
   update(
     @Param('id') id: string,
     @Body() updatePerfumeTypeDto: UpdatePerfumeTypeDto,
+    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
   ) {
+    updatePerfumeTypeDto.image = image;
     return this.perfumeTypeService.update(id, updatePerfumeTypeDto);
   }
 

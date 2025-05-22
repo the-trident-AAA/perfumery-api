@@ -15,8 +15,16 @@ export class PerfumeTypeResponse {
   })
   name: string;
 
-  constructor(id: string, name: string) {
+  @ApiProperty({
+    description: 'Representa la imagen del tipo de perfume',
+    type: 'string',
+    required: true,
+  })
+  image?: string;
+
+  constructor(id: string, name: string, image?: string) {
     this.id = id;
     this.name = name;
+    this.image = image;
   }
 }

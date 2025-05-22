@@ -7,4 +7,11 @@ export class CreatePerfumeTypeDto {
     required: true,
   })
   name: string;
+  @ApiProperty({
+    description: 'Representa la imagen del tipo de perfume',
+    type: 'string',
+    format: 'binary',
+    required: false,
+  })
+  image?: Express.Multer.File;
 }
