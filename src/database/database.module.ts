@@ -9,6 +9,7 @@ import { ScentEntity } from 'src/scent/entities/scent.entity';
 import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 import { OfferEntity } from 'src/offer/entities/offer.entity';
 import { HomeBannerEntity } from 'src/home-banner/entities/home-banner.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 const folder = process.env.NODE_ENV !== 'development' ? 'dist' : 'src';
 const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
@@ -28,12 +29,6 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
         username: config.get<string>('POSTGRES_USER'),
         password: config.get<string>('POSTGRES_PASSWORD'),
         synchronize: true,
-        ssl: config.get<boolean>('POSTGRES_SSL'),
-        extra: {
-          ssl: {
-            rejectUnauthorized: false,
-          },
-        },
         entities: [join(process.cwd(), folder, '**', `*.entity.${extensions}`)],
         retryAttempts: 0,
       }),
@@ -45,6 +40,7 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
       PerfumeEntity,
       OfferEntity,
       HomeBannerEntity,
+      UserEntity,
     ]),
   ],
   providers: [DatabaseService],

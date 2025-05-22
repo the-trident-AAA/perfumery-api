@@ -10,7 +10,6 @@ export class MinioService {
 
   constructor(private readonly config: ConfigService) {}
 
-
   /**
    * Initializes the MinIO client upon module startup and checks for the existence of the bucket:
    * - Configures the MinIO client with credentials obtained from environment variables.
@@ -18,20 +17,6 @@ export class MinioService {
    * - If the bucket doesn't exist, one is created with the 'en-us' location.
    * - Error handling is performed to ensure any connection or bucket creation issues are logged.
    */
-
-  getMinioURL() {
-    return (
-      (this.config.get<boolean>('MINIO_SSL') ? 'https://' : 'http://') +
-      this.config.get<string>('MINIO_URL') +
-      ':' +
-      this.config.get<string>('MINIO_PORT') +
-      '/' +
-      this.config.get<string>('MINIO_BUCKET') +
-      '/'
-    );
-  }
-
-
   async onModuleInit() {
     try {
       this.minioClient = new Client({
@@ -84,7 +69,6 @@ export class MinioService {
     return fileName;
   }
 
-
   async getPresignedUrl(objectName: string): Promise<string> {
     try {
       const expiryTime = 10 * 60;
@@ -99,7 +83,7 @@ export class MinioService {
     }
   }
 
-   async checkIfExist(path: string) {
+  async checkIfExist(path: string) {
     try {
       await this.minioClient.statObject(
         this.config.get<string>('MINIO_BUCKET'),
@@ -131,5 +115,4 @@ export class MinioService {
       throw error;
     }
   }
-
 }

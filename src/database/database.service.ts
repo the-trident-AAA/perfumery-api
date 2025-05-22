@@ -6,6 +6,7 @@ import { OfferEntity } from 'src/offer/entities/offer.entity';
 import { PerfumeTypeEntity } from 'src/perfume-type/entities/perfume-type.entity';
 import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 import { ScentEntity } from 'src/scent/entities/scent.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -23,5 +24,7 @@ export class DatabaseService {
     public readonly offerRepository: Repository<OfferEntity>,
     @InjectRepository(HomeBannerEntity)
     public readonly homeBannerRepository: Repository<HomeBannerEntity>,
+    @InjectRepository(UserEntity)
+    public readonly userRepository: Repository<UserEntity>,
   ) {}
 }

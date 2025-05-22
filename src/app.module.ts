@@ -8,6 +8,8 @@ import { PerfumeModule } from './perfume/perfume.module';
 import { OfferModule } from './offer/offer.module';
 import { MinioModule } from './minio/minio.module';
 import { HomeBannerModule } from './home-banner/home-banner.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { HomeBannerModule } from './home-banner/home-banner.module';
     OfferModule,
     MinioModule,
     HomeBannerModule,
+    AuthModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
