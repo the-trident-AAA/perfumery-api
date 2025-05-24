@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ShopCartModule } from './shop-cart/shop-cart.module';
 import { ShopCartPerfumeModule } from './shop-cart-perfume/shop-cart-perfume.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ShopCartPerfumeModule } from './shop-cart-perfume/shop-cart-perfume.mod
     UsersModule,
     ShopCartModule,
     ShopCartPerfumeModule,
+    OrderModule,
   ],
 })
 export class AppModule {}
