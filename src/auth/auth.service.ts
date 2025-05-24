@@ -8,6 +8,7 @@ import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { LoginResponse } from './responses/login.response';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +29,7 @@ export class AuthService {
     return await this.usersService.create(dto);
   }
 
-  async login(dto: loginDto) {
+  async login(dto: loginDto): Promise<LoginResponse> {
     const user = await this.usersService.findOneByUsername(dto.username);
     if (!user) {
       throw new UnauthorizedException('Incorrect username or password');
@@ -42,6 +43,11 @@ export class AuthService {
     const payload = { id: user.id, username: user.username };
     const token = await this.jwtService.signAsync(payload);
 
-    return { token, username: user.username, email: user.email, id: user.id };
+    return {
+      accessToken: token,
+      username: user.username,
+      email: user.email,
+      id: user.id,
+    };
   }
 }
