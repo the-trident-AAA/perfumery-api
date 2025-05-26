@@ -26,4 +26,8 @@ export class UsersService {
   async remove(id: string) {
     return await this.db.userRepository.delete({ id });
   }
+
+  async removeAll () {
+    return await this.db.userRepository.clear()
+  }
 }
