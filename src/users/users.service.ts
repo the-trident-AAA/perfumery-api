@@ -2,12 +2,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
+import { UserResponse } from './responses/user.response';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly db: DatabaseService,
     private readonly shopCartService: ShopCartService,
+    private readonly minioService: MinioService,
   ) {}
 
   async create(dto: CreateUserDto) {
@@ -20,7 +23,22 @@ export class UsersService {
   }
 
   async find() {
-    return await this.db.userRepository.find();
+    const users = await this.db.userRepository.find();
+
+    return await Promise.all(
+      users.map(
+        async (user) =>
+          new UserResponse(
+            user.id,
+            user.username,
+            user.avatar
+              ? await this.minioService.getPresignedUrl(user.avatar)
+              : null,
+            user.email,
+            user.role,
+          ),
+      ),
+    );
   }
 
   async findOneByUsername(username: string) {
