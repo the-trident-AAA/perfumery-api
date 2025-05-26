@@ -8,5 +8,6 @@ import { PerfumeModule } from 'src/perfume/perfume.module';
   imports: [DatabaseModule, PerfumeModule],
   controllers: [ShopCartPerfumeController],
   providers: [ShopCartPerfumeService],
+  exports: [ShopCartPerfumeService],
 })
 export class ShopCartPerfumeModule {}
