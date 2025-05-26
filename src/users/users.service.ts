@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
@@ -28,6 +28,17 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    return await this.db.userRepository.delete({ id });
+    const user = await this.db.userRepository.findOne({ where: { id } });
+
+    if (!user)
+      throw new BadRequestException(
+        'No exite un usuario con ese identificador',
+      );
+
+    const rowsAffect = await this.db.userRepository.delete({ id });
+    // deleted a shop cart
+    await this.shopCartService.remove(user.shopCartId);
+
+    return rowsAffect;
   }
 }
