@@ -2,6 +2,7 @@ import { Controller, Body, Patch, Param, Post, Delete } from '@nestjs/common';
 import { ShopCartPerfumeService } from './shop-cart-perfume.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateShopCartPerfumeDto } from './dto/create-shop-cart-perfume.dto';
+import { UpdateShopCartPerfumeDto } from './dto/update-shop-cart-perfume.dto';
 
 @Controller('shop-cart-perfume')
 export class ShopCartPerfumeController {
@@ -23,7 +24,7 @@ export class ShopCartPerfumeController {
     return this.shopCartPerfumeService.create(dto);
   }
 
-  @Patch('increase-quantity/:id')
+  @Patch(':id')
   @ApiOperation({
     summary:
       'Este endpoint incrementa la cantidad de perfume de este tipo seleccionado en el carrito',
@@ -36,8 +37,11 @@ export class ShopCartPerfumeController {
     status: 500,
     description: 'Ocurrió un error en la acción de incremento',
   })
-  increaseQuantity(@Param('id') id: string) {
-    return this.shopCartPerfumeService.increaseQuantity(id);
+  update(
+    @Param('id') id: string,
+    @Body() updateShopCartPerfumeDto: UpdateShopCartPerfumeDto,
+  ) {
+    return this.shopCartPerfumeService.update(id, updateShopCartPerfumeDto);
   }
 
   @Delete(':id')

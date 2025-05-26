@@ -3,6 +3,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { CreateShopCartPerfumeDto } from './dto/create-shop-cart-perfume.dto';
 import { PerfumeService } from 'src/perfume/perfume.service';
 import { ShopCartPerfumeResponse } from './responses/shop-cart-perfume.response';
+import { UpdateShopCartPerfumeDto } from './dto/update-shop-cart-perfume.dto';
 
 @Injectable()
 export class ShopCartPerfumeService {
@@ -38,7 +39,7 @@ export class ShopCartPerfumeService {
     );
   }
 
-  async increaseQuantity(id: string) {
+  async update(id: string, updateShopCartPerfume: UpdateShopCartPerfumeDto) {
     const shopCartPerfume = await this.db.shopCartPerfumeRespository.findOne({
       where: { id },
     });
@@ -48,18 +49,7 @@ export class ShopCartPerfumeService {
         'No existe un perfume de carrito con ese identificador',
       );
 
-    // check perfume availability
-    if (
-      !(await this.perfumeService.checkStocks(
-        shopCartPerfume.perfumeId,
-        shopCartPerfume.cant + 1,
-      ))
-    )
-      throw new BadRequestException(
-        'No existe disponibilidad de dicho perfume en el inventario',
-      );
-
-    shopCartPerfume.cant++; // increase quantity in one
+    Object.assign(shopCartPerfume, updateShopCartPerfume);
 
     return await this.db.shopCartPerfumeRespository.save(shopCartPerfume);
   }
