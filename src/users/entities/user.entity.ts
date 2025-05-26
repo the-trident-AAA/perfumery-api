@@ -1,7 +1,10 @@
+import { ShopCartEntity } from 'src/shop-cart/entities/shop-cart.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -24,4 +27,10 @@ export class UserEntity {
 
   @DeleteDateColumn()
   deleteAt: Date;
+
+  @Column({ name: 'shop_cart_id' })
+  shopCartId: string;
+  @OneToOne(() => ShopCartEntity)
+  @JoinColumn({ name: 'shop_cart_id' })
+  shopCart: ShopCartEntity;
 }

@@ -1,13 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { DatabaseService } from 'src/database/database.service';
+import { ShopCartService } from 'src/shop-cart/shop-cart.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly shopCartService: ShopCartService,
+  ) {}
 
   async create(dto: CreateUserDto) {
-    return await this.db.userRepository.save(dto);
+    // created a shop cart
+    const shopCart = await this.shopCartService.create({});
+    return await this.db.userRepository.save({
+      ...dto,
+      shopCartId: shopCart.id,
+    });
   }
 
   async findOneByUsername(username: string) {
