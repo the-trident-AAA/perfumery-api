@@ -28,7 +28,7 @@ export class UserEntity {
   @DeleteDateColumn()
   deleteAt: Date;
 
-  @Column({ name: 'shop_cart_id' })
+  @Column({ name: 'shop_cart_id', nullable: true })
   shopCartId: string;
   @OneToOne(() => ShopCartEntity)
   @JoinColumn({ name: 'shop_cart_id' })
