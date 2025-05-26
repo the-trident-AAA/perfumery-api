@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserResponse } from './responses/user.response';
+import { UserDetailsResponse } from './responses/user-details.response';
 
 @Controller('users')
 export class UsersController {
@@ -29,6 +30,24 @@ export class UsersController {
   })
   find() {
     return this.usersService.find();
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Este endpoint el usuario con el identificador proporcionado',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Usuario con el identificador proporcionado con todos sus detalles',
+    type: UserDetailsResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de obtener el usuario',
+  })
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(id);
   }
 
   @Delete(':id')

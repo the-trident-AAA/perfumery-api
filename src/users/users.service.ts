@@ -4,6 +4,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
 import { UserResponse } from './responses/user.response';
 import { MinioService } from 'src/minio/minio.service';
+import { UserDetailsResponse } from './responses/user-details.response';
 
 @Injectable()
 export class UsersService {
@@ -38,6 +39,24 @@ export class UsersService {
             user.role,
           ),
       ),
+    );
+  }
+
+  async findOne(id: string) {
+    const user = await this.db.userRepository.findOne({ where: { id } });
+
+    if (!user)
+      throw new BadRequestException(
+        'No existe un usuario con ese identificador',
+      );
+
+    return new UserDetailsResponse(
+      user.id,
+      user.username,
+      user.avatar,
+      user.email,
+      user.role,
+      await this.shopCartService.findOne(user.shopCartId),
     );
   }
 
