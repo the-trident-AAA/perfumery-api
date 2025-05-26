@@ -22,4 +22,8 @@ export class UsersService {
   async findOneByUsername(username: string) {
     return await this.db.userRepository.findOneBy({ username });
   }
+
+  async remove(id: string) {
+    return await this.db.userRepository.delete({ id });
+  }
 }
