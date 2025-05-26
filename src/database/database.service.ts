@@ -30,7 +30,7 @@ export class DatabaseService {
     public readonly userRepository: Repository<UserEntity>,
     @InjectRepository(ShopCartEntity)
     public readonly shopCartRespository: Repository<ShopCartEntity>,
-    @InjectRepository(ShopCartEntity)
+    @InjectRepository(ShopCartPerfumeEntity)
     public readonly shopCartPerfumeRespository: Repository<ShopCartPerfumeEntity>,
   ) {}
 }
