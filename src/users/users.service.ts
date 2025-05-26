@@ -19,6 +19,10 @@ export class UsersService {
     });
   }
 
+  async find() {
+    return await this.db.userRepository.find();
+  }
+
   async findOneByUsername(username: string) {
     return await this.db.userRepository.findOneBy({ username });
   }
