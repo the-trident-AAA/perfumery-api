@@ -10,6 +10,8 @@ import { MinioModule } from './minio/minio.module';
 import { HomeBannerModule } from './home-banner/home-banner.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ShopCartModule } from './shop-cart/shop-cart.module';
+import { ShopCartPerfumeModule } from './shop-cart-perfume/shop-cart-perfume.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { UsersModule } from './users/users.module';
     HomeBannerModule,
     AuthModule,
     UsersModule,
+    ShopCartModule,
+    ShopCartPerfumeModule,
   ],
 })
 export class AppModule {}

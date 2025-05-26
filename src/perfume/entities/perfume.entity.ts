@@ -5,6 +5,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Gender } from './gender.enum';
@@ -13,6 +14,7 @@ import { ScentEntity } from 'src/scent/entities/scent.entity';
 import { PerfumeTypeEntity } from 'src/perfume-type/entities/perfume-type.entity';
 import { OfferEntity } from 'src/offer/entities/offer.entity';
 import { HomeBannerEntity } from 'src/home-banner/entities/home-banner.entity';
+import { ShopCartPerfumeEntity } from 'src/shop-cart-perfume/entities/shop-cart-perfume.entity';
 
 @Entity({ name: 'perfume' })
 export class PerfumeEntity {
@@ -79,4 +81,9 @@ export class PerfumeEntity {
   offer: OfferEntity;
   @ManyToMany(() => HomeBannerEntity, (homeBanner) => homeBanner.perfumes)
   homeBanners: HomeBannerEntity[];
+  @OneToMany(
+    () => ShopCartPerfumeEntity,
+    (shopCartPerfume) => shopCartPerfume.perfume,
+  )
+  shopCartPerfumes: ShopCartPerfumeEntity[];
 }

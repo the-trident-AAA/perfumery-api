@@ -6,6 +6,8 @@ import { OfferEntity } from 'src/offer/entities/offer.entity';
 import { PerfumeTypeEntity } from 'src/perfume-type/entities/perfume-type.entity';
 import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 import { ScentEntity } from 'src/scent/entities/scent.entity';
+import { ShopCartPerfumeEntity } from 'src/shop-cart-perfume/entities/shop-cart-perfume.entity';
+import { ShopCartEntity } from 'src/shop-cart/entities/shop-cart.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -26,5 +28,9 @@ export class DatabaseService {
     public readonly homeBannerRepository: Repository<HomeBannerEntity>,
     @InjectRepository(UserEntity)
     public readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(ShopCartEntity)
+    public readonly shopCartRespository: Repository<ShopCartEntity>,
+    @InjectRepository(ShopCartEntity)
+    public readonly shopCartPerfumeRespository: Repository<ShopCartPerfumeEntity>,
   ) {}
 }

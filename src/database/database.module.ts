@@ -10,6 +10,8 @@ import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 import { OfferEntity } from 'src/offer/entities/offer.entity';
 import { HomeBannerEntity } from 'src/home-banner/entities/home-banner.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { ShopCartEntity } from 'src/shop-cart/entities/shop-cart.entity';
+import { ShopCartPerfumeEntity } from 'src/shop-cart-perfume/entities/shop-cart-perfume.entity';
 
 const folder = process.env.NODE_ENV !== 'development' ? 'dist' : 'src';
 const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
@@ -44,6 +46,8 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
       OfferEntity,
       HomeBannerEntity,
       UserEntity,
+      ShopCartEntity,
+      ShopCartPerfumeEntity
     ]),
   ],
   providers: [DatabaseService],
