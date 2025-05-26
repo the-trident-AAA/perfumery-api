@@ -156,4 +156,14 @@ export class PerfumeService {
 
     return await this.db.perfumeRepository.delete({ id });
   }
+
+  // method to check perfume stocks
+
+  async checkStocks(id: string, cant: number): Promise<boolean> {
+    const perfume = await this.db.perfumeRepository.findOne({ where: { id } });
+
+    if (!perfume) throw new Error('Perfume no encontrado');
+
+    return perfume.cant >= cant;
+  }
 }
