@@ -13,7 +13,8 @@ export class ShopCartResponse {
   @ApiProperty({
     description:
       'Representa las lista de perfumes del carrito de compras del usuario',
-    type: 'string',
+    type: ShopCartPerfumeResponse,
+    isArray: true,
     required: true,
   })
   shopCartPerfumes: ShopCartPerfumeResponse[];
