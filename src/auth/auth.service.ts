@@ -43,11 +43,12 @@ export class AuthService {
     const payload = { id: user.id, username: user.username };
     const token = await this.jwtService.signAsync(payload);
 
-    return {
-      accessToken: token,
-      username: user.username,
-      email: user.email,
-      id: user.id,
-    };
+    return new LoginResponse(
+      token,
+      user.id,
+      user.username,
+      user.email,
+      user.shopCartId,
+    );
   }
 }

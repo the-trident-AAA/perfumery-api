@@ -26,16 +26,25 @@ export class LoginResponse {
     required: true,
   })
   email: string;
+  @ApiProperty({
+    description:
+      'Representa el identificador único del carrito del usuario logeado',
+    type: 'string',
+    required: true,
+  })
+  shopCartId: string;
 
   constructor(
     accessToken: string,
     id: string,
     username: string,
     email: string,
+    shopCartId: string,
   ) {
     this.accessToken = accessToken;
     this.id = id;
     this.username = username;
     this.email = email;
+    this.shopCartId = shopCartId;
   }
 }
