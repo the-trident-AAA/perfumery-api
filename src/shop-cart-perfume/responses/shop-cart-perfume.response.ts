@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 import { PerfumeDetailsResponse } from 'src/perfume/responses/perfume-details.response';
 
 export class ShopCartPerfumeResponse {
@@ -27,5 +28,15 @@ export class ShopCartPerfumeResponse {
     this.id = id;
     this.perfume = perfume;
     this.cant = cant;
+  }
+
+  @ApiProperty({
+    description:
+      'Representa el precio total (precio del perfume multiplicado por la cantidad)',
+    type: 'number',
+  })
+  @Expose()
+  get price(): number {
+    return this.perfume.price * this.cant;
   }
 }
