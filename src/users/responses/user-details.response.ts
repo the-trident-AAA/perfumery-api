@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UserDetailsResponse extends UserResponse {
   @ApiProperty({
     description: 'Representa el carrito de compras del usuario',
-    type: 'string',
+    type: ShopCartResponse,
     required: true,
   })
   shopCart: ShopCartResponse;
