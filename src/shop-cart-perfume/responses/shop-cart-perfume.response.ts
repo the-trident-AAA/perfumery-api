@@ -12,14 +12,14 @@ export class ShopCartPerfumeResponse {
   id: string;
   @ApiProperty({
     description: 'Representa el perfume asociado a dicho carrito de compras',
-    type: 'string',
+    type: PerfumeDetailsResponse,
     required: true,
   })
   perfume: PerfumeDetailsResponse;
   @ApiProperty({
     description:
       'Representa la cantidad seleccionada para el perfume de dicho carrito de compras',
-    type: 'string',
+    type: 'number',
     required: true,
   })
   cant: number;
