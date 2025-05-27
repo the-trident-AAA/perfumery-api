@@ -1,14 +1,45 @@
-import { Controller, Body, Patch, Param, Post, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Patch,
+  Param,
+  Post,
+  Delete,
+  Get,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { ShopCartPerfumeService } from './shop-cart-perfume.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateShopCartPerfumeDto } from './dto/create-shop-cart-perfume.dto';
 import { UpdateShopCartPerfumeDto } from './dto/update-shop-cart-perfume.dto';
+import { ShopCartPerfumeResponse } from './responses/shop-cart-perfume.response';
 
 @Controller('shop-cart-perfume')
 export class ShopCartPerfumeController {
   constructor(
     private readonly shopCartPerfumeService: ShopCartPerfumeService,
   ) {}
+
+  @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiOperation({
+    summary:
+      'Este endpoint obtiene un perfume del carrito compras en específico de la base de datos',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Carrito de compras obtenido exitosamente',
+    type: ShopCartPerfumeResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de obtener el perfume del carrito de compras',
+  })
+  findOne(@Param('id') id: string) {
+    return this.shopCartPerfumeService.findOne(id);
+  }
 
   @Post()
   @ApiOperation({
