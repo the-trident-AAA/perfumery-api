@@ -17,7 +17,7 @@ export class ShopCartController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
     summary:
-      'Este endpoint obtiene un perfume en específico de la base de datos',
+      'Este endpoint obtiene un carrito de compras en específico de la base de datos',
   })
   @ApiResponse({
     status: 200,
