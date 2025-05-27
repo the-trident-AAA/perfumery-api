@@ -29,7 +29,7 @@ export class ShopCartPerfumeController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Carrito de compras obtenido exitosamente',
+    description: 'Perfume del carrito de compras obtenido exitosamente',
     type: ShopCartPerfumeResponse,
   })
   @ApiResponse({
