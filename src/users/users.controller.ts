@@ -1,4 +1,13 @@
-import { Controller, Post, Body, Delete, Param, Get, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Delete,
+  Param,
+  Get,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -15,7 +24,6 @@ export class UsersController {
   }
 
   @Get()
-  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
     summary: 'Este endpoint obtiene una lista de usuarios de la base de datos',
   })
@@ -34,6 +42,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
     summary: 'Este endpoint el usuario con el identificador proporcionado',
   })
