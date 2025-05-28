@@ -17,10 +17,11 @@ export class PaginationMeta {
   })
   lastPage: number;
 
-  constructor(total: number, page: number, limit: number) {
+  constructor(total: number, page: number, limit: number, lastPage: number) {
     this.total = total;
     this.page = page;
     this.limit = limit;
+    this.lastPage = lastPage;
   }
 }
 export class PagintationResponse<T> {
