@@ -10,17 +10,20 @@ export class PaginatedResponse<T> {
 }
 
 export class PaginationMeta {
-  @ApiProperty({ example: 100 })
-  totalItems: number;
+  @ApiProperty({ description: 'Total de elementos', example: 100 })
+  total: number;
 
-  @ApiProperty({ example: 10 })
-  totalPages: number;
+  @ApiProperty({ description: 'Número de página actual', example: 1 })
+  page: number;
 
-  @ApiProperty({ example: 1 })
-  currentPage: number;
+  @ApiProperty({ description: 'Cantidad de elementos por página', example: 20 })
+  limit: number;
 
-  @ApiProperty({ example: 10 })
-  itemsPerPage: number;
+  @ApiProperty({
+    description: 'Última página de acuerdo a la cantidad total de registros',
+    example: 10,
+  })
+  lastPage: number;
 }
 
 export function ApiPaginatedResponse<T>(
@@ -28,6 +31,11 @@ export function ApiPaginatedResponse<T>(
   dataDescription: string,
 ): any {
   class DynamicPaginatedResponse extends PaginatedResponse<T> {
+    @ApiProperty({
+      description: 'Metados de la paginación',
+      type: PaginationMeta,
+    })
+    paginationMeta: PaginationMeta;
     @ApiProperty({
       description: dataDescription,
       type: classRef,
