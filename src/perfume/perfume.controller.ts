@@ -65,20 +65,6 @@ export class PerfumeController {
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener lista de perfumes',
   })
-  @ApiQuery({
-    name: 'page',
-    required: false,
-    type: Number,
-    description: 'Page number (default: 1)',
-    example: 1,
-  })
-  @ApiQuery({
-    name: 'limit',
-    required: false,
-    type: Number,
-    description: 'Items per page (default: 5, max: 100)',
-    example: 5,
-  })
   findAll(@Query() paginationDto: PaginationDto) {
     paginationDto.page = Number(paginationDto.page);
     paginationDto.limit = Number(paginationDto.limit);
