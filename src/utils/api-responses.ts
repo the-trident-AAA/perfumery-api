@@ -16,6 +16,12 @@ export class PaginationMeta {
     example: 10,
   })
   lastPage: number;
+
+  constructor(total: number, page: number, limit: number) {
+    this.total = total;
+    this.page = page;
+    this.limit = limit;
+  }
 }
 export class PaginatedResponse<T> {
   @ApiProperty({
@@ -28,6 +34,11 @@ export class PaginatedResponse<T> {
     isArray: true,
   })
   data: T[];
+
+  constructor(data: T[], paginationMeta: PaginationMeta) {
+    this.data = data;
+    this.paginationMeta = paginationMeta;
+  }
 }
 
 export function ApiPaginatedResponse<T>(
