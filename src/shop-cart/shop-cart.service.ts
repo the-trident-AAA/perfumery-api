@@ -3,6 +3,7 @@ import { CreateShopCartDto } from './dto/create-shop-cart.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { ShopCartResponse } from './responses/shop-cart.response';
 import { ShopCartPerfumeService } from 'src/shop-cart-perfume/shop-cart-perfume.service';
+import { ShopCartTotalItemsResponse } from './responses/shop-cart-total-items.response';
 
 @Injectable()
 export class ShopCartService {
@@ -35,6 +36,20 @@ export class ShopCartService {
         ),
       ),
     );
+  }
+
+  async totalItems(id: string) {
+    const shopCart = await this.db.shopCartRespository.findOne({
+      where: { id },
+      relations: ['shopCartPerfumes'],
+    });
+
+    if (!shopCart)
+      throw new BadRequestException(
+        'No estiste un carrito con ese identificador',
+      );
+
+    return new ShopCartTotalItemsResponse(shopCart.shopCartPerfumes.length);
   }
 
   async remove(id: string) {

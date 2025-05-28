@@ -8,6 +8,7 @@ import {
 import { ShopCartService } from './shop-cart.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ShopCartResponse } from './responses/shop-cart.response';
+import { ShopCartTotalItemsResponse } from './responses/shop-cart-total-items.response';
 
 @Controller('shop-cart')
 export class ShopCartController {
@@ -31,5 +32,24 @@ export class ShopCartController {
   })
   findOne(@Param('id') id: string) {
     return this.shopCartService.findOne(id);
+  }
+
+  @Get('total-items/:id')
+  @ApiOperation({
+    summary:
+      'Este endpoint devuelve la cantidad de items de un carrito de compras en específico',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Cantidad de items obtenida con éxito',
+    type: ShopCartTotalItemsResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de obtener la cantidad de items del carrito de compras',
+  })
+  totalItems(@Param('id') id: string) {
+    return this.shopCartService.totalItems(id);
   }
 }
