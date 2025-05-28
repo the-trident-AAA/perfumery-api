@@ -1,14 +1,6 @@
 import { Type } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class PaginatedResponse<T> {
-  @ApiProperty({
-    description: 'Array de items paginados',
-    isArray: true,
-  })
-  data: T[];
-}
-
 export class PaginationMeta {
   @ApiProperty({ description: 'Total de elementos', example: 100 })
   total: number;
@@ -25,17 +17,24 @@ export class PaginationMeta {
   })
   lastPage: number;
 }
+export class PaginatedResponse<T> {
+  @ApiProperty({
+    description: 'Metados de la paginación',
+    type: PaginationMeta,
+  })
+  paginationMeta: PaginationMeta;
+  @ApiProperty({
+    description: 'Array de items paginados',
+    isArray: true,
+  })
+  data: T[];
+}
 
 export function ApiPaginatedResponse<T>(
   classRef: Type<T>,
   dataDescription: string,
 ): any {
   class DynamicPaginatedResponse extends PaginatedResponse<T> {
-    @ApiProperty({
-      description: 'Metados de la paginación',
-      type: PaginationMeta,
-    })
-    paginationMeta: PaginationMeta;
     @ApiProperty({
       description: dataDescription,
       type: classRef,
