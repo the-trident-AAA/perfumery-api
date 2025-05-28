@@ -8,15 +8,23 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
-import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiConsumes,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
+import { ApiPaginationdResponse } from 'src/utils/api-responses';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 @Controller('perfume')
 export class PerfumeController {
@@ -48,15 +56,33 @@ export class PerfumeController {
   @ApiResponse({
     status: 200,
     description: 'Lista de perfumes obtenidos exitosamente',
-    type: PerfumeResponse,
-    isArray: true,
+    type: ApiPaginationdResponse(
+      PerfumeResponse,
+      'Representa los perfumes obtenidos como resultado de la de solicitud',
+    ),
   })
   @ApiResponse({
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener lista de perfumes',
   })
-  findAll() {
-    return this.perfumeService.findAll();
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (default: 1)',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Items per page (default: 5, max: 100)',
+    example: 5,
+  })
+  findAll(@Query() paginationDto: PaginationDto) {
+    paginationDto.page = Number(paginationDto.page);
+    paginationDto.limit = Number(paginationDto.limit);
+    return this.perfumeService.findAll(paginationDto);
   }
 
   @Get(':id')

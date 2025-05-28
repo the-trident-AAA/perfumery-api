@@ -10,6 +10,8 @@ import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.res
 import { MinioService } from 'src/minio/minio.service';
 import { DatabaseService } from 'src/database/database.service';
 import { OfferDetailsResponse } from 'src/offer/responses/offer-details.response';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
 
 @Injectable()
 export class PerfumeService {
@@ -40,8 +42,14 @@ export class PerfumeService {
     return await this.db.perfumeRepository.save(perfume);
   }
 
-  async findAll(): Promise<PerfumeResponse[]> {
-    const perfumes = await this.db.perfumeRepository.find({
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PagintationResponse<PerfumeResponse>> {
+    const { page, limit } = paginationDto;
+    const skip = (page - 1) * limit;
+    const [perfumes, total] = await this.db.perfumeRepository.findAndCount({
+      skip,
+      take: limit,
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
     });
 
@@ -69,7 +77,12 @@ export class PerfumeService {
       }),
     );
 
-    return data;
+    const lastPage = Math.ceil(total / limit);
+
+    return new PagintationResponse(
+      data,
+      new PaginationMeta(total, page, limit, lastPage),
+    );
   }
 
   async findOne(id: string) {
