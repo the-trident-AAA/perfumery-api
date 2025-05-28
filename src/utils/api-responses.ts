@@ -41,7 +41,7 @@ export class PagintationResponse<T> {
   }
 }
 
-export function ApiPaginatedResponse<T>(
+export function ApiPaginationdResponse<T>(
   classRef: Type<T>,
   dataDescription: string,
 ): any {
