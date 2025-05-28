@@ -23,7 +23,7 @@ export class PaginationMeta {
     this.limit = limit;
   }
 }
-export class PaginatedResponse<T> {
+export class PagintationResponse<T> {
   @ApiProperty({
     description: 'Metados de la paginación',
     type: PaginationMeta,
@@ -45,7 +45,7 @@ export function ApiPaginatedResponse<T>(
   classRef: Type<T>,
   dataDescription: string,
 ): any {
-  class DynamicPaginatedResponse extends PaginatedResponse<T> {
+  class DynamicPaginationResponse extends PagintationResponse<T> {
     @ApiProperty({
       description: dataDescription,
       type: classRef,
@@ -54,9 +54,9 @@ export function ApiPaginatedResponse<T>(
     data: T[];
   }
 
-  Object.defineProperty(DynamicPaginatedResponse, 'name', {
+  Object.defineProperty(DynamicPaginationResponse, 'name', {
     value: `Paginated${classRef.name}Response`,
   });
 
-  return DynamicPaginatedResponse as Type<PaginatedResponse<T>>;
+  return DynamicPaginationResponse as Type<PagintationResponse<T>>;
 }
