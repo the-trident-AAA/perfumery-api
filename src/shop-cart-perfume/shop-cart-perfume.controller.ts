@@ -91,4 +91,22 @@ export class ShopCartPerfumeController {
   remove(@Param('id') id: string) {
     return this.shopCartPerfumeService.remove(id);
   }
+
+  @Delete('clear-shop-cart/:id')
+  @ApiOperation({
+    summary:
+      'Este endpoint elimina todos los perfumes del carrito de compras indicado',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Perfumes del carrito de compras eliminados exitosamente',
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de eliminación de los perfumes del carrito de compras',
+  })
+  clearShopCart(@Param('id') id: string) {
+    return this.shopCartPerfumeService.clearShopCart(id);
+  }
 }
