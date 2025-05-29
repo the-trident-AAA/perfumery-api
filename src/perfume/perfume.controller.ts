@@ -16,7 +16,6 @@ import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import {
   ApiConsumes,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
 import { PerfumeResponse } from './responses/perfume.response';
