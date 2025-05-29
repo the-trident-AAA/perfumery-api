@@ -25,6 +25,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 import { ApiPaginationdResponse } from 'src/utils/api-responses';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { FiltersPerfumeDto } from './dto/filters-perfume.dto';
 
 @Controller('perfume')
 export class PerfumeController {
@@ -65,10 +66,13 @@ export class PerfumeController {
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener lista de perfumes',
   })
-  findAll(@Query() paginationDto: PaginationDto) {
+  findAll(
+    @Query() paginationDto: PaginationDto,
+    @Query() filtersPerfumeDto: FiltersPerfumeDto,
+  ) {
     paginationDto.page = Number(paginationDto.page);
     paginationDto.limit = Number(paginationDto.limit);
-    return this.perfumeService.findAll(paginationDto);
+    return this.perfumeService.findAll(paginationDto, filtersPerfumeDto);
   }
 
   @Get(':id')

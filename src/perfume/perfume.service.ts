@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
-import { In } from 'typeorm';
+import { ILike, In } from 'typeorm';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { BrandResponse } from 'src/brand/responses/brand.response';
@@ -12,6 +12,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { OfferDetailsResponse } from 'src/offer/responses/offer-details.response';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
+import { FiltersPerfumeDto } from './dto/filters-perfume.dto';
 
 @Injectable()
 export class PerfumeService {
@@ -44,13 +45,46 @@ export class PerfumeService {
 
   async findAll(
     paginationDto: PaginationDto,
+    filtersPerfumeDto: FiltersPerfumeDto,
   ): Promise<PagintationResponse<PerfumeResponse>> {
     const { page, limit } = paginationDto;
     const skip = (page - 1) * limit;
+
     const [perfumes, total] = await this.db.perfumeRepository.findAndCount({
+      where: {
+        ...(filtersPerfumeDto.id && { id: filtersPerfumeDto.id }),
+        ...(filtersPerfumeDto.name && {
+          name: ILike(`%${filtersPerfumeDto.name}%`),
+        }),
+        ...(filtersPerfumeDto.description && {
+          description: ILike(`%${filtersPerfumeDto.description}%`),
+        }),
+        ...(filtersPerfumeDto.gender && { gender: filtersPerfumeDto.gender }),
+        ...(filtersPerfumeDto.milliliters && {
+          milliliters: filtersPerfumeDto.milliliters,
+        }),
+        ...(filtersPerfumeDto.available !== undefined && {
+          available: filtersPerfumeDto.available,
+        }),
+        ...(filtersPerfumeDto.price && { price: filtersPerfumeDto.price }),
+        ...(filtersPerfumeDto.cant && { cant: filtersPerfumeDto.cant }),
+        ...(filtersPerfumeDto.brandId && {
+          brand: { id: filtersPerfumeDto.brandId },
+        }),
+        ...(filtersPerfumeDto.perfumeTypeId && {
+          perfumeType: { id: filtersPerfumeDto.perfumeTypeId },
+        }),
+        ...(filtersPerfumeDto.scentsIds &&
+          filtersPerfumeDto.scentsIds.length > 0 && {
+            scents: { id: In(filtersPerfumeDto.scentsIds) },
+          }),
+        ...(filtersPerfumeDto.offerId && {
+          offer: { id: filtersPerfumeDto.offerId },
+        }),
+      },
+      relations: ['brand', 'perfumeType', 'scents', 'offer'],
       skip,
       take: limit,
-      relations: ['brand', 'perfumeType', 'scents', 'offer'],
     });
 
     const data = await Promise.all(
@@ -64,11 +98,11 @@ export class PerfumeService {
           perfume.name,
           perfume.description,
           image,
-          perfume.brand.name,
+          perfume.brand?.name,
           perfume.gender,
-          perfume.scents.map((scent) => scent.name),
+          perfume.scents?.map((scent) => scent.name),
           perfume.milliliters,
-          perfume.perfumeType.name,
+          perfume.perfumeType?.name,
           perfume.available,
           perfume.price,
           perfume.cant,
