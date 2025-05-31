@@ -15,6 +15,8 @@ import { PerfumeTypeEntity } from 'src/perfume-type/entities/perfume-type.entity
 import { OfferEntity } from 'src/offer/entities/offer.entity';
 import { HomeBannerEntity } from 'src/home-banner/entities/home-banner.entity';
 import { ShopCartPerfumeEntity } from 'src/shop-cart-perfume/entities/shop-cart-perfume.entity';
+import { OrderEntity } from 'src/order/entities/order.entity';
+import { OrderPerfumeEntity } from 'src/order/entities/order-perfume.entity';
 
 @Entity({ name: 'perfume' })
 export class PerfumeEntity {
@@ -79,11 +81,16 @@ export class PerfumeEntity {
   @ManyToOne(() => OfferEntity, (offer) => offer.perfumes)
   @JoinColumn({ name: 'offer_id' })
   offer: OfferEntity;
+
   @ManyToMany(() => HomeBannerEntity, (homeBanner) => homeBanner.perfumes)
   homeBanners: HomeBannerEntity[];
+
   @OneToMany(
     () => ShopCartPerfumeEntity,
     (shopCartPerfume) => shopCartPerfume.perfume,
   )
   shopCartPerfumes: ShopCartPerfumeEntity[];
+
+  @OneToMany(() => OrderPerfumeEntity, (orderPerfume) => orderPerfume.perfume)
+  orderPerfumes: OrderPerfumeEntity[];
 }

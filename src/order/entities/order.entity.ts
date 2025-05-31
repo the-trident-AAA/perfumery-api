@@ -3,10 +3,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { State } from './state.enum';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { OrderPerfumeEntity } from './order-perfume.entity';
 
 @Entity({ name: 'order' })
 export class OrderEntity {
@@ -16,7 +18,7 @@ export class OrderEntity {
   @Column({ enum: State })
   state: State;
 
-  @Column()
+  @Column({ nullable: true })
   price: number;
 
   @Column({ name: 'user_id' })
@@ -25,4 +27,7 @@ export class OrderEntity {
   @ManyToOne(() => UserEntity, (user) => user.orders)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
+
+  @OneToMany(() => OrderPerfumeEntity, (orderPerfume) => orderPerfume.order)
+  orderPerfumes: OrderPerfumeEntity[];
 }

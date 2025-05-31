@@ -9,6 +9,7 @@ export class PaginationDto {
     example: 1,
   })
   page?: number;
+
   @ApiProperty({
     name: 'limit',
     required: false,

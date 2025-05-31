@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BrandEntity } from 'src/brand/entities/brand.entity';
 import { HomeBannerEntity } from 'src/home-banner/entities/home-banner.entity';
 import { OfferEntity } from 'src/offer/entities/offer.entity';
+import { OrderPerfumeEntity } from 'src/order/entities/order-perfume.entity';
+import { OrderEntity } from 'src/order/entities/order.entity';
 import { PerfumeTypeEntity } from 'src/perfume-type/entities/perfume-type.entity';
 import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 import { ScentEntity } from 'src/scent/entities/scent.entity';
@@ -32,5 +34,9 @@ export class DatabaseService {
     public readonly shopCartRespository: Repository<ShopCartEntity>,
     @InjectRepository(ShopCartPerfumeEntity)
     public readonly shopCartPerfumeRespository: Repository<ShopCartPerfumeEntity>,
+    @InjectRepository(OrderEntity)
+    public readonly orderRespository: Repository<OrderEntity>,
+    @InjectRepository(OrderPerfumeEntity)
+    public readonly orderPerfumeRepository: Repository<OrderPerfumeEntity>,
   ) {}
 }
