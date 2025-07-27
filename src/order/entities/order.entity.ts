@@ -18,7 +18,7 @@ export class OrderEntity {
   @Column({ enum: State })
   state: State;
 
-  @Column({ nullable: true })
+  @Column()
   price: number;
 
   @Column({ name: 'user_id' })

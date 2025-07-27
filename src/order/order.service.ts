@@ -8,7 +8,7 @@ export class OrderService {
   constructor(private readonly db: DatabaseService) {}
 
   async create(dto: CreateOrderDto) {
-    const order = this.db.orderRespository.create(dto);
+    const order = this.db.orderRespository.create({ ...dto, price: 0 });
     const savedOrder = await this.db.orderRespository.save(order);
 
     // Create the relationships between Order and Perfume with quantities
@@ -24,10 +24,16 @@ export class OrderService {
         });
       }),
     );
-
     await this.db.orderPerfumeRepository.save(orderPerfumes);
 
-    return [savedOrder];
+    // Calculate the total price of the order
+    savedOrder.price = orderPerfumes.reduce(
+      (acc, orderPerfume) =>
+        acc + orderPerfume.perfume.price * orderPerfume.cant,
+      0,
+    );
+
+    return await this.db.orderRespository.save(savedOrder);
   }
 
   async findAll() {
