@@ -9,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Role } from 'src/common/enums/role.enum';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -24,11 +25,11 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: false, select: false })
   password: string;
 
-  @Column({ default: 'client' })
-  role: string;
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  role: Role;
 
   @DeleteDateColumn()
   deleteAt: Date;

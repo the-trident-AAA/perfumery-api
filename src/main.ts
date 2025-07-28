@@ -24,6 +24,7 @@ async function bootstrap() {
     .setDescription('API perfumery project')
     .setVersion('1.0')
     .addTag('codification')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, swagger);
   SwaggerModule.setup('swagger', app, documentFactory);

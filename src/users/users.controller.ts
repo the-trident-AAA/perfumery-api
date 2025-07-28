@@ -10,10 +10,14 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserResponse } from './responses/user.response';
 import { UserDetailsResponse } from './responses/user-details.response';
+import { Auth } from 'src/auth/decorators/auth.decorators';
+import { Role } from 'src/common/enums/role.enum';
 
+@ApiBearerAuth()
+@Auth(Role.ADMIN)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
