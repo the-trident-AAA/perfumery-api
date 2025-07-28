@@ -10,18 +10,28 @@ import {
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorators';
+import { Role } from 'src/common/enums/role.enum';
+import { ActiveUser } from 'src/common/decorators/active-user.decorator';
+import { ActiveUserInterface } from 'src/common/interfaces/active-user.interface';
 
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
   @Post()
   @ApiOperation({
     summary: 'Este endpoint agrega un pedido a la base de datos',
   })
-  create(@Body() dto: CreateOrderDto) {
-    return this.orderService.create(dto);
+  create(
+    @ActiveUser()
+    user: ActiveUserInterface,
+  ) {
+    console.log(user);
+    return this.orderService.create(user);
   }
 
   @ApiOperation({

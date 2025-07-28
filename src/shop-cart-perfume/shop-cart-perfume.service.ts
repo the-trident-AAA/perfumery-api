@@ -26,7 +26,10 @@ export class ShopCartPerfumeService {
 
     // check if a perfume already exists in this cart
     const shopCartPerfume = await this.db.shopCartPerfumeRespository.findOne({
-      where: { perfumeId: createShopCartPerfumeDto.perfumeId },
+      where: {
+        perfumeId: createShopCartPerfumeDto.perfumeId,
+        shopCartId: createShopCartPerfumeDto.shopCartId,
+      },
     });
 
     return await this.db.shopCartPerfumeRespository.save(

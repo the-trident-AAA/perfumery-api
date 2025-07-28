@@ -1,4 +1,6 @@
 export interface ActiveUserInterface {
-  email: string;
+  username: string;
   role: string;
+  shopCartId: string;
+  id: string;
 }

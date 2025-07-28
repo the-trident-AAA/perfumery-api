@@ -40,7 +40,13 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect username or password');
     }
 
-    const payload = { id: user.id, username: user.username, role: user.role };
+    console.log(user);
+    const payload = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      shopCartId: user.shopCartId,
+    };
     const token = await this.jwtService.signAsync(payload);
 
     return new LoginResponse(

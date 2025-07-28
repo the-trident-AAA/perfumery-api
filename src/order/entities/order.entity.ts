@@ -15,7 +15,7 @@ export class OrderEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ enum: State })
+  @Column({ enum: State, default: State.PENDING })
   state: State;
 
   @Column()

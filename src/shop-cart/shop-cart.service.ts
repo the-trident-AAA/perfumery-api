@@ -55,4 +55,8 @@ export class ShopCartService {
   async remove(id: string) {
     return await this.db.shopCartRespository.delete({ id });
   }
+
+  async clearShopCart(shopCartId: string) {
+    return await this.shopCartPerfumeService.clearShopCart(shopCartId);
+  }
 }

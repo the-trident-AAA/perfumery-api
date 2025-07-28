@@ -2,24 +2,33 @@ import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseService } from 'src/database/database.service';
+import { ShopCartService } from 'src/shop-cart/shop-cart.service';
+import { ShopCartResponse } from 'src/shop-cart/responses/shop-cart.response';
+import { ActiveUserInterface } from 'src/common/interfaces/active-user.interface';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly shopCartService: ShopCartService,
+  ) {}
 
-  async create(dto: CreateOrderDto) {
-    const order = this.db.orderRespository.create({ ...dto, price: 0 });
+  async create(user: ActiveUserInterface) {
+    const shopCart = await this.shopCartService.findOne(user.shopCartId);
+
+    const order = this.db.orderRespository.create({
+      orderPerfumes: null,
+      price: 0,
+      userId: user.id,
+    });
     const savedOrder = await this.db.orderRespository.save(order);
 
     // Create the relationships between Order and Perfume with quantities
     const orderPerfumes = await Promise.all(
-      dto.perfumes.map(async (p) => {
-        const perfume = await this.db.perfumeRepository.findOneBy({
-          id: p.perfumeId,
-        });
+      shopCart.shopCartPerfumes.map(async (p) => {
         return this.db.orderPerfumeRepository.create({
           order: savedOrder,
-          perfume: perfume,
+          perfume: p.perfume,
           cant: p.cant,
         });
       }),
@@ -33,6 +42,8 @@ export class OrderService {
       0,
     );
 
+    // clear the shop cart
+    this.shopCartService.clearShopCart(user.shopCartId);
     return await this.db.orderRespository.save(savedOrder);
   }
 

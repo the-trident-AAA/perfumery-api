@@ -18,7 +18,7 @@ import { Role } from '../common/enums/role.enum';
 import { Auth } from './decorators/auth.decorators';
 
 interface RequestWithUser extends Request {
-  user: { email: string; role: string };
+  user: { user: string; role: string };
 }
 @Controller('auth')
 export class AuthController {
@@ -49,19 +49,19 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
-  @Get('profile')
-  @Roles(Role.USER)
+  @Get('admin-profile')
+  @Roles([Role.USER])
   @UseGuards(AuthGuard, RolesGuard)
-  profile(
+  profileClient(
     @Request()
     req: RequestWithUser,
   ) {
     return req.user;
   }
 
-  @Get('profile2')
-  @Auth(Role.ADMIN)
-  profile2(
+  @Get('client-profile')
+  @Auth([Role.ADMIN])
+  profileAdmin(
     @Request()
     req: RequestWithUser,
   ) {
