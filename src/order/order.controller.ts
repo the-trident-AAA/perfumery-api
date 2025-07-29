@@ -6,15 +6,17 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
 import { ActiveUser } from 'src/common/decorators/active-user.decorator';
 import { ActiveUserInterface } from 'src/common/interfaces/active-user.interface';
+import { FindOrdersDto } from './dto/find-orders';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 @Controller('order')
 export class OrderController {
@@ -38,8 +40,13 @@ export class OrderController {
     summary: 'Este endpoint obtiene los pedidos de la base de datos',
   })
   @Get()
-  findAll() {
-    return this.orderService.findAll();
+  async findAll(
+    @Query() paginationDto: PaginationDto,
+    @Query() dto: FindOrdersDto,
+  ) {
+    paginationDto.page = Number(paginationDto.page);
+    paginationDto.limit = Number(paginationDto.limit);
+    return this.orderService.findAll(paginationDto, dto);
   }
 
   @Get(':id')
