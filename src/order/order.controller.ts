@@ -55,6 +55,8 @@ export class OrderController {
     @Query() paginationDto: PaginationDto,
     @Query() filtersOrderDto: FiltersOrderDto,
   ) {
+    paginationDto.page = Number(paginationDto.page);
+    paginationDto.limit = Number(paginationDto.limit);
     return this.orderService.findAll(paginationDto, filtersOrderDto);
   }
 
