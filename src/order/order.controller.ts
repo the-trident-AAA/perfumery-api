@@ -15,12 +15,10 @@ import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
 import { ActiveUser } from 'src/common/decorators/active-user.decorator';
 import { ActiveUserInterface } from 'src/common/interfaces/active-user.interface';
-
-import { FindOrdersDto } from './dto/find-orders';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
-
 import { ApiPaginationdResponse } from 'src/utils/api-responses';
 import { OrderResponse } from './responses/order.response';
+import { FiltersOrderDto } from './filters/filters-order.dto';
 
 
 @Controller('order')
@@ -53,13 +51,11 @@ export class OrderController {
     ),
   })
   @Get()
-  async findAll(
+  findAll(
     @Query() paginationDto: PaginationDto,
-    @Query() dto: FindOrdersDto,
+    @Query() filtersOrderDto: FiltersOrderDto,
   ) {
-    paginationDto.page = Number(paginationDto.page);
-    paginationDto.limit = Number(paginationDto.limit);
-    return this.orderService.findAll(paginationDto, dto);
+    return this.orderService.findAll(paginationDto, filtersOrderDto);
   }
 
   @Get(':id')

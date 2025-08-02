@@ -7,7 +7,13 @@ import { OrderResponse } from './responses/order.response';
 import { UsersService } from 'src/users/users.service';
 import { OrderPerfumeResponse } from './responses/order-perfume.response';
 import { PerfumeService } from 'src/perfume/perfume.service';
+<<<<<<< HEAD
 import { OrderEntity } from './entities/order.entity';
+=======
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { FiltersOrderDto } from './filters/filters-order.dto';
+import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
+>>>>>>> 7c7b380 (feat(order): implement pagination and filters in the findAll method of OrderService)
 
 @Injectable()
 export class OrderService {
@@ -46,12 +52,25 @@ export class OrderService {
     return await this.db.orderRespository.save(savedOrder);
   }
 
-  async findAll() {
-    const ordersEntity = await this.db.orderRespository.find({
+  async findAll(
+    paginationDto: PaginationDto,
+    filtersOrderDto: FiltersOrderDto,
+  ) {
+    const { page, limit } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [ordersEntity, total] = await this.db.orderRespository.findAndCount({
+      where: {
+        ...(filtersOrderDto.id && { id: filtersOrderDto.id }),
+        ...(filtersOrderDto.state && { state: filtersOrderDto.state }),
+        ...(filtersOrderDto.userId && { userId: filtersOrderDto.userId }),
+      },
       relations: ['orderPerfumes', 'orderPerfumes.perfume'],
+      skip,
+      take: limit,
     });
 
-    return await Promise.all(
+    const data = await Promise.all(
       ordersEntity.map(
         async (orderEntity) =>
           new OrderResponse(
@@ -72,6 +91,13 @@ export class OrderService {
             ),
           ),
       ),
+    );
+
+    const lastPage = Math.ceil(total / limit);
+
+    return new PagintationResponse(
+      data,
+      new PaginationMeta(total, page, limit, lastPage),
     );
   }
 
