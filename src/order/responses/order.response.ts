@@ -1,8 +1,8 @@
-import { UserResponse } from 'src/users/responses/user.response';
 import { State } from '../entities/state.enum';
 import { OrderPerfumeResponse } from './order-perfume.response';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
+import { UserDetailsResponse } from 'src/users/responses/user-details.response';
 
 export class OrderResponse {
   @ApiProperty({
@@ -17,9 +17,9 @@ export class OrderResponse {
   state: State;
   @ApiProperty({
     description: 'Representa el usuario asociado a la orden',
-    type: UserResponse,
+    type: UserDetailsResponse,
   })
-  user: UserResponse;
+  user: UserDetailsResponse;
   @ApiProperty({
     description: 'Representa los perfumes asociados a la orden',
     type: OrderPerfumeResponse,
@@ -52,7 +52,7 @@ export class OrderResponse {
   constructor(
     id: string,
     state: State,
-    user: UserResponse,
+    user: UserDetailsResponse,
     orderPerfumes: OrderPerfumeResponse[],
   ) {
     this.id = id;
