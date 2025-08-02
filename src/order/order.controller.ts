@@ -23,7 +23,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @ApiBearerAuth()
-  @Auth([Role.USER, Role.ADMIN])
+  @Auth([Role.USER])
   @Post()
   @ApiOperation({
     summary: 'Este endpoint agrega un pedido a la base de datos',
