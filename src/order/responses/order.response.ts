@@ -48,4 +48,16 @@ export class OrderResponse {
       return total + orderPerfume.price;
     }, 0);
   }
+
+  constructor(
+    id: string,
+    state: State,
+    user: UserResponse,
+    orderPerfumes: OrderPerfumeResponse[],
+  ) {
+    this.id = id;
+    this.state = state;
+    this.user = user;
+    this.orderPerfumes = orderPerfumes;
+  }
 }

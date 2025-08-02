@@ -27,4 +27,10 @@ export class OrderPerfumeResponse {
   get price(): number {
     return this.perfume.price * this.cant;
   }
+
+  constructor(id: string, perfume: PerfumeResponse, cant: number) {
+    this.id = id;
+    this.perfume = perfume;
+    this.cant = cant;
+  }
 }
