@@ -13,7 +13,9 @@ export class OrderPerfumeEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => OrderEntity, (order) => order.orderPerfumes)
+  @ManyToOne(() => OrderEntity, (order) => order.orderPerfumes, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'order_id' })
   order: OrderEntity;
 

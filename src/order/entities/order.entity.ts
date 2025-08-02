@@ -26,6 +26,9 @@ export class OrderEntity extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @OneToMany(() => OrderPerfumeEntity, (orderPerfume) => orderPerfume.order)
+  @OneToMany(() => OrderPerfumeEntity, (orderPerfume) => orderPerfume.order, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   orderPerfumes: OrderPerfumeEntity[];
 }
