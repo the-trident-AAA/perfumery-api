@@ -64,11 +64,6 @@ export class OrderController {
     return this.orderService.findAll(paginationDto, filtersOrderDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
-  }
-
   @ApiBearerAuth()
   @Auth([Role.USER])
   @Get('user-total-orders')
@@ -92,6 +87,11 @@ export class OrderController {
   ) {
     console.log(user);
     return this.orderService.userTotalOrders(user.id);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.orderService.findOne(+id);
   }
 
   @Patch(':id')
