@@ -7,13 +7,12 @@ import { OrderResponse } from './responses/order.response';
 import { UsersService } from 'src/users/users.service';
 import { OrderPerfumeResponse } from './responses/order-perfume.response';
 import { PerfumeService } from 'src/perfume/perfume.service';
-<<<<<<< HEAD
-import { OrderEntity } from './entities/order.entity';
-=======
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { FiltersOrderDto } from './filters/filters-order.dto';
 import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
->>>>>>> 7c7b380 (feat(order): implement pagination and filters in the findAll method of OrderService)
+import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
+import { OrderEntity } from './entities/order.entity';
+
 
 @Injectable()
 export class OrderService {
@@ -106,7 +105,9 @@ export class OrderService {
   }
 
   async userTotalOrders(userId: string) {
-    return await this.db.orderRespository.count({ where: { userId } });
+    return new UserTotalOrdersResponse(
+      await this.db.orderRespository.count({ where: { userId } }),
+    );
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
