@@ -17,6 +17,9 @@ export class OrderPerfumeEntity {
   @JoinColumn({ name: 'order_id' })
   order: OrderEntity;
 
+  @Column({ name: 'perfume_id', nullable: true })
+  perfumeId: string;
+
   @ManyToOne(() => PerfumeEntity, (perfume) => perfume.orderPerfumes)
   @JoinColumn({ name: 'perfume_id' })
   perfume: PerfumeEntity;
