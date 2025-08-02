@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -39,6 +41,8 @@ export class OrderController {
     return this.orderService.create(user);
   }
 
+  @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
     summary: 'Este endpoint obtiene los pedidos de la base de datos',
   })
@@ -50,7 +54,6 @@ export class OrderController {
       'Representa las órdenes como resultado de la de solicitud',
     ),
   })
-  @Get()
   findAll(
     @Query() paginationDto: PaginationDto,
     @Query() filtersOrderDto: FiltersOrderDto,
