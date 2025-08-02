@@ -6,17 +6,20 @@ export class FiltersOrderDto {
     description:
       'Representa el identificador de la orden por el que se desea filtrar',
     type: 'number',
+    required: false,
   })
   id: string;
   @ApiProperty({
     description: 'Representa el estado de la orden por el que se desea filtrar',
-    example: 'por definir',
+    type: 'string',
+    required: false,
   })
   state: State;
   @ApiProperty({
     description:
       'Representa el identificador del usuario por el que se desea filtrar',
     type: 'number',
+    required: false,
   })
   userId: string;
 }
