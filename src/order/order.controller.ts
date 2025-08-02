@@ -10,13 +10,18 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
 import { ActiveUser } from 'src/common/decorators/active-user.decorator';
 import { ActiveUserInterface } from 'src/common/interfaces/active-user.interface';
+
 import { FindOrdersDto } from './dto/find-orders';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
+
+import { ApiPaginationdResponse } from 'src/utils/api-responses';
+import { OrderResponse } from './responses/order.response';
+
 
 @Controller('order')
 export class OrderController {
@@ -38,6 +43,14 @@ export class OrderController {
 
   @ApiOperation({
     summary: 'Este endpoint obtiene los pedidos de la base de datos',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de perfumes obtenidos exitosamente',
+    type: ApiPaginationdResponse(
+      OrderResponse,
+      'Representa las órdenes como resultado de la de solicitud',
+    ),
   })
   @Get()
   async findAll(
