@@ -5,7 +5,7 @@ export class FiltersOrderDto {
   @ApiProperty({
     description:
       'Representa el identificador de la orden por el que se desea filtrar',
-    type: 'number',
+    type: 'string',
     required: false,
   })
   id: string;
@@ -18,7 +18,7 @@ export class FiltersOrderDto {
   @ApiProperty({
     description:
       'Representa el identificador del usuario por el que se desea filtrar',
-    type: 'number',
+    type: 'string',
     required: false,
   })
   userId: string;
