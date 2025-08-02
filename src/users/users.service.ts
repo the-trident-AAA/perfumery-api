@@ -60,6 +60,23 @@ export class UsersService {
     );
   }
 
+  async findOneWithOutRelations(id: string) {
+    const user = await this.db.userRepository.findOne({ where: { id } });
+
+    if (!user)
+      throw new BadRequestException(
+        'No existe un usuario con ese identificador',
+      );
+
+    return new UserResponse(
+      user.id,
+      user.username,
+      user.avatar,
+      user.email,
+      user.role,
+    );
+  }
+
   async findOneByUsername(username: string) {
     return this.db.userRepository.findOne({
       where: { username },
