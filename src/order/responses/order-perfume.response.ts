@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { PerfumeResponse } from 'src/perfume/responses/perfume.response';
+import { PerfumeDetailsResponse } from 'src/perfume/responses/perfume-details.response';
+
 
 export class OrderPerfumeResponse {
   @ApiProperty({
@@ -10,9 +11,9 @@ export class OrderPerfumeResponse {
   id: string;
   @ApiProperty({
     description: 'Representa el perfume seleccionado para dicha orden',
-    type: PerfumeResponse,
+    type: PerfumeDetailsResponse,
   })
-  perfume: PerfumeResponse;
+  perfume: PerfumeDetailsResponse;
   @ApiProperty({
     description: 'Representa la cantidad seleccionada del perfume de la orden',
     type: 'number',
@@ -28,7 +29,7 @@ export class OrderPerfumeResponse {
     return this.perfume.price * this.cant;
   }
 
-  constructor(id: string, perfume: PerfumeResponse, cant: number) {
+  constructor(id: string, perfume: PerfumeDetailsResponse, cant: number) {
     this.id = id;
     this.perfume = perfume;
     this.cant = cant;
