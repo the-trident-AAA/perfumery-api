@@ -1,15 +1,13 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger} from '@nestjs/common';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
 import { ActiveUserInterface } from 'src/common/interfaces/active-user.interface';
+import { OrderResponse } from './responses/order.response';
+import { UsersService } from 'src/users/users.service';
+import { OrderPerfumeResponse } from './responses/order-perfume.response';
+import { PerfumeService } from 'src/perfume/perfume.service';
 import { OrderEntity } from './entities/order.entity';
-import { FindOrdersDto } from './dto/find-orders';
-import { PaginationDto } from 'src/utils/dto/pagination.dto';
-import { OrderResponse } from './responses/order-pesponse';
-import { OrderPerfumeResponse } from './responses/order-perfume-response';
-import { PerfumeResponse } from 'src/perfume/responses/perfume.response';
-import { UserResponse } from 'src/users/responses/user.response';
 
 @Injectable()
 export class OrderService {
@@ -17,6 +15,8 @@ export class OrderService {
   constructor(
     private readonly db: DatabaseService,
     private readonly shopCartService: ShopCartService,
+    private readonly userService: UsersService,
+    private readonly perfumeService: PerfumeService,
   ) {}
 
   async create(user: ActiveUserInterface) {
@@ -46,59 +46,33 @@ export class OrderService {
     return await this.db.orderRespository.save(savedOrder);
   }
 
-  async findAll(paginationDto: PaginationDto, dto: FindOrdersDto) {
-    const { page, limit } = paginationDto;
-    const skip = (page - 1) * limit;
+  async findAll() {
+    const ordersEntity = await this.db.orderRespository.find({
+      relations: ['orderPerfumes, orderPerfumes.perfume'],
+    });
 
-    const queryBuilder = OrderEntity.createQueryBuilder('order')
-      .leftJoinAndSelect('order.orderPerfumes', 'orderPerfume')
-      .leftJoinAndSelect('orderPerfume.perfume', 'perfume')
-      .leftJoinAndSelect('order.user', 'user');
-
-    if (dto.state)
-      queryBuilder.andWhere('order.state = :state', {
-        state: dto.state,
-      });
-
-    if (dto.userId)
-      queryBuilder.andWhere('order.userId = :userId', {
-        userId: dto.userId,
-      });
-
-    queryBuilder.orderBy('order.id').skip(skip).take(limit);
-
-    try {
-      const [rawOrders, total] = await queryBuilder.getManyAndCount();
-      const orders: OrderResponse[] = rawOrders.map((order) => {
-        const user = new UserResponse(
-          null,
-          order.user.username,
-          null,
-          order.user.email,
-          null,
-        );
-        const perfumes: OrderPerfumeResponse[] = Array.isArray(
-          order.orderPerfumes,
-        )
-          ? order.orderPerfumes.map((op) => {
-              const perfume = op.perfume;
-              return new OrderPerfumeResponse(op.cant, perfume);
-            })
-          : [];
-        return new OrderResponse(
-          order.id,
-          order.state,
-          order.price,
-          perfumes,
-          user,
-        );
-      });
-      return { orders, total };
-    } catch (err) {
-      this.logger.error(err);
-      this.logger.error(err.stack);
-      throw err;
-    }
+    return await Promise.all(
+      ordersEntity.map(
+        async (orderEntity) =>
+          new OrderResponse(
+            orderEntity.id,
+            orderEntity.state,
+            await this.userService.findOne(orderEntity.userId),
+            await Promise.all(
+              orderEntity.orderPerfumes.map(
+                async (orderPerfumeEntity) =>
+                  new OrderPerfumeResponse(
+                    orderPerfumeEntity.id,
+                    await this.perfumeService.findOne(
+                      orderPerfumeEntity.perfumeId,
+                    ),
+                    orderPerfumeEntity.cant,
+                  ),
+              ),
+            ),
+          ),
+      ),
+    );
   }
 
   findOne(id: number) {
