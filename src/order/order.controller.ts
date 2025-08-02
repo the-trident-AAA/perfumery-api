@@ -69,7 +69,9 @@ export class OrderController {
     return this.orderService.findOne(+id);
   }
 
-  @Get('user-total-orders/:id')
+  @ApiBearerAuth()
+  @Auth([Role.USER])
+  @Get('user-total-orders')
   @ApiOperation({
     summary:
       'Este endpoint devuelve la cantidad de items de un carrito de compras en específico',
@@ -84,8 +86,12 @@ export class OrderController {
     description:
       'Ocurrió un error en el proceso de obtener la cantidad de items del carrito de compras',
   })
-  userTotalOrders(@Param('id') id: string) {
-    return this.orderService.userTotalOrders(id);
+  userTotalOrders(
+    @ActiveUser()
+    user: ActiveUserInterface,
+  ) {
+    console.log(user);
+    return this.orderService.userTotalOrders(user.id);
   }
 
   @Patch(':id')
