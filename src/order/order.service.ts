@@ -48,7 +48,7 @@ export class OrderService {
 
   async findAll() {
     const ordersEntity = await this.db.orderRespository.find({
-      relations: ['orderPerfumes, orderPerfumes.perfume'],
+      relations: ['orderPerfumes', 'orderPerfumes.perfume'],
     });
 
     return await Promise.all(
