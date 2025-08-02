@@ -24,7 +24,7 @@ export class OrderService {
 
     const order = this.db.orderRespository.create({
       orderPerfumes: null,
-      price: 0,
+
       userId: user.id,
     });
     const savedOrder = await this.db.orderRespository.save(order);
@@ -40,13 +40,6 @@ export class OrderService {
       }),
     );
     await this.db.orderPerfumeRepository.save(orderPerfumes);
-
-    // Calculate the total price of the order
-    savedOrder.price = orderPerfumes.reduce(
-      (acc, orderPerfume) =>
-        acc + orderPerfume.perfume.price * orderPerfume.cant,
-      0,
-    );
 
     // clear the shop cart
     this.shopCartService.clearShopCart(user.shopCartId);
