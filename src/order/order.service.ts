@@ -57,7 +57,7 @@ export class OrderService {
           new OrderResponse(
             orderEntity.id,
             orderEntity.state,
-            await this.userService.findOne(orderEntity.userId),
+            await this.userService.findOneWithOutRelations(orderEntity.userId),
             await Promise.all(
               orderEntity.orderPerfumes.map(
                 async (orderPerfumeEntity) =>
