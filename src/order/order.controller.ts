@@ -21,6 +21,7 @@ import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { ApiPaginationdResponse } from 'src/utils/api-responses';
 import { OrderResponse } from './responses/order.response';
 import { FiltersOrderDto } from './filters/filters-order.dto';
+import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
 
 
 @Controller('order')
@@ -66,6 +67,25 @@ export class OrderController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(+id);
+  }
+
+  @Get('user-total-orders/:id')
+  @ApiOperation({
+    summary:
+      'Este endpoint devuelve la cantidad de items de un carrito de compras en específico',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Cantidad de items obtenida con éxito',
+    type: UserTotalOrdersResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de obtener la cantidad de items del carrito de compras',
+  })
+  userTotalOrders(@Param('id') id: string) {
+    return this.orderService.userTotalOrders(id);
   }
 
   @Patch(':id')

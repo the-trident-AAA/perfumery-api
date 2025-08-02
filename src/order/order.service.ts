@@ -105,6 +105,10 @@ export class OrderService {
     return `This action returns a #${id} order`;
   }
 
+  async userTotalOrders(userId: string) {
+    return await this.db.orderRespository.count({ where: { userId } });
+  }
+
   update(id: number, updateOrderDto: UpdateOrderDto) {
     return `This action updates a #${id} order`;
   }
