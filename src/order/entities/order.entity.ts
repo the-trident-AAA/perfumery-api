@@ -19,9 +19,6 @@ export class OrderEntity extends BaseEntity {
   @Column({ enum: State, default: State.PENDING })
   state: State;
 
-  @Column()
-  price: number;
-
   @Column({ name: 'user_id' })
   userId: string;
 
