@@ -13,17 +13,6 @@ export class ShopCartPerfumeService {
   ) {}
 
   async create(createShopCartPerfumeDto: CreateShopCartPerfumeDto) {
-    // check perfume availability
-    if (
-      !(await this.perfumeService.checkStocks(
-        createShopCartPerfumeDto.perfumeId,
-        createShopCartPerfumeDto.cant,
-      ))
-    )
-      throw new BadRequestException(
-        'No existe disponibilidad de dicho perfume en el inventario',
-      );
-
     // check if a perfume already exists in this cart
     const shopCartPerfume = await this.db.shopCartPerfumeRespository.findOne({
       where: {
@@ -31,6 +20,19 @@ export class ShopCartPerfumeService {
         shopCartId: createShopCartPerfumeDto.shopCartId,
       },
     });
+
+    // check perfume availability
+    if (
+      !(await this.perfumeService.checkStocks(
+        createShopCartPerfumeDto.perfumeId,
+        shopCartPerfume
+          ? createShopCartPerfumeDto.cant + shopCartPerfume.cant
+          : createShopCartPerfumeDto.cant,
+      ))
+    )
+      throw new BadRequestException(
+        'No existe disponibilidad de dicho perfume en el inventario',
+      );
 
     return await this.db.shopCartPerfumeRespository.save(
       shopCartPerfume
