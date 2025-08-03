@@ -4,10 +4,6 @@ import { Type } from 'class-transformer';
 import { State } from '../entities/state.enum';
 
 class PerfumeOrderDto {
-  @ApiProperty({ description: 'ID del perfume' })
-  @IsUUID()
-  perfumeId: string;
-
   @ApiProperty({ description: 'Cantidad de perfumes en el pedido' })
   cant: number;
 }
