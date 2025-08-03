@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { State } from '../entities/state.enum';
+import { IsNull } from 'typeorm';
 
 class PerfumeOrderDto {
   @ApiProperty({ description: 'ID del perfume' })
@@ -15,7 +16,6 @@ export class UpdateOrderDto {
   @ApiProperty({
     description: 'Representa el estado del pedido',
   })
-  @IsEnum(State)
   state?: State;
   @ApiProperty({
     description:
