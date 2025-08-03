@@ -4,6 +4,9 @@ import { Type } from 'class-transformer';
 import { State } from '../entities/state.enum';
 
 class PerfumeOrderDto {
+  @ApiProperty({ description: 'ID del perfume' })
+  @IsUUID()
+  perfumeId: string;
   @ApiProperty({ description: 'Cantidad de perfumes en el pedido' })
   cant: number;
 }
@@ -13,7 +16,7 @@ export class UpdateOrderDto {
     description: 'Representa el estado del pedido',
   })
   @IsEnum(State)
-  state: State;
+  state?: State;
   @ApiProperty({
     description:
       'Lista de perfumes en el pedido con sus respectivas cantidades',
@@ -22,5 +25,5 @@ export class UpdateOrderDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PerfumeOrderDto)
-  perfumes: PerfumeOrderDto[];
+  perfumes?: PerfumeOrderDto[];
 }
