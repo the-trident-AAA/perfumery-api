@@ -100,8 +100,28 @@ export class OrderService {
     );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: string) {
+    const orderEntity = await this.db.orderRespository.findOne({
+      where: {
+        id,
+      },
+      relations: ['orderPerfumes', 'orderPerfumes.perfume'],
+    });
+    return new OrderResponse(
+      orderEntity.id,
+      orderEntity.state,
+      await this.userService.findOneWithOutRelations(orderEntity.userId),
+      await Promise.all(
+        orderEntity.orderPerfumes.map(
+          async (orderPerfumeEntity) =>
+            new OrderPerfumeResponse(
+              orderPerfumeEntity.id,
+              await this.perfumeService.findOne(orderPerfumeEntity.perfumeId),
+              orderPerfumeEntity.cant,
+            ),
+        ),
+      ),
+    );
   }
 
   async userTotalOrders(userId: string) {
