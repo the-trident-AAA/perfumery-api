@@ -110,7 +110,29 @@ export class OrderService {
     );
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
+  async update(id: string, updateOrderDto: UpdateOrderDto) {
+    if (updateOrderDto.state)
+      await this.db.orderRespository.update(id, {
+        state: updateOrderDto.state,
+      });
+
+    if (updateOrderDto.perfumes) {
+      // first, delete the all perfumes of the order
+      await this.db.orderPerfumeRepository.delete({ orderId: id });
+
+      // Create the relationships between Order and Perfume with quantities
+      const orderPerfumes = await Promise.all(
+        updateOrderDto.perfumes.map(async (p) => {
+          return this.db.orderPerfumeRepository.create({
+            orderId: id,
+            perfumeId: p.perfumeId,
+            cant: p.cant,
+          });
+        }),
+      );
+      await this.db.orderPerfumeRepository.save(orderPerfumes);
+    }
+
     return `This action updates a #${id} order`;
   }
 
