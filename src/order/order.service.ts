@@ -153,7 +153,7 @@ export class OrderService {
       await this.db.orderPerfumeRepository.save(orderPerfumes);
     }
 
-    return `This action updates a #${id} order`;
+    return { success: true };
   }
 
   remove(id: number) {
