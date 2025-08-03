@@ -52,6 +52,16 @@ export class ShopCartPerfumeService {
         'No existe un perfume de carrito con ese identificador',
       );
 
+    if (
+      !(await this.perfumeService.checkStocks(
+        shopCartPerfume.perfumeId,
+        updateShopCartPerfume.cant,
+      ))
+    )
+      throw new BadRequestException(
+        'No existe disponibilidad de dicho perfume en el inventario',
+      );
+
     Object.assign(shopCartPerfume, updateShopCartPerfume);
 
     return await this.db.shopCartPerfumeRespository.save(shopCartPerfume);
