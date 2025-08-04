@@ -89,6 +89,7 @@ export class OrderController {
     return this.orderService.userTotalOrders(user.id);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('get-order-perfumes/:id')
   getOrderPerfumes(@Param('id') id: string) {
     return this.orderService.getOrderPerfumes(id);
