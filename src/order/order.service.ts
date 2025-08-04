@@ -124,6 +124,23 @@ export class OrderService {
     );
   }
 
+  async getOrderPerfumes(id: string) {
+    const orderPerfumes = await this.db.orderPerfumeRepository.find({
+      where: { orderId: id },
+    });
+
+    return await Promise.all(
+      orderPerfumes.map(
+        async (orderPerfume) =>
+          new OrderPerfumeResponse(
+            orderPerfume.id,
+            await this.perfumeService.findOne(orderPerfume.perfumeId),
+            orderPerfume.cant,
+          ),
+      ),
+    );
+  }
+
   async userTotalOrders(userId: string) {
     return new UserTotalOrdersResponse(
       await this.db.orderRespository.count({ where: { userId } }),

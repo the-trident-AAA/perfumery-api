@@ -89,6 +89,11 @@ export class OrderController {
     return this.orderService.userTotalOrders(user.id);
   }
 
+  @Get('get-order-perfumes/:id')
+  getOrderPerfumes(@Param('id') id: string) {
+    return this.orderService.getOrderPerfumes(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(id);
