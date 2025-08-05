@@ -61,7 +61,7 @@ export class PerfumeService {
     const orderClause: FindOptionsOrder<PerfumeEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
-        : { id: 'ASC' };
+        : { price: 'ASC' };
 
     const [perfumes, total] = await this.db.perfumeRepository.findAndCount({
       where: {
