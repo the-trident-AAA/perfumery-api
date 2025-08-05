@@ -5,9 +5,9 @@ export class OrderDto {
   @ApiProperty({
     name: 'orderBy',
     required: false,
-    type: Number,
+    type: 'string',
     description: 'OrderBy column: example "name"',
-    example: 1,
+    example: 'name',
   })
   @IsOptional()
   @IsString()
@@ -16,9 +16,9 @@ export class OrderDto {
   @ApiProperty({
     name: 'order',
     required: false,
-    type: Number,
+    type: 'string',
     description: 'order example "ASC"',
-    example: 1,
+    example: 'ASC',
   })
   @IsOptional()
   @IsIn(['ASC', 'DESC'])
