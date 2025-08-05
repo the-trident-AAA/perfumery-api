@@ -13,11 +13,7 @@ import {
 import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
-import {
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -25,6 +21,7 @@ import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.p
 import { ApiPaginationdResponse } from 'src/utils/api-responses';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { FiltersPerfumeDto } from './dto/filters-perfume.dto';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Controller('perfume')
 export class PerfumeController {
@@ -68,10 +65,15 @@ export class PerfumeController {
   findAll(
     @Query() paginationDto: PaginationDto,
     @Query() filtersPerfumeDto: FiltersPerfumeDto,
+    @Query() orderDto: OrderDto,
   ) {
     paginationDto.page = Number(paginationDto.page);
     paginationDto.limit = Number(paginationDto.limit);
-    return this.perfumeService.findAll(paginationDto, filtersPerfumeDto);
+    return this.perfumeService.findAll(
+      paginationDto,
+      filtersPerfumeDto,
+      orderDto,
+    );
   }
 
   @Get(':id')

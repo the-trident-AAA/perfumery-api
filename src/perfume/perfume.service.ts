@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
-import { ILike, In } from 'typeorm';
+import { FindOptionsOrder, ILike, In } from 'typeorm';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { BrandResponse } from 'src/brand/responses/brand.response';
@@ -13,6 +13,8 @@ import { OfferDetailsResponse } from 'src/offer/responses/offer-details.response
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
 import { FiltersPerfumeDto } from './dto/filters-perfume.dto';
+import { OrderDto } from 'src/utils/dto/order.dto';
+import { PerfumeEntity } from './entities/perfume.entity';
 
 @Injectable()
 export class PerfumeService {
@@ -46,9 +48,20 @@ export class PerfumeService {
   async findAll(
     paginationDto: PaginationDto,
     filtersPerfumeDto: FiltersPerfumeDto,
+    orderDto: OrderDto,
   ): Promise<PagintationResponse<PerfumeResponse>> {
     const { page, limit } = paginationDto;
     const skip = (page - 1) * limit;
+    const { order, orderBy } = orderDto;
+
+    const sortableFields = ['id', 'name', 'price', 'cant', 'milliliters'];
+
+    const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+    const orderClause: FindOptionsOrder<PerfumeEntity> =
+      orderBy && sortableFields.includes(orderBy)
+        ? { [orderBy]: direction }
+        : { id: 'ASC' };
 
     const [perfumes, total] = await this.db.perfumeRepository.findAndCount({
       where: {
@@ -85,6 +98,7 @@ export class PerfumeService {
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
       skip,
       take: limit,
+      order: orderClause,
     });
 
     const data = await Promise.all(
