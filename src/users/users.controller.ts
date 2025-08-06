@@ -15,11 +15,9 @@ import { UserResponse } from './responses/user.response';
 import { UserDetailsResponse } from './responses/user-details.response';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
-import { ActiveUser } from 'src/common/decorators/active-user.decorator';
-import { ActiveUserInterface } from 'src/common/interfaces/active-user.interface';
 
 @ApiBearerAuth()
-@Auth([Role.ADMIN])
+@Auth([Role.USER])
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
