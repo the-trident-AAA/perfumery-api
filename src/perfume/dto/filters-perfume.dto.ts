@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entities/gender.enum';
+import { IsOptional, IsUUID } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class FiltersPerfumeDto {
   @ApiProperty({
@@ -37,13 +39,20 @@ export class FiltersPerfumeDto {
   })
   gender: Gender;
 
+  @IsOptional()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+  @IsUUID('4', { each: true })
   @ApiProperty({
-    description: 'Representa el tipo de perfume al que pertenece el perfume',
-    type: 'string',
-    isArray: true,
+    description: 'IDs de los aromas asociados al perfume',
+    type: 'array',
     required: false,
+    isArray: true,
+    example: [
+      'a52fac27-df9d-4b38-9287-ff4146b1418d',
+      'b6d8d69e-bc6e-4ebf-832e-1209f1d39e88',
+    ],
   })
-  scentsIds: string[];
+  scentsIds?: string[];
 
   @ApiProperty({
     description: 'Representa los mililitros que contiene el perfume',
