@@ -86,4 +86,28 @@ export class FiltersPerfumeDto {
     required: false,
   })
   offerId: string;
+  @ApiProperty({
+    description: 'Representa el límite inferior de precio',
+    type: 'string',
+    required: false,
+  })
+  priceMin?: number;
+  @ApiProperty({
+    description: 'Representa el límite superior de precio',
+    type: 'string',
+    required: false,
+  })
+  priceMax?: number;
+  @ApiProperty({
+    description: 'Representa el límite inferior de mililitros',
+    type: 'string',
+    required: false,
+  })
+  millilitersMin?: number;
+  @ApiProperty({
+    description: 'Representa el límite superior de mililitros',
+    type: 'string',
+    required: false,
+  })
+  millilitersMax?: number;
 }
