@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
-import { FindOptionsOrder, ILike, In } from 'typeorm';
+import { Between, FindOptionsOrder, ILike, In } from 'typeorm';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import { BrandResponse } from 'src/brand/responses/brand.response';
@@ -73,13 +73,27 @@ export class PerfumeService {
           description: ILike(`%${filtersPerfumeDto.description}%`),
         }),
         ...(filtersPerfumeDto.gender && { gender: filtersPerfumeDto.gender }),
-        ...(filtersPerfumeDto.milliliters && {
-          milliliters: filtersPerfumeDto.milliliters,
-        }),
+
         ...(filtersPerfumeDto.available !== undefined && {
           available: filtersPerfumeDto.available,
         }),
-        ...(filtersPerfumeDto.price && { price: filtersPerfumeDto.price }),
+        // ✅ Rango para price
+        ...((filtersPerfumeDto.priceMin !== undefined ||
+          filtersPerfumeDto.priceMax !== undefined) && {
+          price: Between(
+            filtersPerfumeDto.priceMin ?? 0,
+            filtersPerfumeDto.priceMax ?? Number.MAX_SAFE_INTEGER,
+          ),
+        }),
+
+        // ✅ Rango para milliliters
+        ...((filtersPerfumeDto.millilitersMin !== undefined ||
+          filtersPerfumeDto.millilitersMax !== undefined) && {
+          milliliters: Between(
+            filtersPerfumeDto.millilitersMin ?? 0,
+            filtersPerfumeDto.millilitersMax ?? Number.MAX_SAFE_INTEGER,
+          ),
+        }),
         ...(filtersPerfumeDto.cant && { cant: filtersPerfumeDto.cant }),
         ...(filtersPerfumeDto.brandId && {
           brand: { id: filtersPerfumeDto.brandId },
