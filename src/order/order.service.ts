@@ -1,4 +1,4 @@
-import { Injectable, Logger} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
@@ -12,7 +12,6 @@ import { FiltersOrderDto } from './filters/filters-order.dto';
 import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
 import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
 import { OrderEntity } from './entities/order.entity';
-
 
 @Injectable()
 export class OrderService {
