@@ -30,7 +30,9 @@ export class ShopCartResponse {
   })
   @Expose()
   get totalItems(): number {
-    return this.shopCartPerfumes.length;
+    return this.shopCartPerfumes.reduce((total, shopCartPerfume) => {
+      return total + shopCartPerfume.cant;
+    }, 0);
   }
 
   @ApiProperty({
