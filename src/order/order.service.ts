@@ -47,7 +47,10 @@ export class OrderService {
 
     // clear the shop cart
     this.shopCartService.clearShopCart(user.shopCartId);
-    return await this.db.orderRespository.save(savedOrder);
+
+    const orderEntity = await this.db.orderRespository.save(savedOrder);
+
+    return await this.findOne(orderEntity.id);
   }
 
   async findAll(
