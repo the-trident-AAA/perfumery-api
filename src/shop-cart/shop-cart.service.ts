@@ -49,7 +49,11 @@ export class ShopCartService {
         'No estiste un carrito con ese identificador',
       );
 
-    return new ShopCartTotalItemsResponse(shopCart.shopCartPerfumes.length);
+    return new ShopCartTotalItemsResponse(
+      shopCart.shopCartPerfumes.reduce((total, shopCartPerfume) => {
+        return total + shopCartPerfume.cant;
+      }, 0),
+    );
   }
 
   async remove(id: string) {
