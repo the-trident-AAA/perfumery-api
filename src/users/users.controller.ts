@@ -91,7 +91,7 @@ export class UsersController {
     description: 'Ocurrió un error en el proceso de actualizar el usuario',
   })
   update(
-    @Param() id: string,
+    @Param('id') id: string,
     @Body() dto: UpdateUserDto,
     @UploadedFile(new ImageFileValidationPipe()) avatar: Express.Multer.File,
   ) {
