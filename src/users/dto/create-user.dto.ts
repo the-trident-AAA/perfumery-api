@@ -19,11 +19,4 @@ export class CreateUserDto {
     required: true,
   })
   password: string;
-  @ApiProperty({
-    description: 'Representa el avatar del usuario',
-    type: 'string',
-    format: 'binary',
-    required: false,
-  })
-  avatar?: Express.Multer.File;
 }
