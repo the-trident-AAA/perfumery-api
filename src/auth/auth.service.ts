@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginResponse } from './responses/login.response';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -55,6 +56,29 @@ export class AuthService {
       user.username,
       user.email,
       user.shopCartId,
+    );
+  }
+
+  async changePasswordUser(id: string, changePasswordDto: ChangePasswordDto) {
+    const userEntity = await this.usersService.findOneEntity(id);
+
+    if (!userEntity)
+      throw new BadRequestException(
+        'No existe un usuario con ese identificador',
+      );
+
+    const isPasswordValid = await bcrypt.compare(
+      changePasswordDto.currentPassword,
+      userEntity.password,
+    );
+    if (!isPasswordValid)
+      throw new UnauthorizedException(
+        'La contraseña actual proporcionada es incorrecta',
+      );
+
+    return await this.usersService.changePasswordUser(
+      id,
+      await bcrypt.hash(changePasswordDto.newPassword, 10),
     );
   }
 }

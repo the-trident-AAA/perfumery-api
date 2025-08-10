@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -16,6 +17,7 @@ import { Roles } from './decorators/roles.decorator';
 import { RolesGuard } from './guard/roles.guard';
 import { Role } from '../common/enums/role.enum';
 import { Auth } from './decorators/auth.decorators';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 interface RequestWithUser extends Request {
   user: { user: string; role: string };
@@ -30,6 +32,23 @@ export class AuthController {
   })
   register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
+  }
+
+  @Post('change-password-user/:id')
+  @ApiOperation({
+    summary:
+      'Este endpoint se encaraga del proceso de cambio de contraseña de un usuario',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Cambio de contraseña efectuado con éxito',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de cambio de contraseña',
+  })
+  changePasswordUser(@Param('id') id: string, @Body() dto: ChangePasswordDto) {
+    return this.authService.changePasswordUser(id, dto);
   }
 
   @Post('login')

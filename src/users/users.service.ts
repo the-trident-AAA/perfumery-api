@@ -119,6 +119,10 @@ export class UsersService {
     });
   }
 
+  async changePasswordUser(id: string, newPassword: string) {
+    return await this.db.userRepository.update(id, { password: newPassword });
+  }
+
   async findOneWithOutRelations(id: string) {
     const user = await this.db.userRepository.findOne({ where: { id } });
 
