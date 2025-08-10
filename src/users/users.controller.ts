@@ -7,6 +7,7 @@ import {
   Get,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Patch,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,6 +16,7 @@ import { UserResponse } from './responses/user.response';
 import { UserDetailsResponse } from './responses/user-details.response';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiBearerAuth()
 @Auth([Role.USER])
@@ -62,6 +64,24 @@ export class UsersController {
   })
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
+  }
+
+  @Patch(':id')
+  @ApiOperation({
+    summary:
+      'Endpoint para actualizar la información de pérfil de un usuario en específico',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Datos del usuario actualizados',
+    type: UserDetailsResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de actualizar el usuario',
+  })
+  update(@Param() id: string, @Body() dto: UpdateUserDto) {
+    return this.usersService.update(id, dto);
   }
 
   @Delete(':id')
