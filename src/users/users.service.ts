@@ -111,6 +111,14 @@ export class UsersService {
     );
   }
 
+  async findOneEntity(id: string) {
+    return await this.db.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
   async findOneWithOutRelations(id: string) {
     const user = await this.db.userRepository.findOne({ where: { id } });
 
