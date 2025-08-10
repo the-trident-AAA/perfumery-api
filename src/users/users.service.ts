@@ -15,10 +15,21 @@ export class UsersService {
   ) {}
 
   async create(dto: CreateUserDto) {
+    const { avatar, ...restDto } = dto;
     // created a shop cart
     const shopCart = await this.shopCartService.create({});
+
+    // Upload the avatar image
+    const image = await this.minioService.uploadFile(
+      undefined,
+      avatar.buffer,
+      avatar.originalname.split('.').pop(),
+      avatar.mimetype,
+    );
+
     return await this.db.userRepository.save({
-      ...dto,
+      ...restDto,
+      avatar: image,
       shopCartId: shopCart.id,
     });
   }
