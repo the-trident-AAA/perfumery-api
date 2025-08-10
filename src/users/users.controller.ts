@@ -8,15 +8,23 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Patch,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { UserResponse } from './responses/user.response';
 import { UserDetailsResponse } from './responses/user-details.response';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 
 @ApiBearerAuth()
 @Auth([Role.USER])
@@ -67,6 +75,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('avatar'))
   @ApiOperation({
     summary:
       'Endpoint para actualizar la información de pérfil de un usuario en específico',
@@ -80,7 +90,12 @@ export class UsersController {
     status: 500,
     description: 'Ocurrió un error en el proceso de actualizar el usuario',
   })
-  update(@Param() id: string, @Body() dto: UpdateUserDto) {
+  update(
+    @Param() id: string,
+    @Body() dto: UpdateUserDto,
+    @UploadedFile(new ImageFileValidationPipe()) avatar: Express.Multer.File,
+  ) {
+    dto.avatar = avatar;
     return this.usersService.update(id, dto);
   }
 
