@@ -72,7 +72,7 @@ export class AuthService {
       userEntity.password,
     );
     if (!isPasswordValid)
-      throw new UnauthorizedException(
+      throw new BadRequestException(
         'La contraseña actual proporcionada es incorrecta',
       );
 
