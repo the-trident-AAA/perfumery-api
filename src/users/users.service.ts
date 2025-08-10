@@ -97,10 +97,14 @@ export class UsersService {
         'No existe un usuario con ese identificador',
       );
 
+    const avatar = user.avatar
+      ? await this.minioService.getPresignedUrl(user.avatar)
+      : null;
+
     return new UserDetailsResponse(
       user.id,
       user.username,
-      user.avatar,
+      avatar,
       user.email,
       user.role,
       await this.shopCartService.findOne(user.shopCartId),
@@ -115,10 +119,14 @@ export class UsersService {
         'No existe un usuario con ese identificador',
       );
 
+    const avatar = user.avatar
+      ? await this.minioService.getPresignedUrl(user.avatar)
+      : null;
+
     return new UserResponse(
       user.id,
       user.username,
-      user.avatar,
+      avatar,
       user.email,
       user.role,
     );
