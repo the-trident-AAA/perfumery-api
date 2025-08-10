@@ -55,6 +55,25 @@ export class UsersController {
     return this.usersService.find();
   }
 
+  @Get('find-one-without-relations/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiOperation({
+    summary: 'Este endpoint el usuario con el identificador proporcionado',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Usuario con el identificador proporcionado con todos sus detalles',
+    type: UserDetailsResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de obtener el usuario',
+  })
+  findOneWithoutRelations(@Param('id') id: string) {
+    return this.usersService.findOneWithOutRelations(id);
+  }
+
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
