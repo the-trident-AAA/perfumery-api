@@ -46,7 +46,7 @@ export class UsersService {
           username: dto.username,
         },
       });
-      if (userByUsername.id !== id)
+      if (userByUsername && userByUsername.id !== id)
         throw new BadRequestException(
           'Ya existe en el sistema un usuario con ese nombre de usuario',
         );
