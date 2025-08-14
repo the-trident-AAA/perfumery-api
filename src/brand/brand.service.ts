@@ -54,9 +54,7 @@ export class BrandService {
     });
 
     if (brandByName && brandByName.id !== id)
-      throw new BadRequestException(
-        'Ya existe una marca con ese identificador',
-      );
+      throw new BadRequestException('Ya existe una marca con ese nombre');
 
     Object.assign(brand, dto);
 
