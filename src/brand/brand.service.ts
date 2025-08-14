@@ -41,6 +41,23 @@ export class BrandService {
 
   async update(id: string, dto: UpdateBrandDto) {
     const brand = await this.findOne(id);
+
+    if (!brand)
+      throw new BadRequestException(
+        'No existe una marca con ese identificador',
+      );
+
+    const brandByName = await this.db.brandRepository.findOne({
+      where: {
+        name: dto.name,
+      },
+    });
+
+    if (brandByName && brandByName.id !== id)
+      throw new BadRequestException(
+        'Ya existe una marca con ese identificador',
+      );
+
     Object.assign(brand, dto);
 
     return await this.db.brandRepository.save(brand);
