@@ -9,6 +9,15 @@ export class BrandService {
   constructor(private readonly db: DatabaseService) {}
 
   async create(dto: CreateBrandDto) {
+    const brandEntity = await this.db.brandRepository.findOne({
+      where: {
+        name: dto.name,
+      },
+    });
+
+    if (brandEntity)
+      throw new BadRequestException('Ya existe una marca con ese nombre');
+
     const brand = this.db.brandRepository.create(dto);
     return await this.db.brandRepository.save(brand);
   }
