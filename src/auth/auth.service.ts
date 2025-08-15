@@ -118,6 +118,7 @@ export class AuthService {
     const isValid = await this.otpService.verifyOTP(email, otp);
 
     if (isValid) {
+      await this.usersService.activateAccount(email);
       return { valid: true, message: 'OTP válido' };
     }
     return { valid: false, message: 'OTP inválido o expirado' };
