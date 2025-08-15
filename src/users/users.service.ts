@@ -84,6 +84,7 @@ export class UsersService {
               : null,
             user.email,
             user.role,
+            user.isActive,
           ),
       ),
     );
@@ -107,6 +108,7 @@ export class UsersService {
       avatar,
       user.email,
       user.role,
+      user.isActive,
       await this.shopCartService.findOne(user.shopCartId),
     );
   }
@@ -141,6 +143,7 @@ export class UsersService {
       avatar,
       user.email,
       user.role,
+      user.isActive,
     );
   }
 

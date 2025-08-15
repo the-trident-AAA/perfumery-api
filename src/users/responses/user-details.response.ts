@@ -16,9 +16,10 @@ export class UserDetailsResponse extends UserResponse {
     avatar: string,
     email: string,
     role: string,
+    isActive: boolean,
     shopCart: ShopCartResponse,
   ) {
-    super(id, username, avatar, email, role);
+    super(id, username, avatar, email, role, isActive);
     this.shopCart = shopCart;
   }
 }

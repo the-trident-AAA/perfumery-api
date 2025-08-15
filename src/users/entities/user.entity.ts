@@ -28,6 +28,9 @@ export class UserEntity {
   @Column({ nullable: false })
   password: string;
 
+  @Column({ nullable: true })
+  isActive: boolean;
+
   @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
