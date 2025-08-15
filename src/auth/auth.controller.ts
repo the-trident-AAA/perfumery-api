@@ -122,9 +122,9 @@ export class AuthController {
     return this.authService.verifyOTP(dto.email, dto.otp);
   }
 
-  @Post('verify-otp')
+  @Post('activate-account')
   @ApiOperation({
-    summary: 'Verificar código OTP',
+    summary: 'Actvivar cuenta de usuario',
   })
   @ApiResponse({
     status: 201,
