@@ -118,10 +118,19 @@ export class AuthService {
     const isValid = await this.otpService.verifyOTP(email, otp);
 
     if (isValid) {
-      await this.usersService.activateAccount(email);
       return { valid: true, message: 'OTP válido' };
     }
     return { valid: false, message: 'OTP inválido o expirado' };
+  }
+
+  async activateAccount(email: string, otp: string) {
+    const otpResponde = await this.verifyOTP(email, otp);
+
+    if (!otpResponde.valid)
+      throw new BadRequestException('El código otp es incorrecto');
+
+    await this.usersService.activateAccount(email);
+    return { valid: true, message: 'Cuenta activada con éxito' };
   }
 
   async resetPassword(dto: ResetPasswordDto) {

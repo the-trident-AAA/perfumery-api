@@ -122,6 +122,22 @@ export class AuthController {
     return this.authService.verifyOTP(dto.email, dto.otp);
   }
 
+  @Post('verify-otp')
+  @ApiOperation({
+    summary: 'Verificar código OTP',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Cuenta activdad correctamente',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'OTP de activación inválido o expirado',
+  })
+  async activateAccount(@Body() dto: VerifyOtpDto) {
+    return this.authService.activateAccount(dto.email, dto.otp);
+  }
+
   @Post('reset-password')
   @ApiOperation({
     summary: 'Resetear contraseña usando OTP',
