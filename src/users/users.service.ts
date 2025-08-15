@@ -151,6 +151,13 @@ export class UsersService {
     });
   }
 
+  async findOneByEmail(email: string) {
+    return this.db.userRepository.findOne({
+      where: { email },
+      select: ['id', 'username', 'email', 'password', 'role', 'shopCartId'],
+    });
+  }
+
   async remove(id: string) {
     const user = await this.db.userRepository.findOne({ where: { id } });
 
