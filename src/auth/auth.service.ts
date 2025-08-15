@@ -2,6 +2,8 @@ import {
   Injectable,
   BadRequestException,
   UnauthorizedException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
@@ -46,7 +48,16 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect username or password');
     }
 
-    console.log(user);
+    if (!user.isActive) {
+      // send the otp for user
+      await this.sendOTP(user.email);
+
+      throw new HttpException(
+        'La cuenta del usuario necesita ser activada',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     const payload = {
       id: user.id,
       username: user.username,
@@ -105,7 +116,7 @@ export class AuthService {
 
   async verifyOTP(email: string, otp: string) {
     const isValid = await this.otpService.verifyOTP(email, otp);
-    
+
     if (isValid) {
       return { valid: true, message: 'OTP válido' };
     }
