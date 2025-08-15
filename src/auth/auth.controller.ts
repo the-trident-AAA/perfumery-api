@@ -18,6 +18,9 @@ import { RolesGuard } from './guard/roles.guard';
 import { Role } from '../common/enums/role.enum';
 import { Auth } from './decorators/auth.decorators';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { SendOtpDto } from './dto/send-otp.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 interface RequestWithUser extends Request {
   user: { user: string; role: string };
@@ -85,5 +88,53 @@ export class AuthController {
     req: RequestWithUser,
   ) {
     return req.user;
+  }
+
+  @Post('send-otp')
+  @ApiOperation({
+    summary: 'Enviar código OTP al email del usuario',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'OTP enviado correctamente',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Email inválido o usuario no encontrado',
+  })
+  async sendOTP(@Body() dto: SendOtpDto) {
+    return this.authService.sendOTP(dto.email);
+  }
+
+  @Post('verify-otp')
+  @ApiOperation({
+    summary: 'Verificar código OTP',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'OTP verificado correctamente',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'OTP inválido o expirado',
+  })
+  async verifyOTP(@Body() dto: VerifyOtpDto) {
+    return this.authService.verifyOTP(dto.email, dto.otp);
+  }
+
+  @Post('reset-password')
+  @ApiOperation({
+    summary: 'Resetear contraseña usando OTP',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Contraseña cambiada exitosamente',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'OTP inválido o usuario no encontrado',
+  })
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto);
   }
 }

@@ -11,6 +11,7 @@ import { ScentEntity } from 'src/scent/entities/scent.entity';
 import { ShopCartPerfumeEntity } from 'src/shop-cart-perfume/entities/shop-cart-perfume.entity';
 import { ShopCartEntity } from 'src/shop-cart/entities/shop-cart.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { OtpEntity } from 'src/otp/entities/otp.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -38,5 +39,7 @@ export class DatabaseService {
     public readonly orderRespository: Repository<OrderEntity>,
     @InjectRepository(OrderPerfumeEntity)
     public readonly orderPerfumeRepository: Repository<OrderPerfumeEntity>,
+    @InjectRepository(OtpEntity)
+    public readonly otpRepository: Repository<OtpEntity>,
   ) {}
 }

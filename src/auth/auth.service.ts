@@ -10,12 +10,17 @@ import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginResponse } from './responses/login.response';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { OtpService } from 'src/otp/otp.service';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly otpService: OtpService,
+    private readonly mailService: MailService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -80,5 +85,50 @@ export class AuthService {
       id,
       await bcrypt.hash(changePasswordDto.newPassword, 10),
     );
+  }
+
+  async sendOTP(email: string) {
+    // Verificar que el usuario existe
+    const user = await this.usersService.findOneByEmail(email);
+    if (!user) {
+      throw new BadRequestException('No existe un usuario con este email');
+    }
+
+    const otp = this.otpService.generateOTP();
+    await this.mailService.sendOTPEmail(email, otp);
+
+    // Guardar OTP en base de datos con expiración
+    await this.otpService.saveOTP(email, otp);
+
+    return { message: 'OTP enviado correctamente' };
+  }
+
+  async verifyOTP(email: string, otp: string) {
+    const isValid = await this.otpService.verifyOTP(email, otp);
+    
+    if (isValid) {
+      return { valid: true, message: 'OTP válido' };
+    }
+    return { valid: false, message: 'OTP inválido o expirado' };
+  }
+
+  async resetPassword(dto: ResetPasswordDto) {
+    // Verificar que el usuario existe
+    const user = await this.usersService.findOneByEmail(dto.email);
+    if (!user) {
+      throw new BadRequestException('No existe un usuario con este email');
+    }
+
+    // Verificar el OTP
+    const isValidOTP = await this.otpService.verifyOTP(dto.email, dto.otp);
+    if (!isValidOTP) {
+      throw new BadRequestException('OTP inválido o expirado');
+    }
+
+    // Cambiar la contraseña
+    const hashedPassword = await bcrypt.hash(dto.newPassword, 10);
+    await this.usersService.changePasswordUser(user.id, hashedPassword);
+
+    return { message: 'Contraseña cambiada exitosamente' };
   }
 }
