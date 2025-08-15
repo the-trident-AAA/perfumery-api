@@ -70,6 +70,17 @@ export class UsersService {
     return await this.db.userRepository.save(userEntity);
   }
 
+  async activateAccount(email: string) {
+    const user = await this.findOneByEmail(email);
+
+    if (!user)
+      throw new BadRequestException('No existe un usuario con ese email');
+
+    user.isActive = true;
+
+    await this.db.userRepository.save(user);
+  }
+
   async find() {
     const users = await this.db.userRepository.find();
 
@@ -150,14 +161,30 @@ export class UsersService {
   async findOneByUsername(username: string) {
     return this.db.userRepository.findOne({
       where: { username },
-      select: ['id', 'username', 'email', 'password', 'role', 'shopCartId'],
+      select: [
+        'id',
+        'username',
+        'email',
+        'password',
+        'role',
+        'shopCartId',
+        'isActive',
+      ],
     });
   }
 
   async findOneByEmail(email: string) {
     return this.db.userRepository.findOne({
       where: { email },
-      select: ['id', 'username', 'email', 'password', 'role', 'shopCartId'],
+      select: [
+        'id',
+        'username',
+        'email',
+        'password',
+        'role',
+        'shopCartId',
+        'isActive',
+      ],
     });
   }
 
