@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { generateOTPEmailHTML } from './templates/otp';
 import { AssetsService } from '../assets/assets.service';
+import { join } from 'path';
 
 @Injectable()
 export class MailService {
@@ -18,8 +19,8 @@ export class MailService {
       this.logger.log(`Enviando OTP a: ${email}`);
 
       const currentYear = new Date().getFullYear();
-      const logoBase64 = this.assetsService.getLogoAsBase64();
-      const htmlContent = generateOTPEmailHTML(otp, currentYear, logoBase64);
+      const logoUrl = this.assetsService.getLogoUrl();
+      const htmlContent = generateOTPEmailHTML(otp, currentYear, logoUrl);
 
       await this.mailerService.sendMail({
         to: email,
