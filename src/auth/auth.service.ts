@@ -98,24 +98,24 @@ export class AuthService {
     );
   }
 
-  async sendOTP(email: string) {
+  async sendOTP(userId: string) {
     // Verificar que el usuario existe
-    const user = await this.usersService.findOneByEmail(email);
+    const user = await this.usersService.findOneEntity(userId);
     if (!user) {
       throw new BadRequestException('No existe un usuario con este email');
     }
 
     const otp = this.otpService.generateOTP();
-    await this.mailService.sendOTPEmail(email, otp);
+    await this.mailService.sendOTPEmail(user.email, otp);
 
     // Guardar OTP en base de datos con expiración
-    await this.otpService.saveOTP(email, otp);
+    await this.otpService.saveOTP(userId, otp);
 
     return { message: 'OTP enviado correctamente' };
   }
 
-  async verifyOTP(email: string, otp: string) {
-    const isValid = await this.otpService.verifyOTP(email, otp);
+  async verifyOTP(userId: string, otp: string) {
+    const isValid = await this.otpService.verifyOTP(userId, otp);
 
     if (isValid) {
       return { valid: true, message: 'OTP válido' };
@@ -123,25 +123,25 @@ export class AuthService {
     return { valid: false, message: 'OTP inválido o expirado' };
   }
 
-  async activateAccount(email: string, otp: string) {
-    const otpResponde = await this.verifyOTP(email, otp);
+  async activateAccount(userId: string, otp: string) {
+    const otpResponde = await this.verifyOTP(userId, otp);
 
     if (!otpResponde.valid)
       throw new BadRequestException('El código otp es incorrecto');
 
-    await this.usersService.activateAccount(email);
+    await this.usersService.activateAccount(userId);
     return { valid: true, message: 'Cuenta activada con éxito' };
   }
 
   async resetPassword(dto: ResetPasswordDto) {
     // Verificar que el usuario existe
-    const user = await this.usersService.findOneByEmail(dto.email);
+    const user = await this.usersService.findOneEntity(dto.userId);
     if (!user) {
       throw new BadRequestException('No existe un usuario con este email');
     }
 
     // Verificar el OTP
-    const isValidOTP = await this.otpService.verifyOTP(dto.email, dto.otp);
+    const isValidOTP = await this.otpService.verifyOTP(dto.userId, dto.otp);
     if (!isValidOTP) {
       throw new BadRequestException('OTP inválido o expirado');
     }

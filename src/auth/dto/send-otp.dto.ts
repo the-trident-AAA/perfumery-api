@@ -3,10 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class SendOtpDto {
   @ApiProperty({
-    description: 'Email del usuario para enviar el OTP',
-    example: 'usuario@ejemplo.com',
+    description: 'Identificador del usuario al cual se le enviará el OTP',
+    type: 'string',
   })
-  @IsEmail({}, { message: 'El email debe tener un formato válido' })
-  @IsNotEmpty({ message: 'El email es requerido' })
-  email: string;
+  @IsNotEmpty({ message: 'El identificador es requerido' })
+  userId: string;
 }

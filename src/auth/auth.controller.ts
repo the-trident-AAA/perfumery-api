@@ -103,7 +103,7 @@ export class AuthController {
     description: 'Email inválido o usuario no encontrado',
   })
   async sendOTP(@Body() dto: SendOtpDto) {
-    return this.authService.sendOTP(dto.email);
+    return this.authService.sendOTP(dto.userId);
   }
 
   @Post('verify-otp')
@@ -119,7 +119,7 @@ export class AuthController {
     description: 'OTP inválido o expirado',
   })
   async verifyOTP(@Body() dto: VerifyOtpDto) {
-    return this.authService.verifyOTP(dto.email, dto.otp);
+    return this.authService.verifyOTP(dto.userId, dto.otp);
   }
 
   @Post('activate-account')
@@ -135,7 +135,7 @@ export class AuthController {
     description: 'OTP de activación inválido o expirado',
   })
   async activateAccount(@Body() dto: VerifyOtpDto) {
-    return this.authService.activateAccount(dto.email, dto.otp);
+    return this.authService.activateAccount(dto.userId, dto.otp);
   }
 
   @Post('reset-password')

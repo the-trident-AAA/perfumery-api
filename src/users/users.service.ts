@@ -70,8 +70,12 @@ export class UsersService {
     return await this.db.userRepository.save(userEntity);
   }
 
-  async activateAccount(email: string) {
-    const user = await this.findOneByEmail(email);
+  async activateAccount(userId: string) {
+    const user = await this.db.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
 
     if (!user)
       throw new BadRequestException('No existe un usuario con ese email');

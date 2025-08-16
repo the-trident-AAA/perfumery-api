@@ -11,21 +11,23 @@ export class OtpService {
     private readonly db: DatabaseService,
     private readonly configService: ConfigService,
   ) {}
-  
+
   generateOTP(): string {
-    return otplib.authenticator.generate(this.configService.get<string>('OTP_SECRET'));
+    return otplib.authenticator.generate(
+      this.configService.get<string>('OTP_SECRET'),
+    );
   }
 
-  async saveOTP(email: string, otp: string): Promise<OtpEntity> {
+  async saveOTP(userId: string, otp: string): Promise<OtpEntity> {
     // Invalidar OTPs anteriores para este email
     await this.db.otpRepository.update(
-      { email, isUsed: false },
-      { isUsed: true }
+      { userId, isUsed: false },
+      { isUsed: true },
     );
 
     // Crear nuevo OTP
     const otpEntity = this.db.otpRepository.create({
-      email,
+      userId,
       otp,
       expiresAt: this.getOTPExpiration(),
     });
@@ -33,10 +35,10 @@ export class OtpService {
     return await this.db.otpRepository.save(otpEntity);
   }
 
-  async verifyOTP(email: string, token: string): Promise<boolean> {
+  async verifyOTP(userId: string, token: string): Promise<boolean> {
     const otpEntity = await this.db.otpRepository.findOne({
       where: {
-        email,
+        userId,
         otp: token,
         isUsed: false,
       },
@@ -51,16 +53,13 @@ export class OtpService {
       // Marcar como usado si ha expirado
       await this.db.otpRepository.update(
         { id: otpEntity.id },
-        { isUsed: true }
+        { isUsed: true },
       );
       return false;
     }
 
     // Marcar como usado si es válido
-    await this.db.otpRepository.update(
-      { id: otpEntity.id },
-      { isUsed: true }
-    );
+    await this.db.otpRepository.update({ id: otpEntity.id }, { isUsed: true });
 
     return true;
   }

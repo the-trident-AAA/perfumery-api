@@ -3,12 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class VerifyOtpDto {
   @ApiProperty({
-    description: 'Email del usuario',
-    example: 'usuario@ejemplo.com',
+    description: 'Identificador del usuario',
+    type: 'string',
   })
-  @IsEmail({}, { message: 'El email debe tener un formato válido' })
-  @IsNotEmpty({ message: 'El email es requerido' })
-  email: string;
+  @IsNotEmpty({ message: 'El identificador es requerido' })
+  userId: string;
 
   @ApiProperty({
     description: 'Código OTP de 6 dígitos',

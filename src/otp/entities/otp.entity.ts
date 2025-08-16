@@ -12,8 +12,7 @@ export class OtpEntity {
   id: string;
 
   @Column()
-  @Index()
-  email: string;
+  userId: string;
 
   @Column()
   otp: string;
