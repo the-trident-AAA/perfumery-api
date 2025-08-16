@@ -15,7 +15,7 @@ export function generateOTPEmailHTML(otp: string, currentYear: number): string {
             
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #ede0d4 0%, #252422 100%);
                 min-height: 100vh;
                 display: flex;
                 align-items: center;
@@ -33,7 +33,7 @@ export function generateOTPEmailHTML(otp: string, currentYear: number): string {
             }
             
             .header {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #ede0d4 0%, #252422 100%);
                 padding: 40px 30px;
                 text-align: center;
                 position: relative;
@@ -85,7 +85,7 @@ export function generateOTPEmailHTML(otp: string, currentYear: number): string {
             }
             
             .otp-container {
-                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                background: linear-gradient(135deg, #ede0d4 0%, #252422 100%);
                 border-radius: 15px;
                 padding: 25px;
                 margin: 30px 0;
