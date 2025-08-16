@@ -74,7 +74,7 @@ export class AssetsService {
    */
   getLogoUrl(): string {
     // Use your server's URL - replace with your actual domain
-    const baseUrl = process.env.API_URL || 'http://localhost:3000';
+    const baseUrl = process.env.API_URL || 'http://localhost:4000';
     return `${baseUrl}/assets/images/logo.png`;
   }
 

@@ -203,7 +203,7 @@ export function generateOTPEmailHTML(otp: string, currentYear: number, logoUrl?:
         <div class="container">
             <div class="header">
                 <div class="logo">
-                    ${logoUrl ? `<img src="${logoUrl}" alt="Perfumery Logo" />` : 'Perfumery'}
+                    ${logoUrl ? `<img src="${logoUrl}" alt="Perfumery" />` : 'Perfumery'}
                 </div>
                 <div class="subtitle">Tu tienda de fragancias favorita</div>
             </div>
