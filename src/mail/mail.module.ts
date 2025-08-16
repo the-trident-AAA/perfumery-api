@@ -2,9 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { AssetsModule } from '../assets/assets.module';
 
 @Module({
   imports: [
+    AssetsModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

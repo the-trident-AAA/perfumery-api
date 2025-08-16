@@ -1,4 +1,4 @@
-export function generateOTPEmailHTML(otp: string, currentYear: number): string {
+export function generateOTPEmailHTML(otp: string, currentYear: number, logoBase64?: string): string {
   return `
     <!DOCTYPE html>
     <html lang="es">
@@ -56,6 +56,12 @@ export function generateOTPEmailHTML(otp: string, currentYear: number): string {
                 margin-bottom: 10px;
                 position: relative;
                 z-index: 1;
+            }
+            
+            .logo img {
+                max-height: 60px;
+                width: auto;
+                filter: brightness(0) invert(1); /* Makes the logo white */
             }
             
             .subtitle {
@@ -196,7 +202,9 @@ export function generateOTPEmailHTML(otp: string, currentYear: number): string {
     <body>
         <div class="container">
             <div class="header">
-                <div class="logo">🌸 Perfumery</div>
+                <div class="logo">
+                    ${logoBase64 ? `<img src="data:image/png;base64,${logoBase64}" alt="Perfumery Logo" />` : 'Perfumery'}
+                </div>
                 <div class="subtitle">Tu tienda de fragancias favorita</div>
             </div>
             

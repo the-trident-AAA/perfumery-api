@@ -2,23 +2,28 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { generateOTPEmailHTML } from './templates/otp';
+import { AssetsService } from '../assets/assets.service';
 
 @Injectable()
 export class MailService {
   private readonly logger = new Logger(MailService.name);
 
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly assetsService: AssetsService,
+  ) {}
 
   async sendOTPEmail(email: string, otp: string): Promise<void> {
     try {
       this.logger.log(`Enviando OTP a: ${email}`);
 
       const currentYear = new Date().getFullYear();
-      const htmlContent = generateOTPEmailHTML(otp, currentYear);
+      const logoBase64 = this.assetsService.getLogoAsBase64();
+      const htmlContent = generateOTPEmailHTML(otp, currentYear, logoBase64);
 
       await this.mailerService.sendMail({
         to: email,
-        subject: '🌸 Tu código de verificación - Perfumery',
+        subject: 'Tu código de verificación - Perfumery',
         html: htmlContent,
       });
 
