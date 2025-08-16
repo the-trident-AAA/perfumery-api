@@ -40,13 +40,23 @@ const imageBase64 = this.assetsService.getImageAsBase64('mi-imagen.png');
 
 ## Uso en emails
 
-Para usar imágenes en templates de email, convierte la imagen a Base64 y pásala como parámetro:
+Para usar imágenes en templates de email, usa la URL del servidor:
 
 ```typescript
 // En mail.service.ts
-const logoBase64 = this.assetsService.getLogoAsBase64();
-const htmlContent = generateOTPEmailHTML(otp, currentYear, logoBase64);
+const logoUrl = this.assetsService.getLogoUrl();
+const htmlContent = generateOTPEmailHTML(otp, currentYear, logoUrl);
 ```
+
+### Configuración de la URL del servidor:
+
+Agrega la variable de entorno `API_URL` en tu archivo `.env`:
+
+```env
+API_URL=https://tu-dominio.com
+```
+
+Si no se especifica, usará `http://localhost:3000` por defecto.
 
 ## Notas importantes
 
