@@ -117,10 +117,10 @@ export class AuthService {
   async verifyOTP(userId: string, otp: string) {
     const isValid = await this.otpService.verifyOTP(userId, otp);
 
-    if (isValid) {
-      return { valid: true, message: 'OTP válido' };
+    if (!isValid) {
+      throw new BadRequestException('OTP inválido o expirado');
     }
-    return { valid: false, message: 'OTP inválido o expirado' };
+    return { valid: true, message: 'Verificación exitosa' };
   }
 
   async activateAccount(userId: string, otp: string) {
