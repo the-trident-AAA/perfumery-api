@@ -69,6 +69,16 @@ export class AssetsService {
   }
 
   /**
+   * Gets the logo URL for email templates
+   * @returns URL string of the logo
+   */
+  getLogoUrl(): string {
+    // Use your server's URL - replace with your actual domain
+    const baseUrl = process.env.API_URL || 'http://localhost:3000';
+    return `${baseUrl}/assets/images/logo.png`;
+  }
+
+  /**
    * Determines MIME type based on file extension
    * @param extension - File extension
    * @returns MIME type string

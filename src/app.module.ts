@@ -15,6 +15,7 @@ import { ShopCartPerfumeModule } from './shop-cart-perfume/shop-cart-perfume.mod
 import { OrderModule } from './order/order.module';
 import { MailModule } from './mail/mail.module';
 import { OtpModule } from './otp/otp.module';
+import { AssetsModule } from './assets/assets.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { OtpModule } from './otp/otp.module';
     OrderModule,
     MailModule,
     OtpModule,
+    AssetsModule,
   ],
 })
 export class AppModule {}
