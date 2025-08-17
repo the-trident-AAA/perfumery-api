@@ -64,6 +64,20 @@ export class OtpService {
     return true;
   }
 
+  async checkOtp(
+    userId: string,
+    token: string,
+  ): Promise<{ valid: boolean; reason?: 'not_found' | 'expired' | 'used' }> {
+    const otp = await this.db.otpRepository.findOne({
+      where: { userId, otp: token },
+    });
+
+    if (!otp) return { valid: false, reason: 'not_found' };
+    if (otp.isUsed) return { valid: false, reason: 'used' };
+    if (new Date() > otp.expiresAt) return { valid: false, reason: 'expired' };
+    return { valid: true };
+  }
+
   getOTPExpiration(): Date {
     const expiresInMinutes = 5;
     const expiration = new Date();

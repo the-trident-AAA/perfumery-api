@@ -122,6 +122,22 @@ export class AuthController {
     return this.authService.verifyOTP(dto.userId, dto.otp);
   }
 
+  @Post('check-otp')
+  @ApiOperation({
+    summary: 'Chequear código OTP',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'OTP chequeado correctamente',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'OTP inválido o expirado',
+  })
+  async checkOtp(@Body() dto: VerifyOtpDto) {
+    return this.authService.checkOtp(dto.userId, dto.otp);
+  }
+
   @Post('activate-account')
   @ApiOperation({
     summary: 'Actvivar cuenta de usuario',

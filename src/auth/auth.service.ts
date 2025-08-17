@@ -123,6 +123,15 @@ export class AuthService {
     return { valid: true, message: 'Verificación exitosa' };
   }
 
+  async checkOtp(userId: string, otp: string) {
+    const isValid = await this.otpService.checkOtp(userId, otp);
+
+    if (!isValid.valid) {
+      throw new BadRequestException('OTP inválido o expirado');
+    }
+    return { valid: true, message: 'Verificación exitosa' };
+  }
+
   async activateAccount(userId: string, otp: string) {
     const otpResponde = await this.verifyOTP(userId, otp);
 
