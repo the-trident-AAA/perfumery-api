@@ -25,6 +25,7 @@ export class UsersService {
     return await this.db.userRepository.save({
       ...dto,
       shopCartId: shopCart.id,
+      isActive: false,
     });
   }
 
