@@ -49,11 +49,11 @@ export class AuthService {
     }
 
     if (!user.isActive) {
-      // send the otp for user
-      await this.sendOTP(user.email);
-
       throw new HttpException(
-        'La cuenta del usuario necesita ser activada',
+        {
+          message: 'La cuenta del usuario necesita ser activada',
+          userId: user.id,
+        },
         HttpStatus.FORBIDDEN,
       );
     }
