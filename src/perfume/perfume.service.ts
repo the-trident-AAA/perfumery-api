@@ -36,10 +36,26 @@ export class PerfumeService {
       dto.image.mimetype,
     );
 
+    // Upload the images of the perfume
+    const images = dto.images
+      ? await Promise.all(
+          dto.images.map(
+            async (image) =>
+              await this.minioService.uploadFile(
+                undefined,
+                image.buffer,
+                image.originalname.split('.').pop(),
+                image.mimetype,
+              ),
+          ),
+        )
+      : [];
+
     const perfume = this.db.perfumeRepository.create({
       ...dto,
       scents,
       image,
+      images,
     });
 
     return await this.db.perfumeRepository.save(perfume);

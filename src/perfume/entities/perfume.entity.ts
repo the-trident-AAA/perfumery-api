@@ -56,6 +56,14 @@ export class PerfumeEntity {
   @Column({ name: 'image', nullable: true })
   image: string;
 
+  @Column({
+    name: 'images',
+    type: 'json',
+    nullable: true,
+    default: [],
+  })
+  images: string[];
+
   @ManyToOne(() => BrandEntity, (brand) => brand.perfumes)
   @JoinColumn({ name: 'brand_id' })
   brand: BrandEntity;

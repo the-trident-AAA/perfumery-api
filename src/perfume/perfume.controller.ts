@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
+  UploadedFiles,
 } from '@nestjs/common';
 import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
@@ -16,12 +17,13 @@ import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 import { ApiPaginationdResponse } from 'src/utils/api-responses';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { FiltersPerfumeDto } from './dto/filters-perfume.dto';
 import { OrderDto } from 'src/utils/dto/order.dto';
+import { ImagesFileValidationPipe } from 'src/utils/pipes/images-file-validation.pipe';
 
 @Controller('perfume')
 export class PerfumeController {
@@ -29,7 +31,7 @@ export class PerfumeController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileInterceptor('image'), FilesInterceptor('images', 10))
   @ApiOperation({
     summary: 'Este endpoint agrega un perfume a la base de datos',
   })
@@ -41,8 +43,11 @@ export class PerfumeController {
   create(
     @Body() dto: CreatePerfumeDto,
     @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+    @UploadedFiles(new ImagesFileValidationPipe())
+    images: Express.Multer.File[],
   ) {
     dto.image = image;
+    dto.images = images;
     return this.perfumeService.create(dto);
   }
 

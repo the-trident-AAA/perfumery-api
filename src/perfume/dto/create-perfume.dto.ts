@@ -117,4 +117,15 @@ export class CreatePerfumeDto {
     required: true,
   })
   image: Express.Multer.File;
+
+  @ApiProperty({
+    description: 'Representa las imágenes del perfume',
+    type: 'array',
+    items: {
+      type: 'string',
+      format: 'binary',
+    },
+    required: false,
+  })
+  images?: Express.Multer.File[];
 }
