@@ -177,11 +177,18 @@ export class PerfumeService {
       ? await this.minioService.getPresignedUrl(perfume.image)
       : null;
 
+    const images = await Promise.all(
+      perfume.images.map(
+        async (image) => await this.minioService.getPresignedUrl(image),
+      ),
+    );
+
     return new PerfumeDetailsResponse(
       perfume.id,
       perfume.name,
       perfume.description,
       image,
+      images,
       new BrandResponse(perfume.brand.id, perfume.brand.name),
       perfume.gender,
       perfume.scents.map((scent) => new ScentResponse(scent.id, scent.name)),

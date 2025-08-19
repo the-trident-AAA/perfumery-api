@@ -35,6 +35,13 @@ export class PerfumeDetailsResponse {
   image: string;
 
   @ApiProperty({
+    description: 'Representa las url de las imagenes del perfume',
+    type: 'array',
+    required: true,
+  })
+  images: string[];
+
+  @ApiProperty({
     description: 'Representa la marca del perfume',
     type: BrandResponse,
     required: false,
@@ -98,12 +105,12 @@ export class PerfumeDetailsResponse {
   })
   cant: number;
 
-
   constructor(
     id: string,
     name: string,
     description: string,
     image: string,
+    images: string[],
     brand: BrandResponse,
     gender: Gender,
     scents: ScentResponse[],
@@ -126,6 +133,7 @@ export class PerfumeDetailsResponse {
     this.price = price;
     this.cant = cant;
     this.image = image;
+    this.images = images;
     this.offer = offer;
     this.description = description;
   }
