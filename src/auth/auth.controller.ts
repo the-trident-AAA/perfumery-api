@@ -71,6 +71,24 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  @Post('verify-state-account')
+  @ApiOperation({
+    summary:
+      'Este endpoint se encarga de verificar si la cuenta de un usuario se encuentra activada o no',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Verificación realizada con éxito',
+    type: LoginResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de verificación',
+  })
+  verifyStateAccount(@Body() dto: loginDto) {
+    return this.authService.verifyStateAccount(dto);
+  }
+
   @Get('admin-profile')
   @Roles([Role.USER])
   @UseGuards(AuthGuard, RolesGuard)

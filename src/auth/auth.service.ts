@@ -75,6 +75,30 @@ export class AuthService {
     );
   }
 
+  async verifyStateAccount(dto: loginDto) {
+    const user = await this.usersService.findOneByUsername(dto.username);
+    if (!user) {
+      throw new UnauthorizedException('Incorrect username or password');
+    }
+
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Incorrect username or password');
+    }
+
+    if (!user.isActive) {
+      throw new HttpException(
+        {
+          message: 'La cuenta del usuario necesita ser activada',
+          userId: user.id,
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    return { valid: true, message: 'Cuenta activada' };
+  }
+
   async changePasswordUser(id: string, changePasswordDto: ChangePasswordDto) {
     const userEntity = await this.usersService.findOneEntity(id);
 
