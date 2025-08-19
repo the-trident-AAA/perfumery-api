@@ -40,12 +40,12 @@ export class AuthService {
   async login(dto: loginDto): Promise<LoginResponse> {
     const user = await this.usersService.findOneByUsername(dto.username);
     if (!user) {
-      throw new UnauthorizedException('Incorrect username or password');
+      throw new BadRequestException('Credenciales incorrectas');
     }
 
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Incorrect username or password');
+      throw new BadRequestException('Credenciales incorrectas');
     }
 
     if (!user.isActive) {
@@ -78,12 +78,12 @@ export class AuthService {
   async verifyStateAccount(dto: loginDto) {
     const user = await this.usersService.findOneByUsername(dto.username);
     if (!user) {
-      throw new UnauthorizedException('Incorrect username or password');
+      throw new BadRequestException('Credenciales incorrectas');
     }
 
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Incorrect username or password');
+      throw new BadRequestException('Credenciales incorrectas');
     }
 
     if (!user.isActive) {
