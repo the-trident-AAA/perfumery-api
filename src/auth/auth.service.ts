@@ -96,7 +96,7 @@ export class AuthService {
       );
     }
 
-    return { valid: true, message: 'Cuenta activada' };
+    return { userId: user.id };
   }
 
   async changePasswordUser(id: string, changePasswordDto: ChangePasswordDto) {
