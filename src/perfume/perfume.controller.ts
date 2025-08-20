@@ -17,7 +17,11 @@ import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 import { ApiPaginationdResponse } from 'src/utils/api-responses';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
@@ -31,7 +35,12 @@ export class PerfumeController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image'), FilesInterceptor('images', 10))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'image', maxCount: 1 },
+      { name: 'images', maxCount: 10 },
+    ]),
+  )
   @ApiOperation({
     summary: 'Este endpoint agrega un perfume a la base de datos',
   })
@@ -40,14 +49,13 @@ export class PerfumeController {
     status: 500,
     description: 'Ocurrió un error en el proceso de creación de perfume',
   })
-  create(
+  async create(
     @Body() dto: CreatePerfumeDto,
-    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
-    @UploadedFiles(new ImagesFileValidationPipe())
-    images: Express.Multer.File[],
+    @UploadedFiles()
+    files: { image: Express.Multer.File[]; images?: Express.Multer.File[] },
   ) {
-    dto.image = image;
-    dto.images = images;
+    dto.image = files.image[0];
+    dto.images = files.images;
     return this.perfumeService.create(dto);
   }
 
@@ -101,7 +109,12 @@ export class PerfumeController {
 
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image'), FilesInterceptor('images', 10))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'image', maxCount: 1 },
+      { name: 'images', maxCount: 10 },
+    ]),
+  )
   @ApiOperation({
     summary: 'Este endpoint edita un perfume de la base de datos',
   })
@@ -113,12 +126,11 @@ export class PerfumeController {
   update(
     @Param('id') id: string,
     @Body() updatePerfumeDto: UpdatePerfumeDto,
-    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
-    @UploadedFiles(new ImagesFileValidationPipe())
-    images: Express.Multer.File[],
+    @UploadedFiles()
+    files: { image: Express.Multer.File[]; images?: Express.Multer.File[] },
   ) {
-    updatePerfumeDto.image = image;
-    updatePerfumeDto.images = images;
+    updatePerfumeDto.image = files.image[0];
+    updatePerfumeDto.images = files.images;
     return this.perfumeService.update(id, updatePerfumeDto);
   }
 
