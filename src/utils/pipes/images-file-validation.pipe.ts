@@ -5,7 +5,7 @@ export class ImagesFileValidationPipe implements PipeTransform {
   transform(files: Express.Multer.File[]) {
     // Validar que al menos hay una imagen
     if (!files || files.length === 0) {
-      return undefined;
+      return [];
     }
 
     // Validar cada archivo
