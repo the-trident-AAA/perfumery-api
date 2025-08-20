@@ -58,7 +58,18 @@ export class CreatePerfumeDto {
     return value;
   })
   @IsArray()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   @IsUUID('4', { each: true })
+  @ApiProperty({
+    description: 'IDs de los aromas asociados al perfume',
+    type: 'array',
+    required: false,
+    isArray: true,
+    example: [
+      'a52fac27-df9d-4b38-9287-ff4146b1418d',
+      'b6d8d69e-bc6e-4ebf-832e-1209f1d39e88',
+    ],
+  })
   scentsId: string[];
 
   @ApiProperty({
