@@ -105,7 +105,32 @@ export class HomeBannerService {
   }
 
   async markedAsMainHomeBanner(id: string) {
-    return await this.db.homeBannerRepository.update(id, { isMain: true });
+    const homeBanner = await this.db.homeBannerRepository.findOne({
+      where: { id },
+    });
+
+    if (!homeBanner)
+      throw new BadRequestException(
+        'No existe un home banner con ese identificador',
+      );
+
+    if (homeBanner.isMain) homeBanner.isMain = false;
+    else {
+      // find the last principal home banner
+      const lastPrincipalHomeBanner =
+        await this.db.homeBannerRepository.findOne({
+          where: {
+            isMain: true,
+          },
+        });
+      if (lastPrincipalHomeBanner && lastPrincipalHomeBanner.id !== id) {
+        lastPrincipalHomeBanner.isMain = false;
+        await this.db.homeBannerRepository.save(lastPrincipalHomeBanner);
+      }
+      homeBanner.isMain = true;
+    }
+
+    return await this.db.homeBannerRepository.save(homeBanner);
   }
 
   async remove(id: string) {
