@@ -269,6 +269,13 @@ export class PerfumeService {
     // delete the image from Minio
     await this.minioService.deleteFile(perfume.image);
 
+    // delete the images from Minio
+    await Promise.all(
+      perfume.images.map(
+        async (image) => await this.minioService.deleteFile(image),
+      ),
+    );
+
     // delete relationships in the intermediate table perfume_scent
     await this.db.perfumeRepository.query(
       `DELETE FROM perfume_scent WHERE perfume_id = $1`,
