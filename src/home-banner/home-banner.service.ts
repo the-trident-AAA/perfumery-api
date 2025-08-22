@@ -5,6 +5,9 @@ import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
 import { MinioService } from 'src/minio/minio.service';
 import { DatabaseService } from 'src/database/database.service';
+import { OrderDto } from 'src/utils/dto/order.dto';
+import { FindOptionsOrder } from 'typeorm';
+import { HomeBannerEntity } from './entities/home-banner.entity';
 
 @Injectable()
 export class HomeBannerService {
@@ -34,8 +37,19 @@ export class HomeBannerService {
     return await this.db.homeBannerRepository.save(homeBanner);
   }
 
-  async findAll() {
-    const homeBanners = await this.db.homeBannerRepository.find();
+  async findAll(orderDto: OrderDto) {
+    const { order, orderBy } = orderDto;
+
+    const sortableFields = ['id', 'title', 'description', 'isMain'];
+    const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+    const orderClause: FindOptionsOrder<HomeBannerEntity> =
+      orderBy && sortableFields.includes(orderBy)
+        ? { [orderBy]: direction }
+        : { title: 'ASC' };
+
+    const homeBanners = await this.db.homeBannerRepository.find({
+      order: orderClause,
+    });
 
     return Promise.all(
       homeBanners.map(async (homeBanner) => {

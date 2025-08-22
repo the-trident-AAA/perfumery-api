@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { HomeBannerService } from './home-banner.service';
 import { CreateHomeBannerDto } from './dto/create-home-banner.dto';
@@ -16,6 +17,7 @@ import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Controller('home-banner')
 export class HomeBannerController {
@@ -60,8 +62,8 @@ export class HomeBannerController {
     description:
       'Ocurrió un error en el proceso de obtener la lista de banners del home',
   })
-  findAll() {
-    return this.homeBannerService.findAll();
+  findAll(@Query() orderDto: OrderDto) {
+    return this.homeBannerService.findAll(orderDto);
   }
 
   @Get(':id')
