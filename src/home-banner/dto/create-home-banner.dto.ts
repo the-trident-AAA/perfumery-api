@@ -1,19 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 export class StatisticalTip {
   @ApiProperty({
     description: 'Representa el nombre de la estadística',
     type: 'string',
-    required: true,
   })
+  @IsString()
   statistics: string;
+
   @ApiProperty({
     description: 'Representa la información acerca de esa estadística',
     type: 'string',
-    required: true,
   })
+  @IsString()
   info: string;
 }
 
@@ -25,6 +26,7 @@ export class CreateHomeBannerDto {
   })
   @IsString()
   title: string;
+
   @ApiProperty({
     description: 'Representa la descripción del Banner del Home',
     type: 'string',
@@ -32,32 +34,68 @@ export class CreateHomeBannerDto {
   })
   @IsString()
   description?: string;
+
   @ApiProperty({
     description: 'Representa las imágenes que se promocionarán en el banner',
     type: 'array',
-    items: {
-      type: 'string',
-      format: 'binary',
-    },
+    items: { type: 'string', format: 'binary' },
     required: true,
   })
   images: Express.Multer.File[];
-  @IsArray()
-  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+
   @ApiProperty({
     description:
       'Representa la lista de tips sobre estadísticas que tendrá el banner',
     type: StatisticalTip,
-    required: true,
+    isArray: true,
+    required: false,
   })
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (!value) return []; // si no viene, devolver []
+    if (Array.isArray(value)) {
+      return value
+        .map((v) => {
+          try {
+            return JSON.parse(v);
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+    }
+    if (typeof value === 'string') {
+      try {
+        return [JSON.parse(value)];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  })
+  @ValidateNested({ each: true })
+  @Type(() => StatisticalTip)
   statisticalTips: StatisticalTip[];
-  @IsArray()
-  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+
   @ApiProperty({
     description:
       'Representa la lista de tips informativas que tendrá el banner',
     type: 'string',
-    required: true,
+    isArray: true,
+    required: false,
   })
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (!value) return []; // si no viene, devolver []
+    if (Array.isArray(value)) {
+      return value.flatMap((v) => (typeof v === 'string' ? v.split(',') : []));
+    }
+    if (typeof value === 'string') {
+      return value.split(',');
+    }
+    return [];
+  })
+  @IsArray()
+  @IsString({ each: true })
   infoTips: string[];
 }
