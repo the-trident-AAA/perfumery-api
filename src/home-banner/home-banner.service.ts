@@ -59,8 +59,8 @@ export class HomeBannerService {
   async findOne(id: string) {
     const homeBanner = await this.db.homeBannerRepository.findOne({
       where: { id },
-      relations: ['perfumes'],
     });
+    console.log(homeBanner);
     if (!homeBanner)
       throw new BadRequestException(
         'No existe un home banner con ese identificador',
