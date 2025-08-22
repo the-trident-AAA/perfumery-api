@@ -28,6 +28,7 @@ export class HomeBannerService {
     const homeBanner = this.db.homeBannerRepository.create({
       ...createHomeBannerDto,
       images: images,
+      isMain: false,
     });
 
     return await this.db.homeBannerRepository.save(homeBanner);

@@ -8,6 +8,8 @@ export class HomeBannerEntity {
   title: string;
   @Column({ nullable: true })
   description?: string;
+  @Column()
+  isMain: boolean;
   @Column({
     name: 'images',
     type: 'json',
