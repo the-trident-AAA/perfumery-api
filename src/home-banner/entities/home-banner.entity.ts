@@ -1,11 +1,5 @@
 import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'home_banner' })
 export class HomeBannerEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -14,9 +8,28 @@ export class HomeBannerEntity {
   title: string;
   @Column({ nullable: true })
   description?: string;
-  @Column({ nullable: true })
-  image: string;
-  @ManyToMany(() => PerfumeEntity, (perfume) => perfume.homeBanners)
-  @JoinTable()
-  perfumes: PerfumeEntity[];
+  @Column({
+    name: 'images',
+    type: 'json',
+    nullable: true,
+    default: [],
+  })
+  images: string[];
+  @Column({
+    name: 'statistical_tips',
+    type: 'json',
+    nullable: false,
+    default: [],
+  })
+  statisticalTips: {
+    statistics: string;
+    info: string; // the information about statistics
+  }[];
+  @Column({
+    name: 'info_tips',
+    type: 'json',
+    nullable: false,
+    default: [],
+  })
+  infoTips: string[];
 }

@@ -7,7 +7,7 @@ import {
   Param,
   Delete,
   UseInterceptors,
-  UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
 import { HomeBannerService } from './home-banner.service';
 import { CreateHomeBannerDto } from './dto/create-home-banner.dto';
@@ -15,8 +15,7 @@ import { UpdateHomeBannerDto } from './dto/update-home-banner.dto';
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('home-banner')
 export class HomeBannerController {
@@ -24,7 +23,7 @@ export class HomeBannerController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
   @ApiOperation({
     summary: 'Este endpoint agrega un banner del home a la base de datos',
   })
@@ -38,9 +37,10 @@ export class HomeBannerController {
   })
   create(
     @Body() createHomeBannerDto: CreateHomeBannerDto,
-    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+    @UploadedFiles()
+    files: { images: Express.Multer.File[] },
   ) {
-    createHomeBannerDto.image = image;
+    createHomeBannerDto.images = files.images;
     return this.homeBannerService.create(createHomeBannerDto);
   }
 
@@ -84,7 +84,7 @@ export class HomeBannerController {
 
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
   @ApiOperation({
     summary: 'Este endpoint edita un banner del home de la base de datos',
   })
@@ -100,9 +100,10 @@ export class HomeBannerController {
   update(
     @Param('id') id: string,
     @Body() updateHomeBannerDto: UpdateHomeBannerDto,
-    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+    @UploadedFiles()
+    files: { images: Express.Multer.File[] },
   ) {
-    updateHomeBannerDto.image = image;
+    updateHomeBannerDto.images = files.images;
     return this.homeBannerService.update(id, updateHomeBannerDto);
   }
 

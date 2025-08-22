@@ -90,9 +90,6 @@ export class PerfumeEntity {
   @JoinColumn({ name: 'offer_id' })
   offer: OfferEntity;
 
-  @ManyToMany(() => HomeBannerEntity, (homeBanner) => homeBanner.perfumes)
-  homeBanners: HomeBannerEntity[];
-
   @OneToMany(
     () => ShopCartPerfumeEntity,
     (shopCartPerfume) => shopCartPerfume.perfume,

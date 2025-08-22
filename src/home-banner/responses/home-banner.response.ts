@@ -20,16 +20,21 @@ export class HomeBannerResponse {
   })
   description: string;
   @ApiProperty({
-    description: 'Representa la imagen promocional del Banner del Home',
-    type: 'string',
+    description: 'Representa las imagenes promocionales del Banner del Home',
+    type: 'array',
     required: true,
   })
-  image: string;
+  images: string[];
 
-  constructor(id: string, title: string, description: string, image: string) {
+  constructor(
+    id: string,
+    title: string,
+    description: string,
+    images: string[],
+  ) {
     this.id = id;
     this.title = title;
     this.description = description;
-    this.image = image;
+    this.images = images;
   }
 }
