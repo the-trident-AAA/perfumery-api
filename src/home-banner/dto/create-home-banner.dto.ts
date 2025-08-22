@@ -42,6 +42,8 @@ export class CreateHomeBannerDto {
     required: true,
   })
   images: Express.Multer.File[];
+  @IsArray()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   @ApiProperty({
     description:
       'Representa la lista de tips sobre estadísticas que tendrá el banner',
@@ -49,6 +51,8 @@ export class CreateHomeBannerDto {
     required: true,
   })
   statisticalTips: StatisticalTip[];
+  @IsArray()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   @ApiProperty({
     description:
       'Representa la lista de tips informativas que tendrá el banner',
