@@ -5,10 +5,11 @@ export class HomeBannerDetailsResponse extends HomeBannerResponse {
     id: string,
     title: string,
     description: string,
+    isMain: boolean,
     images: string[],
     statisticalTips: StatisticalTip[],
     infoTips: string[],
   ) {
-    super(id, title, description, images, statisticalTips, infoTips);
+    super(id, title, description, isMain, images, statisticalTips, infoTips);
   }
 }

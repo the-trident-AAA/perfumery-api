@@ -35,6 +35,12 @@ export class HomeBannerResponse {
   })
   description: string;
   @ApiProperty({
+    description: 'Indica si el Banner es el principal o no',
+    type: 'boolean',
+    required: true,
+  })
+  isMain: boolean;
+  @ApiProperty({
     description: 'Representa las imagenes promocionales del Banner del Home',
     type: 'array',
     required: true,
@@ -58,6 +64,7 @@ export class HomeBannerResponse {
     id: string,
     title: string,
     description: string,
+    isMain: boolean,
     images: string[],
     statisticalTips: StatisticalTip[],
     infoTips: string[],
@@ -65,6 +72,7 @@ export class HomeBannerResponse {
     this.id = id;
     this.title = title;
     this.description = description;
+    this.isMain = isMain;
     this.images = images;
     this.statisticalTips = statisticalTips;
     this.infoTips = infoTips;
