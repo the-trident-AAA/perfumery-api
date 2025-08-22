@@ -256,7 +256,7 @@ export class PerfumeService {
         ),
       );
       perfume.images = imagesMinio;
-    }
+    } else perfume.images = [];
 
     return await this.db.perfumeRepository.save(perfume);
   }
