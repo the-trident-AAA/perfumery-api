@@ -3,8 +3,6 @@ import { CreateHomeBannerDto } from './dto/create-home-banner.dto';
 import { UpdateHomeBannerDto } from './dto/update-home-banner.dto';
 import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
-import { PerfumeService } from 'src/perfume/perfume.service';
-import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 import { MinioService } from 'src/minio/minio.service';
 import { DatabaseService } from 'src/database/database.service';
 
@@ -12,7 +10,6 @@ import { DatabaseService } from 'src/database/database.service';
 export class HomeBannerService {
   constructor(
     private readonly db: DatabaseService,
-    private readonly perfumeService: PerfumeService,
     private readonly minioService: MinioService,
   ) {}
   async create(createHomeBannerDto: CreateHomeBannerDto) {
