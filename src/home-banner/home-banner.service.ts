@@ -104,6 +104,10 @@ export class HomeBannerService {
     return await this.db.homeBannerRepository.save(homeBanner);
   }
 
+  async markedAsMainHomeBanner(id: string) {
+    return await this.db.homeBannerRepository.update(id, { isMain: true });
+  }
+
   async remove(id: string) {
     const homeBanner = await this.db.homeBannerRepository.findOne({
       where: { id },

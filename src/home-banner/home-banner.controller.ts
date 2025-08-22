@@ -123,4 +123,21 @@ export class HomeBannerController {
   remove(@Param('id') id: string) {
     return this.homeBannerService.remove(id);
   }
+
+  @Post('marked-as-active/:id')
+  @ApiOperation({
+    summary: 'Este endpoint marca como principal a un home banner específico',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Banner del Home marcado como principal exitosamente',
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de marcar como principal el home banner',
+  })
+  markedAsActive(@Param('id') id: string) {
+    return this.homeBannerService.markedAsMainHomeBanner(id);
+  }
 }
