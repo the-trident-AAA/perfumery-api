@@ -49,6 +49,8 @@ export class HomeBannerService {
           homeBanner.title,
           homeBanner.description,
           images,
+          homeBanner.statisticalTips,
+          homeBanner.infoTips,
         );
       }),
     );
@@ -75,6 +77,8 @@ export class HomeBannerService {
       homeBanner.title,
       homeBanner.description,
       images,
+      homeBanner.statisticalTips,
+      homeBanner.infoTips,
     );
   }
 

@@ -1,4 +1,4 @@
-import { HomeBannerResponse } from './home-banner.response';
+import { HomeBannerResponse, StatisticalTip } from './home-banner.response';
 
 export class HomeBannerDetailsResponse extends HomeBannerResponse {
   constructor(
@@ -6,7 +6,9 @@ export class HomeBannerDetailsResponse extends HomeBannerResponse {
     title: string,
     description: string,
     images: string[],
+    statisticalTips: StatisticalTip[],
+    infoTips: string[],
   ) {
-    super(id, title, description, images);
+    super(id, title, description, images, statisticalTips, infoTips);
   }
 }
