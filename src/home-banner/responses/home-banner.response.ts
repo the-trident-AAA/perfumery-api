@@ -66,5 +66,7 @@ export class HomeBannerResponse {
     this.title = title;
     this.description = description;
     this.images = images;
+    this.statisticalTips = statisticalTips
+    this.infoTips
   }
 }
