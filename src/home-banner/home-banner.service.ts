@@ -98,6 +98,33 @@ export class HomeBannerService {
     );
   }
 
+  async findMainHomeBanner() {
+    const homeBanner = await this.db.homeBannerRepository.findOne({
+      where: { isMain: true },
+    });
+
+    if (!homeBanner)
+      throw new BadRequestException(
+        'No existe un home banner con ese identificador',
+      );
+
+    const images = await Promise.all(
+      homeBanner.images.map(
+        async (image) => await this.minioService.getPresignedUrl(image),
+      ),
+    );
+
+    return new HomeBannerDetailsResponse(
+      homeBanner.id,
+      homeBanner.title,
+      homeBanner.description,
+      homeBanner.isMain,
+      images,
+      homeBanner.statisticalTips,
+      homeBanner.infoTips,
+    );
+  }
+
   async update(id: string, updateHomeBannerDto: UpdateHomeBannerDto) {
     const { images, ...restDTO } = updateHomeBannerDto;
     const homeBanner = await this.db.homeBannerRepository.findOne({

@@ -66,6 +66,24 @@ export class HomeBannerController {
     return this.homeBannerService.findAll(orderDto);
   }
 
+  @Get('find-main-home-banner')
+  @ApiOperation({
+    summary: 'Este endpoint obtiene el home banner principal',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Home Banner principal obtenido exitosamente',
+    type: HomeBannerDetailsResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de obtener el banner del home principal',
+  })
+  findMainHomeBanner() {
+    return this.homeBannerService.findMainHomeBanner();
+  }
+
   @Get(':id')
   @ApiOperation({
     summary:
