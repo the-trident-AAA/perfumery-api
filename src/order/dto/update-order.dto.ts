@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsUUID, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsOptional,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { State } from '../entities/state.enum';
 import { IsNull } from 'typeorm';
@@ -23,6 +29,7 @@ export class UpdateOrderDto {
     type: [PerfumeOrderDto],
   })
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => PerfumeOrderDto)
   perfumes?: PerfumeOrderDto[];
