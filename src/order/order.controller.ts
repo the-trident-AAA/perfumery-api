@@ -23,7 +23,6 @@ import { OrderResponse } from './responses/order.response';
 import { FiltersOrderDto } from './filters/filters-order.dto';
 import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
 
-
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
@@ -96,6 +95,7 @@ export class OrderController {
   }
 
   @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(id);
   }
