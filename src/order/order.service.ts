@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
@@ -12,6 +12,7 @@ import { FiltersOrderDto } from './filters/filters-order.dto';
 import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
 import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
 import { OrderEntity } from './entities/order.entity';
+import { State } from './entities/state.enum';
 
 @Injectable()
 export class OrderService {
@@ -150,10 +151,43 @@ export class OrderService {
   }
 
   async update(id: string, updateOrderDto: UpdateOrderDto) {
-    if (updateOrderDto.state)
-      await this.db.orderRespository.update(id, {
+    const orderEntity = await this.db.orderRespository.findOne({
+      where: {
+        id,
+      },
+      relations: ['orderPerfumes'],
+    });
+
+    if (!orderEntity)
+      throw new BadRequestException(
+        'No existe una orden con ese identificador',
+      );
+
+    if (updateOrderDto.state) {
+      // si el estado pasa de "completada a cancelada"
+      if (
+        (orderEntity.state === State.COMPLETED &&
+          updateOrderDto.state === State.CANCELED) ||
+        (orderEntity.state === State.COMPLETED &&
+          updateOrderDto.state === State.PENDING)
+      ) {
+        // se deberían actualizar la existencias de los perfumes (incrementando existencias)
+        await this.perfumeService.updateStock(
+          orderEntity.orderPerfumes,
+          'increase',
+        );
+      } else if (updateOrderDto.state === State.COMPLETED) {
+        // se deberían actualizar la existencias de los perfumes (decrementando existencias)
+        await this.perfumeService.updateStock(
+          orderEntity.orderPerfumes,
+          'decrease',
+        );
+      }
+      await this.db.orderRespository.save({
+        ...orderEntity,
         state: updateOrderDto.state,
       });
+    }
 
     if (updateOrderDto.perfumes) {
       // first, delete the all perfumes of the order
