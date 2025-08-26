@@ -15,6 +15,7 @@ import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
 import { FiltersPerfumeDto } from './dto/filters-perfume.dto';
 import { OrderDto } from 'src/utils/dto/order.dto';
 import { PerfumeEntity } from './entities/perfume.entity';
+import { OrderPerfumeEntity } from 'src/order/entities/order-perfume.entity';
 
 @Injectable()
 export class PerfumeService {
@@ -283,6 +284,28 @@ export class PerfumeService {
     );
 
     return await this.db.perfumeRepository.delete({ id });
+  }
+
+  async updateStock(
+    orderPefumes: OrderPerfumeEntity[],
+    action: 'increase' | 'decrease',
+  ) {
+    await Promise.all(
+      orderPefumes.map(async (orderPerfume) => {
+        // find the perfume
+        const perfume = await this.db.perfumeRepository.findOne({
+          where: { id: orderPerfume.perfumeId },
+        });
+
+        await this.db.perfumeRepository.save({
+          ...perfume,
+          cant:
+            action === 'increase'
+              ? perfume.cant + orderPerfume.cant
+              : perfume.cant - orderPerfume.cant,
+        });
+      }),
+    );
   }
 
   // method to check perfume stocks
