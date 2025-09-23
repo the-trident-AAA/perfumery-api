@@ -21,7 +21,7 @@ jobs:
       - name: Execute Deploy Script
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} "
-            cd /home/projects/perfumery && 
+            cd /home/deployer/projects/perfumery && 
             git clone git@github.com:the-trident-AAA/perfumery-api.git || true && 
             cd perfumery-api &&
             rm -f .env &&
