@@ -12,6 +12,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Generate GitHub App token
+        id: generate_token
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { App } = require("@octokit/app");
+            const app = new App({
+              appId: process.env.GH_APP_ID,
+              privateKey: process.env.GH_APP_PRIVATE_KEY,
+            });
+            const token = await app.getInstallationAccessToken({
+              installationId: process.env.GH_INSTALLATION_ID,
+            });
+            core.setOutput("token", token);
+        env:
+          GH_APP_ID: ${{ secrets.GH_APP_ID }}
+          GH_INSTALLATION_ID: ${{ secrets.GH_INSTALLATION_ID }}
+          GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Add SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -21,8 +40,8 @@ jobs:
       - name: Execute Deploy Script
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} "
-            cd /home/deployer/projects/perfumery && 
-            git clone git@github.com:the-trident-AAA/perfumery-api.git || true && 
+            cd /home/deployer/projects/perfumery &&
+            git clone https://x-access-token:${{ steps.generate_token.outputs.token }}@github.com/the-trident-AAA/perfumery-api.git || true &&
             cd perfumery-api &&
             rm -f .env &&
             echo 'APP_PORT=${{ secrets.APP_PORT }}' > .env &&
@@ -44,8 +63,8 @@ jobs:
             echo 'EMAIL_PASS=${{ secrets.EMAIL_PASS }}' >> .env &&
             echo 'OTP_SECRET=${{ secrets.OTP_SECRET }}' >> .env &&
             echo 'EMAIL_FROM=${{ secrets.EMAIL_FROM }}' >> .env &&
-            git pull origin dev && 
+            git pull origin dev &&
             docker-compose down &&
-            docker-compose pull && 
+            docker-compose pull &&
             docker-compose up -d --build
           "
