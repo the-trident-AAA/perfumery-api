@@ -1,18 +1,17 @@
-# Dockerfile
 # Etapa 1: Construcción
 FROM node:20.11-alpine AS builder
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Instalar yarn (viene con corepack en Node 20)
+# Copiar solo package.json y yarn.lock primero
+COPY package.json yarn.lock ./
+
+# Instalar dependencias
 RUN corepack enable && corepack prepare yarn@stable --activate
-
-# Copiar todo el código fuente
-COPY . .
-
-# Instalar dependencias con yarn
 RUN yarn install
+
+# Copiar el resto del código
+COPY . .
 
 # Compilar el proyecto
 RUN yarn build
@@ -20,19 +19,16 @@ RUN yarn build
 # Etapa 2: Ejecución
 FROM node:20.11-alpine
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Instalar yarn (por si acaso)
+# Instalar yarn en caso de necesitarlo
 RUN corepack enable && corepack prepare yarn@stable --activate
 
-# Copiar solo lo necesario desde la etapa de build
+# Copiar build y dependencias desde builder
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY package.json yarn.lock ./
 
-# Exponer el puerto de la aplicación
+# Exponer puerto
 EXPOSE $APP_PORT
 
-# Comando para ejecutar la aplicación
 CMD ["node", "dist/main"]
