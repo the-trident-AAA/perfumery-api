@@ -12,7 +12,7 @@ RUN corepack enable && corepack prepare yarn@stable --activate
 COPY package.json yarn.lock ./
 
 # Instalar dependencias con yarn
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # Copiar el resto del código fuente
 COPY . .
