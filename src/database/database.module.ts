@@ -33,7 +33,7 @@ import { OtpEntity } from 'src/otp/entities/otp.entity';
         username: config.get<string>('POSTGRES_USER'),
         password: config.get<string>('POSTGRES_PASSWORD'),
         synchronize: true,
-        entities: [__dirname + "/**/*.entity{.ts,.js}"],
+        entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
         retryAttempts: 0,
         ssl:
           config.get<string>('POSTGRES_SSL') === 'true'
