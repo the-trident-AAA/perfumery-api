@@ -30,6 +30,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} "
             cd /home/deployer/projects/perfumery &&
+            rm -rf perfumery-api &&
             git clone https://x-access-token:${{ steps.generate_token.outputs.token }}@github.com/the-trident-AAA/perfumery-api.git || true &&
             cd perfumery-api &&
             rm -f .env &&
