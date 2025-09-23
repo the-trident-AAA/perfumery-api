@@ -6,29 +6,42 @@ import { v4 as guid } from 'uuid';
 @Injectable()
 export class MinioService {
   private minioClient: Client;
+  private minioPublicClient: Client; // Cliente para URLs públicas
   private logger = new Logger('MinioService');
 
   constructor(private readonly config: ConfigService) {}
 
-  /**
-   * Initializes the MinIO client upon module startup and checks for the existence of the bucket:
-   * - Configures the MinIO client with credentials obtained from environment variables.
-   * - Checks to see if the specified bucket already exists on the server.
-   * - If the bucket doesn't exist, one is created with the 'en-us' location.
-   * - Error handling is performed to ensure any connection or bucket creation issues are logged.
-   */
   async onModuleInit() {
     try {
+      // Cliente para operaciones internas (upload, delete, etc.)
       this.minioClient = new Client({
         accessKey: this.config.get<string>('MINIO_ACCESS_KEY'),
-        endPoint: this.config.get<string>('MINIO_URL'),
+        endPoint: this.config.get<string>('MINIO_URL'), // URL interna
         secretKey: this.config.get<string>('MINIO_SECRET_KEY'),
         port: parseInt(this.config.get<string>('MINIO_PORT')),
         useSSL: false,
       });
+
+      // Cliente específico para generar URLs presigned públicas
+      const publicUrl = this.config.get<string>('MINIO_PUBLIC_URL');
+      if (publicUrl) {
+        const url = new URL(publicUrl);
+        this.minioPublicClient = new Client({
+          accessKey: this.config.get<string>('MINIO_ACCESS_KEY'),
+          endPoint: url.hostname,
+          port: parseInt(url.port) || (url.protocol === 'https:' ? 443 : 80),
+          secretKey: this.config.get<string>('MINIO_SECRET_KEY'),
+          useSSL: url.protocol === 'https:',
+        });
+      } else {
+        // Fallback al cliente interno si no hay URL pública configurada
+        this.minioPublicClient = this.minioClient;
+      }
+
       const bucketExist = await this.minioClient.bucketExists(
         this.config.get<string>('MINIO_BUCKET'),
       );
+
       if (!bucketExist) {
         this.logger.log('Creando bucket');
         await this.minioClient.makeBucket(
@@ -72,22 +85,12 @@ export class MinioService {
   async getPresignedUrl(objectName: string): Promise<string> {
     try {
       const expiryTime = 10 * 60;
-      const presignedUrl = await this.minioClient.presignedGetObject(
+
+      return await this.minioPublicClient.presignedGetObject(
         this.config.get<string>('MINIO_BUCKET'),
         objectName,
         expiryTime,
       );
-
-      const publicUrl = this.config.get<string>('MINIO_PUBLIC_URL');
-
-      if (publicUrl) {
-        return presignedUrl.replace(
-          this.config.get<string>('MINIO_URL'),
-          publicUrl,
-        );
-      }
-
-      return presignedUrl;
     } catch (error) {
       this.logger.error(error);
       return null;
