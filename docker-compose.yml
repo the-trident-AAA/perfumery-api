@@ -8,6 +8,7 @@ services:
       APP_PORT: ${APP_PORT:-4000}
       POSTGRES_URL: ${POSTGRES_URL:-postgresql_service}
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_DATABASE: ${POSTGRES_DATABASE:-perfumery_db}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_SSL: ${POSTGRES_SSL:-true}

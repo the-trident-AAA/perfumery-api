@@ -29,6 +29,7 @@ jobs:
             echo 'POSTGRES_URL=${{ secrets.POSTGRES_URL }}' >> .env &&
             echo 'POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}' >> .env &&
             echo 'POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}' >> .env &&
+            echo 'POSTGRES_USER=${{ secrets.POSTGRES_USER }}' >> .env &&
             echo 'POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}' >> .env &&
             echo 'POSTGRES_SSL=${{ secrets.POSTGRES_SSL }}' >> .env &&
             echo 'MINIO_URL=${{ secrets.MINIO_URL }}' >> .env &&
