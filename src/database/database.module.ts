@@ -36,9 +36,10 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
         synchronize: true,
         entities: [join(process.cwd(), folder, '**', `*.entity.${extensions}`)],
         retryAttempts: 0,
-        ssl: config.get<boolean>('POSTGRES_SSL')
-          ? { rejectUnauthorized: false }
-          : false,
+        ssl:
+          config.get<string>('POSTGRES_SSL') === 'true'
+            ? { rejectUnauthorized: false }
+            : false,
       }),
     }),
     TypeOrmModule.forFeature([
