@@ -1,0 +1,50 @@
+name: Deploy to VPS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "dev" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Add SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.VPS_SSH_KEY }}
+          known_hosts: "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
+
+      - name: Execute Deploy Script
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} "
+            cd /home/projects/perfumery && 
+            git clone git@github.com:the-trident-AAA/perfumery-api.git || true && 
+            cd perfumery-api &&
+            rm -f .env &&
+            echo 'APP_PORT=${{ secrets.APP_PORT }}' > .env &&
+            echo 'POSTGRES_URL=${{ secrets.POSTGRES_URL }}' >> .env &&
+            echo 'POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}' >> .env &&
+            echo 'POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}' >> .env &&
+            echo 'POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}' >> .env &&
+            echo 'POSTGRES_SSL=${{ secrets.POSTGRES_SSL }}' >> .env &&
+            echo 'MINIO_URL=${{ secrets.MINIO_URL }}' >> .env &&
+            echo 'MINIO_PORT=${{ secrets.MINIO_PORT }}' >> .env &&
+            echo 'MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}' >> .env &&
+            echo 'MINIO_BUCKET=${{ secrets.MINIO_BUCKET }}' >> .env &&
+            echo 'SECRET_KEY=${{ secrets.SECRET_KEY }}' >> .env &&
+            echo 'EMAIL_HOST=${{ secrets.EMAIL_HOST }}' >> .env &&
+            echo 'EMAIL_PORT=${{ secrets.EMAIL_PORT }}' >> .env &&
+            echo 'EMAIL_SECURE=${{ secrets.EMAIL_SECURE }}' >> .env &&
+            echo 'EMAIL_USER=${{ secrets.EMAIL_USER }}' >> .env &&
+            echo 'EMAIL_PASS=${{ secrets.EMAIL_PASS }}' >> .env &&
+            echo 'OTP_SECRET=${{ secrets.OTP_SECRET }}' >> .env &&
+            echo 'EMAIL_FROM=${{ secrets.EMAIL_FROM }}' >> .env &&
+            git pull origin dev && 
+            docker-compose down &&
+            docker-compose pull && 
+            docker-compose up -d --build
+          "
