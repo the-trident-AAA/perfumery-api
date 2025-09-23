@@ -13,6 +13,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_SSL: ${POSTGRES_SSL:-true}
       MINIO_URL: ${MINIO_URL:-minio_service}
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-localhost}
       MINIO_PORT: ${MINIO_PORT:-9000}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
