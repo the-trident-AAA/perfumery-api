@@ -1,0 +1,36 @@
+services:
+  perfumery_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      APP_PORT: ${APP_PORT:-4000}
+      POSTGRES_URL: ${POSTGRES_URL:-postgresql_service}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE:-perfumery_db}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_SSL: ${POSTGRES_SSL:-true}
+      MINIO_URL: ${MINIO_URL:-minio_service}
+      MINIO_PORT: ${MINIO_PORT:-9000}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET: ${MINIO_BUCKET:-perfumery}
+      SECRET_KEY: ${SECRET_KEY:-scret}
+      EMAIL_HOST: ${EMAIL_HOST:-smtp.gmail.com}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_SECURE: ${EMAIL_SECURE:-false}
+      EMAIL_USER: ${EMAIL_USER:-sharkpelaez@gmail.com}
+      EMAIL_PASS: ${EMAIL_PASS:-tfya rzig ybwt puwt}
+      OTP_SECRET: ${OTP_SECRET:-secret}
+      EMAIL_FROM: ${EMAIL_FROM:-perfumery}
+
+    ports:
+      - '${APP_PORT:-4000}:${APP_PORT:-4000}'
+
+    networks:
+      - perfumery-network
+
+networks:
+  perfumery-network:
+    name: perfumery-network
