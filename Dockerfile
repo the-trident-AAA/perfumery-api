@@ -5,17 +5,14 @@ FROM node:20.11-alpine AS builder
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Instalar yarn (en alpine no viene por defecto)
+# Instalar yarn (viene con corepack en Node 20)
 RUN corepack enable && corepack prepare yarn@stable --activate
 
-# Copiar los archivos necesarios para instalar dependencias
-COPY package.json yarn.lock ./
+# Copiar todo el código fuente
+COPY . .
 
 # Instalar dependencias con yarn
 RUN yarn install
-
-# Copiar el resto del código fuente
-COPY . .
 
 # Compilar el proyecto
 RUN yarn build
@@ -26,10 +23,10 @@ FROM node:20.11-alpine
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Instalar yarn también en runtime por si lo necesitas
+# Instalar yarn (por si acaso)
 RUN corepack enable && corepack prepare yarn@stable --activate
 
-# Copiar las dependencias instaladas y la carpeta build desde la etapa anterior
+# Copiar solo lo necesario desde la etapa de build
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY package.json yarn.lock ./
