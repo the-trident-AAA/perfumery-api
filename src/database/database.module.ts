@@ -16,9 +16,6 @@ import { OrderEntity } from 'src/order/entities/order.entity';
 import { OrderPerfumeEntity } from 'src/order/entities/order-perfume.entity';
 import { OtpEntity } from 'src/otp/entities/otp.entity';
 
-const folder = process.env.NODE_ENV !== 'development' ? 'dist' : 'src';
-const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
-
 @Global()
 @Module({
   exports: [DatabaseService],
@@ -34,7 +31,7 @@ const extensions = process.env.NODE_ENV !== 'development' ? 'js' : 'ts';
         username: config.get<string>('POSTGRES_USER'),
         password: config.get<string>('POSTGRES_PASSWORD'),
         synchronize: true,
-        entities: [join(process.cwd(), folder, '**', `*.entity.${extensions}`)],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         retryAttempts: 0,
         ssl:
           config.get<string>('POSTGRES_SSL') === 'true'
