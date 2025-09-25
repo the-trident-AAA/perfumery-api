@@ -79,9 +79,6 @@ export class MinioService {
           this.config.get<string>('MINIO_BUCKET'),
           objectName,
           expiryTime,
-          {
-            Host: publicHost,
-          },
         )
       ).replace(
         `${this.config.get<string>('MINIO_URL')}:${this.config.get<string>('MINIO_PORT')}`,
