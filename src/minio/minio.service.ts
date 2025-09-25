@@ -76,7 +76,7 @@ export class MinioService {
       // Crea un cliente específico para la URL pública
       const publicClient = new Client({
         endPoint: this.config.get<string>('MINIO_PUBLIC_HOST'),
-        port: parseInt(this.config.get<string>('MINIO_PORT')),
+        port: 80,
         useSSL: true,
         accessKey: this.config.get<string>('MINIO_ACCESS_KEY'),
         secretKey: this.config.get<string>('MINIO_SECRET_KEY'),
