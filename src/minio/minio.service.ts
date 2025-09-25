@@ -72,20 +72,20 @@ export class MinioService {
   async getPresignedUrl(objectName: string): Promise<string> {
     try {
       const expiryTime = 10 * 60;
+      const publicHost = this.config.get<string>('MINIO_PUBLIC_URL'); // Ej: 'cdn.midominio.com'
 
-      // Crea un cliente específico para la URL pública
-      const publicClient = new Client({
-        endPoint: this.config.get<string>('MINIO_PUBLIC_HOST'),
-        port: 80,
-        useSSL: true,
-        accessKey: this.config.get<string>('MINIO_ACCESS_KEY'),
-        secretKey: this.config.get<string>('MINIO_SECRET_KEY'),
-      });
-
-      return await publicClient.presignedGetObject(
-        this.config.get<string>('MINIO_BUCKET'),
-        objectName,
-        expiryTime,
+      return (
+        await this.minioClient.presignedGetObject(
+          this.config.get<string>('MINIO_BUCKET'),
+          objectName,
+          expiryTime,
+          {
+            Host: publicHost,
+          },
+        )
+      ).replace(
+        `${this.config.get<string>('MINIO_URL')}:${this.config.get<string>('MINIO_PORT')}`,
+        publicHost,
       );
     } catch (error) {
       this.logger.error(error);
