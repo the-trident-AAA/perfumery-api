@@ -72,21 +72,16 @@ export class MinioService {
   async getPresignedUrl(objectName: string): Promise<string> {
     try {
       const expiryTime = 10 * 60;
-      const persignedUrl = await this.minioClient.presignedGetObject(
+      const publicHost = this.config.get<string>('MINIO_PUBLIC_URL');
+
+      return await this.minioClient.presignedGetObject(
         this.config.get<string>('MINIO_BUCKET'),
         objectName,
         expiryTime,
+        {
+          Host: publicHost,
+        },
       );
-
-      const publicUrl = this.config.get<string>('MINIO_PUBLIC_URL');
-      console.log(publicUrl);
-      if (publicUrl)
-        return persignedUrl.replace(
-          `${this.config.get<string>('MINIO_URL')}:${this.config.get<string>('MINIO_PORT')}`,
-          publicUrl,
-        );
-
-      return persignedUrl;
     } catch (error) {
       this.logger.error(error);
       return null;
