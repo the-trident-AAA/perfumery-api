@@ -79,7 +79,7 @@ export class MinioService {
       );
 
       const publicUrl = this.config.get<string>('MINIO_PUBLIC_URL');
-
+      console.log(publicUrl);
       if (publicUrl)
         persignedUrl.replace(this.config.get<string>('MINIO_URL'), publicUrl);
 
