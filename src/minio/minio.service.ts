@@ -81,7 +81,10 @@ export class MinioService {
       const publicUrl = this.config.get<string>('MINIO_PUBLIC_URL');
       console.log(publicUrl);
       if (publicUrl)
-        persignedUrl.replace(this.config.get<string>('MINIO_URL'), publicUrl);
+        return persignedUrl.replace(
+          `${this.config.get<string>('MINIO_URL')}:${this.config.get<string>('MINIO_PORT')}`,
+          publicUrl,
+        );
 
       return persignedUrl;
     } catch (error) {
