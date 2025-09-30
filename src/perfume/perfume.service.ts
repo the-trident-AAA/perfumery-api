@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import { Between, FindOptionsOrder, ILike, In } from 'typeorm';
@@ -268,7 +268,7 @@ export class PerfumeService {
   async remove(id: string) {
     const perfume = await this.findOne(id);
 
-    if (!perfume) throw new Error('Perfume no encontrado');
+    if (!perfume) throw new BadRequestException('Perfume no encontrado');
 
     // verificar que el perfume no se encuentre asociado a ninguna orden
     const orderPerfume = await this.db.orderPerfumeRepository.findOne({
@@ -278,7 +278,7 @@ export class PerfumeService {
     });
 
     if (orderPerfume)
-      throw new Error(
+      throw new BadRequestException(
         'No es posible eliminar el perfume ya que se encuentra asociado a la orden: ' +
           orderPerfume.id,
       );
