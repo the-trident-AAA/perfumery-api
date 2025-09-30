@@ -270,6 +270,19 @@ export class PerfumeService {
 
     if (!perfume) throw new Error('Perfume no encontrado');
 
+    // verificar que el perfume no se encuentre asociado a ninguna orden
+    const orderPerfume = await this.db.orderPerfumeRepository.findOne({
+      where: {
+        perfumeId: perfume.id,
+      },
+    });
+
+    if (orderPerfume)
+      throw new Error(
+        'No es posible eliminar el perfume ya que se encuentra asociado a la orden: ' +
+          orderPerfume.id,
+      );
+
     // delete the image from Minio
     await this.minioService.deleteFile(perfume.image);
 
