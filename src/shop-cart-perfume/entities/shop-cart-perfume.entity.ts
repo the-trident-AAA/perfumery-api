@@ -18,7 +18,9 @@ export class ShopCartPerfumeEntity {
   @Column({ name: 'shop_cart_id' })
   shopCartId: string;
 
-  @ManyToOne(() => PerfumeEntity, (perfume) => perfume.shopCartPerfumes)
+  @ManyToOne(() => PerfumeEntity, (perfume) => perfume.shopCartPerfumes, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'perfume_id' })
   perfume: PerfumeEntity;
 
