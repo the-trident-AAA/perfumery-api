@@ -217,7 +217,10 @@ export class PerfumeService {
   async update(id: string, dto: UpdatePerfumeDto) {
     const { image, images, ...restDTO } = dto;
     const perfume = await this.db.perfumeRepository.findOne({ where: { id } });
-    Object.assign(perfume, restDTO);
+    Object.assign(perfume, {
+      ...restDTO,
+      scents: restDTO.scentsId.map((scentId) => ({ id: scentId })), // update the scents
+    });
 
     // removed defined relations marked as "undefined"
     if (!dto.offerId) {
