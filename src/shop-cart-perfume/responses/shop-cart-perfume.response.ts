@@ -37,6 +37,6 @@ export class ShopCartPerfumeResponse {
   })
   @Expose()
   get price(): number {
-    return this.perfume.price * this.cant;
+    return this.perfume.totalPrice * this.cant;
   }
 }
