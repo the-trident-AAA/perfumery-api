@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entities/gender.enum';
+import { Expose } from 'class-transformer';
 
 export class PerfumeResponse {
   @ApiProperty({
@@ -93,6 +94,12 @@ export class PerfumeResponse {
   })
   cant: number;
 
+  @Expose()
+  get totalPrice(): number {
+    return this.discountOffer
+      ? this.price - this.price * this.discountOffer
+      : this.price;
+  }
 
   constructor(
     id: string,
