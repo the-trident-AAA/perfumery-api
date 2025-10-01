@@ -4,6 +4,7 @@ import { BrandResponse } from 'src/brand/responses/brand.response';
 import { ScentResponse } from 'src/scent/responses/scent.response';
 import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
 import { OfferResponse } from 'src/offer/responses/offer.response';
+import { Expose } from 'class-transformer';
 
 export class PerfumeDetailsResponse {
   @ApiProperty({
@@ -104,6 +105,18 @@ export class PerfumeDetailsResponse {
     required: true,
   })
   cant: number;
+
+  @ApiProperty({
+    description: 'Representa el precio del perfume aplicando los descuentos',
+    type: 'number',
+    required: true,
+  })
+  @Expose()
+  get totalPrice(): number {
+    return this.offer
+      ? this.price - this.price * this.offer.discount
+      : this.price;
+  }
 
   constructor(
     id: string,
