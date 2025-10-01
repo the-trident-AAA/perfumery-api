@@ -10,6 +10,7 @@ import {
   UploadedFile,
   Query,
   UploadedFiles,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
@@ -60,6 +61,7 @@ export class PerfumeController {
   }
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
     summary: 'Este endpoint obtiene una lista de perfumes de la base de datos',
   })
@@ -90,6 +92,7 @@ export class PerfumeController {
   }
 
   @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
     summary:
       'Este endpoint obtiene un perfume en específico de la base de datos',
