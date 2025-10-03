@@ -42,6 +42,32 @@ export class ShopCartController {
     return this.shopCartService.findOne(id);
   }
 
+  @Post('find-anonymous-shop-cart')
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiOperation({
+    summary:
+      'Este endpoint obtiene un carrito de compras en específico de la base de datos',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Carrito de compras obtenido exitosamente',
+    type: ShopCartResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de obtener el carrito de compras',
+  })
+  findAnonymousShopCart(@Body() anonymousShopCartDto: AnonymousShopCartDto) {
+    // verify the sessionId
+    if (!this.sessionService.isValidSessionId(anonymousShopCartDto.sessionId))
+      throw new BadRequestException('Session id inválido');
+
+    return this.shopCartService.findAnonymousShopCart(
+      anonymousShopCartDto.sessionId,
+    );
+  }
+
   @Get('total-items/:id')
   @ApiOperation({
     summary:

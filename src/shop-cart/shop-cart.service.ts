@@ -130,6 +130,27 @@ export class ShopCartService {
     );
   }
 
+  async findAnonymousShopCart(sessionId: string) {
+    const shopCart = await this.db.shopCartRespository.findOne({
+      where: { sessionId },
+      relations: ['shopCartPerfumes'],
+    });
+    if (!shopCart)
+      throw new BadRequestException(
+        'No estiste un carrito con ese identificador',
+      );
+
+    return new ShopCartResponse(
+      shopCart.id,
+      await Promise.all(
+        shopCart.shopCartPerfumes.map(
+          async (shopCartPerfume) =>
+            await this.shopCartPerfumeService.findOne(shopCartPerfume.id),
+        ),
+      ),
+    );
+  }
+
   async totalItems(id: string) {
     const shopCart = await this.db.shopCartRespository.findOne({
       where: { id },
