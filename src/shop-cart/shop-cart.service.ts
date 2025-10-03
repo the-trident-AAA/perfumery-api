@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateShopCartDto } from './dto/create-shop-cart.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { ShopCartResponse } from './responses/shop-cart.response';
@@ -168,5 +172,22 @@ export class ShopCartService {
 
   async clearShopCart(shopCartId: string) {
     return await this.shopCartPerfumeService.clearShopCart(shopCartId);
+  }
+
+  async clearAnonymousShopCart(sessionId: string) {
+    // find the anonymous shop cart
+    const anonymousShopCart = await this.db.shopCartRespository.findOne({
+      where: {
+        sessionId,
+      },
+    });
+
+    if (!anonymousShopCart)
+      throw new BadGatewayException(
+        'No existe un  carrito anónimo especificado ',
+      );
+    return await this.shopCartPerfumeService.clearShopCart(
+      anonymousShopCart.id,
+    );
   }
 }
