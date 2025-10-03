@@ -4,20 +4,40 @@ import { CreateShopCartPerfumeDto } from './dto/create-shop-cart-perfume.dto';
 import { PerfumeService } from 'src/perfume/perfume.service';
 import { ShopCartPerfumeResponse } from './responses/shop-cart-perfume.response';
 import { UpdateShopCartPerfumeDto } from './dto/update-shop-cart-perfume.dto';
+import { ShopCartService } from 'src/shop-cart/shop-cart.service';
 
 @Injectable()
 export class ShopCartPerfumeService {
   constructor(
     private readonly db: DatabaseService,
     private readonly perfumeService: PerfumeService,
+    private readonly shopCartService: ShopCartService,
   ) {}
 
   async create(createShopCartPerfumeDto: CreateShopCartPerfumeDto) {
+    const isCreateAnonymousShopCart =
+      !createShopCartPerfumeDto.shopCartId &&
+      !createShopCartPerfumeDto.sessionId;
     // check if a perfume already exists in this cart
+
+    const anonymousShopCart = !isCreateAnonymousShopCart
+      ? createShopCartPerfumeDto.sessionId
+        ? await this.db.shopCartRespository.findOne({
+            where: {
+              sessionId: createShopCartPerfumeDto.sessionId,
+            },
+          })
+        : undefined
+      : await this.shopCartService.create({
+          sessionId: createShopCartPerfumeDto.sessionId,
+        });
+
     const shopCartPerfume = await this.db.shopCartPerfumeRespository.findOne({
       where: {
         perfumeId: createShopCartPerfumeDto.perfumeId,
-        shopCartId: createShopCartPerfumeDto.shopCartId,
+        shopCartId: !anonymousShopCart
+          ? createShopCartPerfumeDto.shopCartId
+          : anonymousShopCart.id,
       },
     });
 
@@ -34,7 +54,7 @@ export class ShopCartPerfumeService {
         'No existe disponibilidad de dicho perfume en el inventario',
       );
 
-    return await this.db.shopCartPerfumeRespository.save(
+    const shopCartPerfumeSaved = await this.db.shopCartPerfumeRespository.save(
       shopCartPerfume
         ? {
             ...shopCartPerfume,
@@ -42,6 +62,11 @@ export class ShopCartPerfumeService {
           }
         : this.db.shopCartPerfumeRespository.create(createShopCartPerfumeDto),
     );
+
+    return {
+      data: shopCartPerfumeSaved,
+      sessionId: anonymousShopCart?.sessionId,
+    };
   }
 
   async update(id: string, updateShopCartPerfume: UpdateShopCartPerfumeDto) {
