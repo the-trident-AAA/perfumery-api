@@ -14,6 +14,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateShopCartPerfumeDto } from './dto/create-shop-cart-perfume.dto';
 import { UpdateShopCartPerfumeDto } from './dto/update-shop-cart-perfume.dto';
 import { ShopCartPerfumeResponse } from './responses/shop-cart-perfume.response';
+import { ShopCartPerfumeDataResponse } from './responses/shop-cart-perfume-data.response';
 
 @Controller('shop-cart-perfume')
 export class ShopCartPerfumeController {
@@ -45,7 +46,11 @@ export class ShopCartPerfumeController {
   @ApiOperation({
     summary: 'Este endpoint agrega un perfume al carrito de compras',
   })
-  @ApiResponse({ status: 200, description: 'Perfume añadido con éxito' })
+  @ApiResponse({
+    status: 200,
+    description: 'Perfume añadido con éxito',
+    type: ShopCartPerfumeDataResponse,
+  })
   @ApiResponse({
     status: 500,
     description:
