@@ -12,7 +12,6 @@ import { SessionModule } from 'src/session/session.module';
   imports: [
     DatabaseModule,
     PerfumeModule,
-    ShopCartModule,
     SessionModule,
     TypeOrmModule.forFeature([ShopCartPerfumeEntity]),
   ],

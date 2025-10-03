@@ -12,7 +12,6 @@ export class ShopCartPerfumeService {
   constructor(
     private readonly db: DatabaseService,
     private readonly perfumeService: PerfumeService,
-    private readonly shopCartService: ShopCartService,
     private readonly sessionService: SessionService,
   ) {}
 
@@ -30,7 +29,7 @@ export class ShopCartPerfumeService {
             },
           })
         : undefined
-      : await this.shopCartService.create({
+      : await this.db.shopCartRespository.save({
           sessionId: this.sessionService.generateSessionId(),
         });
 
