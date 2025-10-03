@@ -6,12 +6,18 @@ import { PerfumeModule } from 'src/perfume/perfume.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShopCartPerfumeEntity } from './entities/shop-cart-perfume.entity';
 import { ShopCartModule } from 'src/shop-cart/shop-cart.module';
-import { SessionService } from 'src/common/services/session.service';
+import { SessionModule } from 'src/session/session.module';
 
 @Module({
-  imports: [DatabaseModule, PerfumeModule, ShopCartModule, TypeOrmModule.forFeature([ShopCartPerfumeEntity])],
+  imports: [
+    DatabaseModule,
+    PerfumeModule,
+    ShopCartModule,
+    SessionModule,
+    TypeOrmModule.forFeature([ShopCartPerfumeEntity]),
+  ],
   controllers: [ShopCartPerfumeController],
-  providers: [ShopCartPerfumeService, SessionService],
+  providers: [ShopCartPerfumeService],
   exports: [ShopCartPerfumeService],
 })
 export class ShopCartPerfumeModule {}
