@@ -144,6 +144,24 @@ export class ShopCartService {
     );
   }
 
+  async totalItemsAnonymousShopCart(sessionId: string) {
+    const shopCart = await this.db.shopCartRespository.findOne({
+      where: { sessionId },
+      relations: ['shopCartPerfumes'],
+    });
+
+    if (!shopCart)
+      throw new BadRequestException(
+        'No estiste un carrito con ese identificador',
+      );
+
+    return new ShopCartTotalItemsResponse(
+      shopCart.shopCartPerfumes.reduce((total, shopCartPerfume) => {
+        return total + shopCartPerfume.cant;
+      }, 0),
+    );
+  }
+
   async remove(id: string) {
     return await this.db.shopCartRespository.delete({ id });
   }
