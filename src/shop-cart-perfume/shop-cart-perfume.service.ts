@@ -5,6 +5,7 @@ import { PerfumeService } from 'src/perfume/perfume.service';
 import { ShopCartPerfumeResponse } from './responses/shop-cart-perfume.response';
 import { UpdateShopCartPerfumeDto } from './dto/update-shop-cart-perfume.dto';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
+import { SessionService } from 'src/session/session.service';
 
 @Injectable()
 export class ShopCartPerfumeService {
@@ -12,6 +13,7 @@ export class ShopCartPerfumeService {
     private readonly db: DatabaseService,
     private readonly perfumeService: PerfumeService,
     private readonly shopCartService: ShopCartService,
+    private readonly sessionService: SessionService,
   ) {}
 
   async create(createShopCartPerfumeDto: CreateShopCartPerfumeDto) {
@@ -29,7 +31,7 @@ export class ShopCartPerfumeService {
           })
         : undefined
       : await this.shopCartService.create({
-          sessionId: createShopCartPerfumeDto.sessionId,
+          sessionId: this.sessionService.generateSessionId(),
         });
 
     const shopCartPerfume = await this.db.shopCartPerfumeRespository.findOne({
