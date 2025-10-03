@@ -16,6 +16,7 @@ import { OrderModule } from './order/order.module';
 import { MailModule } from './mail/mail.module';
 import { OtpModule } from './otp/otp.module';
 import { AssetsModule } from './assets/assets.module';
+import { SessionModule } from './session/session.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AssetsModule } from './assets/assets.module';
     MailModule,
     OtpModule,
     AssetsModule,
+    SessionModule,
   ],
 })
 export class AppModule {}
