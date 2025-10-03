@@ -15,6 +15,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { OtpService } from 'src/otp/otp.service';
 import { MailService } from 'src/mail/mail.service';
+import { ShopCartService } from 'src/shop-cart/shop-cart.service';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly otpService: OtpService,
     private readonly mailService: MailService,
+    private readonly shopCartService: ShopCartService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -56,6 +58,11 @@ export class AuthService {
         },
         HttpStatus.FORBIDDEN,
       );
+    }
+
+    // fusion the shopcarts if sessionId exist
+    if (dto.sessionId) {
+      await this.shopCartService.fusionShopCart(dto.sessionId, user.shopCartId);
     }
 
     const payload = {
