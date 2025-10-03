@@ -33,12 +33,13 @@ export class ShopCartPerfumeService {
           sessionId: this.sessionService.generateSessionId(),
         });
 
+    if (anonymousShopCart)
+      createShopCartPerfumeDto.shopCartId = anonymousShopCart.id;
+
     const shopCartPerfume = await this.db.shopCartPerfumeRespository.findOne({
       where: {
         perfumeId: createShopCartPerfumeDto.perfumeId,
-        shopCartId: !anonymousShopCart
-          ? createShopCartPerfumeDto.shopCartId
-          : anonymousShopCart.id,
+        shopCartId: createShopCartPerfumeDto.shopCartId,
       },
     });
 
