@@ -16,6 +16,7 @@ import { FiltersPerfumeDto } from './dto/filters-perfume.dto';
 import { OrderDto } from 'src/utils/dto/order.dto';
 import { PerfumeEntity } from './entities/perfume.entity';
 import { OrderPerfumeEntity } from 'src/order/entities/order-perfume.entity';
+import { ShopCartPerfumeEntity } from 'src/shop-cart-perfume/entities/shop-cart-perfume.entity';
 
 @Injectable()
 export class PerfumeService {
@@ -334,8 +335,8 @@ export class PerfumeService {
     return perfume.cant >= cant;
   }
 
-  async checkOrdersPerfumeStocks(
-    orderPerfumes: OrderPerfumeEntity[],
+  async checkPerfumesStocks(
+    orderPerfumes: OrderPerfumeEntity[] | ShopCartPerfumeEntity[],
   ): Promise<boolean> {
     let hasAvailability = true;
 
