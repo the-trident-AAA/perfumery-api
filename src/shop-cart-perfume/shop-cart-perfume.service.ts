@@ -52,9 +52,12 @@ export class ShopCartPerfumeService {
           : createShopCartPerfumeDto.cant,
       ))
     )
-      throw new BadRequestException(
-        'No existe disponibilidad de dicho perfume en el inventario',
-      );
+      {
+        console.log("Entre al bad")
+        throw new BadRequestException(
+          'No existe disponibilidad de dicho perfume en el inventario',
+        );
+      }
 
     const shopCartPerfumeSaved = await this.db.shopCartPerfumeRespository.save(
       shopCartPerfume
