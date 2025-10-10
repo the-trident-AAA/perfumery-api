@@ -333,4 +333,24 @@ export class PerfumeService {
 
     return perfume.cant >= cant;
   }
+
+  async checkOrdersPerfumeStocks(
+    orderPerfumes: OrderPerfumeEntity[],
+  ): Promise<boolean> {
+    let hasAvailability = true;
+
+    for (
+      let index = 0;
+      index < orderPerfumes.length && hasAvailability;
+      index++
+    ) {
+      const orderPerfume = orderPerfumes[index];
+      hasAvailability = await this.checkStocks(
+        orderPerfume.perfumeId,
+        orderPerfume.cant,
+      );
+    }
+
+    return hasAvailability;
+  }
 }
