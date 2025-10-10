@@ -177,6 +177,16 @@ export class OrderService {
           'increase',
         );
       } else if (updateOrderDto.state === State.COMPLETED) {
+        /* se verifica que los perfumes de la orden tengan disponibilidad de existencias 
+        (en caso de no tener disponibilidad el administrador le solicita al cliente que edite el pedido) */
+        const isPerfumesAvaliable =
+          await this.perfumeService.checkOrdersPerfumeStocks(
+            orderEntity.orderPerfumes,
+          );
+        if (!isPerfumesAvaliable)
+          throw new BadRequestException(
+            'Esta orden contiene perfumes que no cuentan con disponibilidad en el inventario. Por lo tanto no es posible marcarla como "completada"',
+          );
         // se deberían actualizar la existencias de los perfumes (decrementando existencias)
         await this.perfumeService.updateStock(
           orderEntity.orderPerfumes,
