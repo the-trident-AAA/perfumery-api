@@ -25,7 +25,21 @@ export class OrderService {
   ) {}
 
   async create(user: ActiveUserInterface) {
-    const shopCart = await this.shopCartService.findOne(user.shopCartId);
+    const shopCart = await this.db.shopCartRespository.findOne({
+      where: {
+        id: user.shopCartId,
+      },
+      relations: ['shopCartPerfumes'],
+    });
+    // Verificar si todos los perfumes cuentan con disponibilidad
+    const hasAvailability = await this.perfumeService.checkPerfumesStocks(
+      shopCart.shopCartPerfumes,
+    );
+
+    if (!hasAvailability)
+      throw new BadRequestException(
+        'Algunos perfumes de este carrito no cuentan con disponibilidad en el inventario. Por lo tanto no es posible crear la orden',
+      );
 
     const order = this.db.orderRespository.create({
       orderPerfumes: null,
@@ -39,7 +53,7 @@ export class OrderService {
       shopCart.shopCartPerfumes.map(async (p) => {
         return this.db.orderPerfumeRepository.create({
           order: savedOrder,
-          perfume: p.perfume,
+          perfumeId: p.perfumeId,
           cant: p.cant,
         });
       }),
@@ -180,7 +194,7 @@ export class OrderService {
         /* se verifica que los perfumes de la orden tengan disponibilidad de existencias 
         (en caso de no tener disponibilidad el administrador le solicita al cliente que edite el pedido) */
         const isPerfumesAvaliable =
-          await this.perfumeService.checkOrdersPerfumeStocks(
+          await this.perfumeService.checkPerfumesStocks(
             orderEntity.orderPerfumes,
           );
         if (!isPerfumesAvaliable)
