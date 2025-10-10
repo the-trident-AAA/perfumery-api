@@ -86,7 +86,9 @@ export class PerfumeEntity {
   @JoinColumn({ name: 'perfume_type_id' })
   perfumeType: PerfumeTypeEntity;
 
-  @ManyToOne(() => OfferEntity, (offer) => offer.perfumes)
+  @ManyToOne(() => OfferEntity, (offer) => offer.perfumes, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'offer_id' })
   offer: OfferEntity;
 
