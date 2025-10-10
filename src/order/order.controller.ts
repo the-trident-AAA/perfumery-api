@@ -30,6 +30,7 @@ export class OrderController {
   @ApiBearerAuth()
   @Auth([Role.USER])
   @Post()
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
     summary: 'Este endpoint agrega un pedido a la base de datos',
   })
