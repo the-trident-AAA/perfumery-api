@@ -28,9 +28,9 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    const user = await this.usersService.findOneByUsername(dto.username);
-    if (user) {
-      throw new BadRequestException('User already exists');
+    const userByUserName = await this.usersService.findOneByUsername(dto.username);
+    if (userByUserName) {
+      throw new BadRequestException('Ese nombre de usuario ya está tomado');
     }
 
     //Encrypt password
