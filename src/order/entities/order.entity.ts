@@ -22,6 +22,15 @@ export class OrderEntity extends BaseEntity {
   @Column({ name: 'user_id' })
   userId: string;
 
+  @Column({
+    name: 'creation_date',
+  })
+  creationDate: Date;
+  @Column({
+    name: 'last_update_date',
+  })
+  lastUpdateDate: Date;
+
   @ManyToOne(() => UserEntity, (user) => user.orders)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;

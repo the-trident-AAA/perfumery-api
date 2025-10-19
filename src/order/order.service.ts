@@ -43,7 +43,8 @@ export class OrderService {
 
     const order = this.db.orderRespository.create({
       orderPerfumes: null,
-
+      creationDate: new Date(),
+      lastUpdateDate: new Date(),
       userId: user.id,
     });
     const savedOrder = await this.db.orderRespository.save(order);
@@ -92,6 +93,8 @@ export class OrderService {
           new OrderResponse(
             orderEntity.id,
             orderEntity.state,
+            orderEntity.creationDate.toISOString(),
+            orderEntity.lastUpdateDate.toISOString(),
             await this.userService.findOneWithOutRelations(orderEntity.userId),
             await Promise.all(
               orderEntity.orderPerfumes.map(
@@ -127,6 +130,8 @@ export class OrderService {
     return new OrderResponse(
       orderEntity.id,
       orderEntity.state,
+      orderEntity.creationDate.toISOString(),
+      orderEntity.lastUpdateDate.toISOString(),
       await this.userService.findOneWithOutRelations(orderEntity.userId),
       await Promise.all(
         orderEntity.orderPerfumes.map(
