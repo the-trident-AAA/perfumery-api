@@ -211,6 +211,6 @@ export class AuthService {
         'El correo proporcionado no tiene ninguna cuenta asociada',
       );
 
-    return { message: 'Correo verificado con éxito' };
+    return { userId: userByEmail.id };
   }
 }
