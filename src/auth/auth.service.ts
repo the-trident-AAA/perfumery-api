@@ -202,4 +202,15 @@ export class AuthService {
 
     return { message: 'Contraseña cambiada exitosamente' };
   }
+
+  async verifyEmail(email: string) {
+    const userByEmail = await this.usersService.findOneByEmail(email);
+
+    if (!userByEmail)
+      throw new BadRequestException(
+        'El correo proporcionado no tiene ninguna cuenta asociada',
+      );
+
+    return { message: 'Correo verificado con éxito' };
+  }
 }
