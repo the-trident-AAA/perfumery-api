@@ -21,6 +21,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { SendOtpDto } from './dto/send-otp.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { VerifyEmailDto } from './dto/verify-email.dto';
 
 interface RequestWithUser extends Request {
   user: { user: string; role: string };
@@ -186,5 +187,21 @@ export class AuthController {
   })
   async resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto);
+  }
+
+  @Post('verify-email')
+  @ApiOperation({
+    summary: 'Verificar Email',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Email verificado con éxito',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Email no asociado a ninguna cuenta',
+  })
+  async verifyEmail(@Body() dto: VerifyEmailDto) {
+    return this.authService.verifyEmail(dto.email);
   }
 }
