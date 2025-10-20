@@ -93,7 +93,7 @@ export class OrderService {
     const orderClause: FindOptionsOrder<OrderEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
-        : { creationDate: 'DESC' };
+        : { lastUpdateDate: 'DESC' };
 
     const [ordersEntity, total] = await this.db.orderRespository.findAndCount({
       where: {
