@@ -14,7 +14,7 @@ import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
 import { OrderEntity } from './entities/order.entity';
 import { State } from './entities/state.enum';
 import { OrderDto } from 'src/utils/dto/order.dto';
-import { FindOptionsOrder } from 'typeorm';
+import { FindOptionsOrder, Between } from 'typeorm';
 
 @Injectable()
 export class OrderService {
@@ -100,6 +100,14 @@ export class OrderService {
         ...(filtersOrderDto.id && { id: filtersOrderDto.id }),
         ...(filtersOrderDto.state && { state: filtersOrderDto.state }),
         ...(filtersOrderDto.userId && { userId: filtersOrderDto.userId }),
+        // ✅ Rango para lastUpdateDate
+        ...((filtersOrderDto.lastUpdateDateMin !== undefined ||
+          filtersOrderDto.lastUpdateDateMax !== undefined) && {
+          lastUpdateDate: Between(
+            filtersOrderDto.lastUpdateDateMin ? new Date(filtersOrderDto.lastUpdateDateMin) : new Date(0),
+            filtersOrderDto.lastUpdateDateMax ? new Date(filtersOrderDto.lastUpdateDateMax) : new Date(),
+          ),
+        }),
       },
       relations: ['orderPerfumes', 'orderPerfumes.perfume'],
       skip,
