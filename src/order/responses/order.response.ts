@@ -11,6 +11,11 @@ export class OrderResponse {
   })
   id: string;
   @ApiProperty({
+    description: 'Representa el código generado para la orden',
+    example: 'por definir',
+  })
+  code: string;
+  @ApiProperty({
     description: 'Representa el estado de la orden',
     example: 'por definir',
   })
@@ -61,15 +66,17 @@ export class OrderResponse {
 
   constructor(
     id: string,
+    code: string,
     state: State,
-    createDate: string,
+    creationDate: string,
     lastUpdateDate: string,
     user: UserResponse,
     orderPerfumes: OrderPerfumeResponse[],
   ) {
     this.id = id;
+    this.code = code;
     this.state = state;
-    this.creationDate = createDate;
+    this.creationDate = creationDate;
     this.lastUpdateDate = lastUpdateDate;
     this.user = user;
     this.orderPerfumes = orderPerfumes;

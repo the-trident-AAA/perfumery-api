@@ -16,6 +16,11 @@ export class OrderEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({
+    name: 'code',
+  })
+  code: string;
+
   @Column({ enum: State, default: State.PENDING })
   state: State;
 

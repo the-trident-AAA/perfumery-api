@@ -15,6 +15,7 @@ import { OrderEntity } from './entities/order.entity';
 import { State } from './entities/state.enum';
 import { OrderDto } from 'src/utils/dto/order.dto';
 import { FindOptionsOrder, Between } from 'typeorm';
+import { generateOrderCode } from './utils/general-utils';
 
 @Injectable()
 export class OrderService {
@@ -45,6 +46,7 @@ export class OrderService {
 
     const order = this.db.orderRespository.create({
       orderPerfumes: null,
+      code: generateOrderCode(new Date()),
       creationDate: new Date(),
       lastUpdateDate: new Date(),
       userId: user.id,
@@ -104,8 +106,12 @@ export class OrderService {
         ...((filtersOrderDto.lastUpdateDateMin !== undefined ||
           filtersOrderDto.lastUpdateDateMax !== undefined) && {
           lastUpdateDate: Between(
-            filtersOrderDto.lastUpdateDateMin ? new Date(filtersOrderDto.lastUpdateDateMin) : new Date(0),
-            filtersOrderDto.lastUpdateDateMax ? new Date(filtersOrderDto.lastUpdateDateMax) : new Date(),
+            filtersOrderDto.lastUpdateDateMin
+              ? new Date(filtersOrderDto.lastUpdateDateMin)
+              : new Date(0),
+            filtersOrderDto.lastUpdateDateMax
+              ? new Date(filtersOrderDto.lastUpdateDateMax)
+              : new Date(),
           ),
         }),
       },
@@ -120,6 +126,7 @@ export class OrderService {
         async (orderEntity) =>
           new OrderResponse(
             orderEntity.id,
+            orderEntity.code,
             orderEntity.state,
             orderEntity.creationDate.toISOString(),
             orderEntity.lastUpdateDate.toISOString(),
@@ -157,6 +164,7 @@ export class OrderService {
     });
     return new OrderResponse(
       orderEntity.id,
+      orderEntity.code,
       orderEntity.state,
       orderEntity.creationDate.toISOString(),
       orderEntity.lastUpdateDate.toISOString(),
