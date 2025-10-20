@@ -22,6 +22,7 @@ import { ApiPaginationdResponse } from 'src/utils/api-responses';
 import { OrderResponse } from './responses/order.response';
 import { FiltersOrderDto } from './filters/filters-order.dto';
 import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Controller('order')
 export class OrderController {
@@ -58,10 +59,11 @@ export class OrderController {
   findAll(
     @Query() paginationDto: PaginationDto,
     @Query() filtersOrderDto: FiltersOrderDto,
+    @Query() orderDto: OrderDto,
   ) {
     paginationDto.page = Number(paginationDto.page);
     paginationDto.limit = Number(paginationDto.limit);
-    return this.orderService.findAll(paginationDto, filtersOrderDto);
+    return this.orderService.findAll(paginationDto, filtersOrderDto, orderDto);
   }
 
   @ApiBearerAuth()

@@ -13,6 +13,8 @@ import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
 import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
 import { OrderEntity } from './entities/order.entity';
 import { State } from './entities/state.enum';
+import { OrderDto } from 'src/utils/dto/order.dto';
+import { FindOptionsOrder } from 'typeorm';
 
 @Injectable()
 export class OrderService {
@@ -72,9 +74,26 @@ export class OrderService {
   async findAll(
     paginationDto: PaginationDto,
     filtersOrderDto: FiltersOrderDto,
+    orderDto: OrderDto,
   ) {
     const { page, limit } = paginationDto;
     const skip = (page - 1) * limit;
+    const { order, orderBy } = orderDto;
+
+    const sortableFields = [
+      'id',
+      'state',
+      'creationDate',
+      'lastUpdateDate',
+      'userId',
+    ];
+
+    const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+    const orderClause: FindOptionsOrder<OrderEntity> =
+      orderBy && sortableFields.includes(orderBy)
+        ? { [orderBy]: direction }
+        : { creationDate: 'DESC' };
 
     const [ordersEntity, total] = await this.db.orderRespository.findAndCount({
       where: {
@@ -85,6 +104,7 @@ export class OrderService {
       relations: ['orderPerfumes', 'orderPerfumes.perfume'],
       skip,
       take: limit,
+      order: orderClause,
     });
 
     const data = await Promise.all(
