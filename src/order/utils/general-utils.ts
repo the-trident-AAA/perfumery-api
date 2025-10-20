@@ -9,8 +9,8 @@ export function generateOrderCode(creationDate: Date): string {
   // Formatear fecha como YYYYMMDD
   const dateString = creationDate.toISOString().slice(0, 10).replace(/-/g, '');
   
-  // Generar secuencia corta (10 caracteres alfanuméricos)
-  const shortSequence = generateShortSequence();
+  // Generar secuencia corta (6 caracteres alfanuméricos)
+  const shortSequence = generateShortSequence(6);
   
   return `${dateString}-${shortSequence}`;
 }
