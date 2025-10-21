@@ -6,12 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BrandResponse } from './responses/brand.response';
+import { FiltersBrandDto } from './dto/filters-brand.dto';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { ApiPaginationdResponse } from 'src/utils/api-responses';
 
 @Controller('brand')
 export class BrandController {
@@ -31,6 +37,7 @@ export class BrandController {
   }
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
     summary: 'Este endpoint obtiene una lista de marcas de la base de datos',
   })
@@ -44,8 +51,8 @@ export class BrandController {
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener la lista de marcas',
   })
-  findAll() {
-    return this.brandService.findAll();
+  findAll(@Query() filtersBrandDto: FiltersBrandDto) {
+    return this.brandService.findAll(filtersBrandDto);
   }
 
   @Get(':id')

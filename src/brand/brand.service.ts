@@ -3,6 +3,10 @@ import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { BrandResponse } from './responses/brand.response';
 import { DatabaseService } from 'src/database/database.service';
+import { FiltersBrandDto } from './dto/filters-brand.dto';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
+import { ILike } from 'typeorm';
 
 @Injectable()
 export class BrandService {
@@ -22,9 +26,21 @@ export class BrandService {
     return await this.db.brandRepository.save(brand);
   }
 
-  async findAll(): Promise<BrandResponse[]> {
-    const brands = await this.db.brandRepository.find();
-    return brands.map((brand) => new BrandResponse(brand.id, brand.name));
+  async findAll(filtersBrandDto: FiltersBrandDto) {
+    const [brands, total] = await this.db.brandRepository.findAndCount({
+      where: {
+        ...(filtersBrandDto.id && { id: filtersBrandDto.id }),
+        ...(filtersBrandDto.name && {
+          name: ILike(`%${filtersBrandDto.name}%`),
+        }),
+      },
+    });
+
+    const brandResponses = brands.map(
+      (brand) => new BrandResponse(brand.id, brand.name),
+    );
+
+    return brandResponses;
   }
 
   async findOne(id: string): Promise<BrandResponse> {
