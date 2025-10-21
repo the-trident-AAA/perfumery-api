@@ -212,7 +212,6 @@ export class OrderService {
       },
       relations: ['orderPerfumes'],
     });
-    let updateOrder = orderEntity;
 
     if (!orderEntity)
       throw new BadRequestException(
@@ -249,7 +248,7 @@ export class OrderService {
           'decrease',
         );
       }
-      updateOrder = this.db.orderRespository.create({
+      await this.db.orderRespository.save({
         ...orderEntity,
         state: updateOrderDto.state,
       });
@@ -272,10 +271,7 @@ export class OrderService {
       await this.db.orderPerfumeRepository.save(orderPerfumes);
     }
 
-    await this.db.orderRespository.save({
-      ...updateOrder,
-      lastUpdateDate: new Date(), // update the last update date
-    });
+    await this.db.orderRespository.update(id, { lastUpdateDate: new Date() });
 
     return { success: true };
   }
