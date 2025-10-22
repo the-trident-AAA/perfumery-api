@@ -325,8 +325,8 @@ export class PerfumeService {
               : perfume.cant - orderPerfume.cant,
           sales:
             action === 'increase'
-              ? perfume.sales + orderPerfume.cant
-              : perfume.sales - orderPerfume.cant,
+              ? perfume.sales - orderPerfume.cant
+              : perfume.sales + orderPerfume.cant,
         });
       }),
     );
