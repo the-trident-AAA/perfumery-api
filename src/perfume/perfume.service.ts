@@ -64,6 +64,41 @@ export class PerfumeService {
     return await this.db.perfumeRepository.save(perfume);
   }
 
+  async getBestSellers(limit: number = 10) {
+    const perfumesEntities = await this.db.perfumeRepository.find({
+      relations: ['brand', 'perfumeType', 'scents', 'offer'],
+      take: limit,
+      order: { sales: 'ASC' },
+    });
+
+    const perfumes = await Promise.all(
+      perfumesEntities.map(async (perfume) => {
+        const image = perfume.image
+          ? await this.minioService.getPresignedUrl(perfume.image)
+          : null;
+
+        return new PerfumeResponse(
+          perfume.id,
+          perfume.name,
+          perfume.description,
+          image,
+          perfume.brand?.name,
+          perfume.gender,
+          perfume.scents?.map((scent) => scent.name),
+          perfume.milliliters,
+          perfume.perfumeType?.name,
+          perfume.available,
+          perfume.price,
+          perfume.sales,
+          perfume.cant,
+          perfume.offer ? perfume.offer.discount : null,
+        );
+      }),
+    );
+
+    return perfumes;
+  }
+
   async findAll(
     paginationDto: PaginationDto,
     filtersPerfumeDto: FiltersPerfumeDto,
