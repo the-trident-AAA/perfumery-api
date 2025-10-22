@@ -10,6 +10,7 @@ import { UserResponse } from './responses/user.response';
 import { MinioService } from 'src/minio/minio.service';
 import { UserDetailsResponse } from './responses/user-details.response';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -26,6 +27,7 @@ export class UsersService {
       ...dto,
       shopCartId: shopCart.id,
       isActive: false,
+      role: dto.role || Role.USER,
     });
   }
 

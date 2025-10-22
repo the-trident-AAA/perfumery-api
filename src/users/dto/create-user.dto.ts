@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from 'src/common/enums/role.enum';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -19,4 +20,10 @@ export class CreateUserDto {
     required: true,
   })
   password: string;
+  @ApiProperty({
+    description: 'Representa el rol del usuario a crear',
+    type: 'string',
+    required: false,
+  })
+  role?: Role;
 }
