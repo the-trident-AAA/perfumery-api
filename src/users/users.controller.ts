@@ -99,7 +99,7 @@ export class UsersController {
   }
 
   @ApiBearerAuth()
-  @Auth([Role.ADMIN])
+  @Auth([Role.ADMIN, Role.USER])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('avatar'))
@@ -125,6 +125,8 @@ export class UsersController {
     return this.usersService.update(id, dto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
