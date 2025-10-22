@@ -134,7 +134,7 @@ export class PerfumeResponse {
     this.perfumeType = perfumeType;
     this.available = available;
     this.price = price;
-    this.sales = price;
+    this.sales = sales;
     this.cant = cant;
     this.image = image;
     this.discountOffer = discountOffer;
