@@ -89,6 +89,7 @@ export class AuthService {
       user.username,
       user.email,
       user.shopCartId,
+      user.role,
     );
   }
 

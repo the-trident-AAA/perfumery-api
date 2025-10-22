@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from 'src/common/enums/role.enum';
 
 export class LoginResponse {
   @ApiProperty({
@@ -33,6 +34,13 @@ export class LoginResponse {
     required: true,
   })
   shopCartId: string;
+  @ApiProperty({
+    description:
+      'Representa el rol del usuario logeado',
+    type: 'string',
+    required: true,
+  })
+  role: Role;
 
   constructor(
     accessToken: string,
@@ -40,11 +48,13 @@ export class LoginResponse {
     username: string,
     email: string,
     shopCartId: string,
+    role: Role
   ) {
     this.accessToken = accessToken;
     this.id = id;
     this.username = username;
     this.email = email;
     this.shopCartId = shopCartId;
+    this.role = role
   }
 }
