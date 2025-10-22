@@ -306,7 +306,7 @@ export class PerfumeService {
     return await this.db.perfumeRepository.delete({ id });
   }
 
-  async updateStock(
+  async updateStockAndSales(
     orderPefumes: OrderPerfumeEntity[],
     action: 'increase' | 'decrease',
   ) {
@@ -323,6 +323,10 @@ export class PerfumeService {
             action === 'increase'
               ? perfume.cant + orderPerfume.cant
               : perfume.cant - orderPerfume.cant,
+          sales:
+            action === 'increase'
+              ? perfume.sales + orderPerfume.cant
+              : perfume.sales - orderPerfume.cant,
         });
       }),
     );
