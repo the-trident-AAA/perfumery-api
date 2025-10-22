@@ -26,17 +26,18 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 
-@ApiBearerAuth()
-@Auth([Role.ADMIN])
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Post()
   create(@Body() dto: CreateUserDto) {
     return this.usersService.create(dto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Get()
   @ApiOperation({
     summary: 'Este endpoint obtiene una lista de usuarios de la base de datos',
@@ -55,6 +56,8 @@ export class UsersController {
     return this.usersService.find();
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN, Role.USER])
   @Get('find-one-without-relations/:id')
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
@@ -74,6 +77,8 @@ export class UsersController {
     return this.usersService.findOneWithOutRelations(id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN, Role.USER])
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
@@ -93,6 +98,8 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('avatar'))
