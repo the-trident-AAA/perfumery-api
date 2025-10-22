@@ -47,6 +47,9 @@ export class PerfumeEntity {
   @Column({ nullable: true })
   price: number;
 
+  @Column({ nullable: true })
+  sales: number;
+
   @Column({})
   cant: number;
 

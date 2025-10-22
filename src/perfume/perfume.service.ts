@@ -58,6 +58,7 @@ export class PerfumeService {
       scents,
       image,
       images,
+      sales: 0,
     });
 
     return await this.db.perfumeRepository.save(perfume);
@@ -151,6 +152,7 @@ export class PerfumeService {
           perfume.perfumeType?.name,
           perfume.available,
           perfume.price,
+          perfume.sales,
           perfume.cant,
           perfume.offer ? perfume.offer.discount : null,
         );
@@ -198,6 +200,7 @@ export class PerfumeService {
       new PerfumeTypeResponse(perfume.perfumeType.id, perfume.perfumeType.name),
       perfume.available,
       perfume.price,
+      perfume.sales,
       perfume.cant,
       perfume.offer
         ? new OfferDetailsResponse(

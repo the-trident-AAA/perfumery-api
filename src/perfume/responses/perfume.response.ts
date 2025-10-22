@@ -88,6 +88,13 @@ export class PerfumeResponse {
   price: number;
 
   @ApiProperty({
+    description: 'Representa las ventas del perfume',
+    type: 'number',
+    required: true,
+  })
+  sales: number;
+
+  @ApiProperty({
     description: 'Representa la cantidad de perfumes disponibles',
     type: 'number',
     required: true,
@@ -113,6 +120,7 @@ export class PerfumeResponse {
     perfumeType: string,
     available: boolean,
     price: number,
+    sales: number,
     cant: number,
     discountOffer?: number,
   ) {
@@ -126,6 +134,7 @@ export class PerfumeResponse {
     this.perfumeType = perfumeType;
     this.available = available;
     this.price = price;
+    this.sales = price;
     this.cant = cant;
     this.image = image;
     this.discountOffer = discountOffer;
