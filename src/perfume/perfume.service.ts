@@ -307,11 +307,11 @@ export class PerfumeService {
   }
 
   async updateStockAndSales(
-    orderPefumes: OrderPerfumeEntity[],
+    orderPerfumes: OrderPerfumeEntity[],
     action: 'increase' | 'decrease',
   ) {
     await Promise.all(
-      orderPefumes.map(async (orderPerfume) => {
+      orderPerfumes.map(async (orderPerfume) => {
         // find the perfume
         const perfume = await this.db.perfumeRepository.findOne({
           where: { id: orderPerfume.perfumeId },
