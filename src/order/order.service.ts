@@ -227,7 +227,7 @@ export class OrderService {
           updateOrderDto.state === State.PENDING)
       ) {
         // se deberían actualizar la existencias de los perfumes (incrementando existencias)
-        await this.perfumeService.updateStock(
+        await this.perfumeService.updateStockAndSales(
           orderEntity.orderPerfumes,
           'increase',
         );
@@ -243,7 +243,7 @@ export class OrderService {
             'Esta orden contiene perfumes que no cuentan con disponibilidad en el inventario. Por lo tanto no es posible marcarla como "completada"',
           );
         // se deberían actualizar la existencias de los perfumes (decrementando existencias)
-        await this.perfumeService.updateStock(
+        await this.perfumeService.updateStockAndSales(
           orderEntity.orderPerfumes,
           'decrease',
         );
