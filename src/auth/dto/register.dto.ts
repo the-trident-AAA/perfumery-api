@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsString, MinLength } from 'class-validator';
+import { Role } from 'src/common/enums/role.enum';
 
 export class RegisterDto {
   @ApiProperty({
@@ -27,4 +28,10 @@ export class RegisterDto {
   @IsString()
   @MinLength(6)
   password: string;
+  @ApiProperty({
+    description: 'Representa el rol del usuario a crear',
+    type: 'string',
+    required: false,
+  })
+  role?: Role;
 }
