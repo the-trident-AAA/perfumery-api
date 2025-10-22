@@ -27,7 +27,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 
 @ApiBearerAuth()
-@Auth([Role.USER])
+@Auth([Role.ADMIN])
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
