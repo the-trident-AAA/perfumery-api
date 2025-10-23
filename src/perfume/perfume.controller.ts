@@ -15,7 +15,12 @@ import {
 import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
-import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiConsumes,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { PerfumeResponse } from './responses/perfume.response';
 import { PerfumeDetailsResponse } from './responses/perfume-details.response';
 import {
@@ -75,6 +80,13 @@ export class PerfumeController {
   @ApiResponse({
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener lista de perfumes',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Límite de resultados a retornar (opcional)',
+    example: 10,
   })
   getBestSellers(@Query('limit') limit?: string) {
     return this.perfumeService.getBestSellers(
