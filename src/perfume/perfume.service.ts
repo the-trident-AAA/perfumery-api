@@ -68,7 +68,7 @@ export class PerfumeService {
     const perfumesEntities = await this.db.perfumeRepository.find({
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
       take: limit,
-      order: { sales: 'ASC' },
+      order: { sales: 'DESC' },
     });
 
     const perfumes = await Promise.all(
