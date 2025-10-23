@@ -63,7 +63,8 @@ export class PerfumeController {
   @Get('best-sellers')
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
-    summary: 'Este endpoint obtiene una lista de perfumes más vendidos la base de datos',
+    summary:
+      'Este endpoint obtiene una lista de perfumes más vendidos la base de datos',
   })
   @ApiResponse({
     status: 200,
