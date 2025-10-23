@@ -69,10 +69,8 @@ export class PerfumeController {
   @ApiResponse({
     status: 200,
     description: 'Lista de perfumes obtenidos exitosamente',
-    type: ApiPaginationdResponse(
-      PerfumeResponse,
-      'Representa los perfumes obtenidos como resultado de la de solicitud',
-    ),
+    type: PerfumeResponse,
+    isArray: true,
   })
   @ApiResponse({
     status: 500,
