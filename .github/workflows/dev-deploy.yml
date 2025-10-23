@@ -56,7 +56,7 @@ jobs:
             echo 'OTP_SECRET=${{ secrets.OTP_SECRET }}' >> .env &&
             echo 'EMAIL_FROM=${{ secrets.EMAIL_FROM }}' >> .env &&
             git pull origin dev &&
-            docker-compose down &&
-            docker-compose pull &&
-            docker-compose up -d --build
+            docker-compose -f docker-compose.dev.yml pull &&
+            docker-compose -f docker-compose.dev.yml build --no-cache &&
+            docker-compose -f docker-compose.dev.yml up -d
           "
