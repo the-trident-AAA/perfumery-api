@@ -60,6 +60,29 @@ export class PerfumeController {
     return this.perfumeService.create(dto);
   }
 
+  @Get('best-sellers')
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiOperation({
+    summary: 'Este endpoint obtiene una lista de perfumes más vendidos la base de datos',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de perfumes obtenidos exitosamente',
+    type: ApiPaginationdResponse(
+      PerfumeResponse,
+      'Representa los perfumes obtenidos como resultado de la de solicitud',
+    ),
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de obtener lista de perfumes',
+  })
+  getBestSellers(@Query('limit') limit?: string) {
+    return this.perfumeService.getBestSellers(
+      limit ? Number(limit) : undefined,
+    );
+  }
+
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
