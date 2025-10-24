@@ -126,11 +126,7 @@ export class PerfumeService {
       .leftJoinAndSelect('perfume.scents', 'scents')
       .leftJoinAndSelect('perfume.offer', 'offer')
       .addSelect(
-        `CASE 
-          WHEN offer.discount IS NOT NULL 
-          THEN perfume.price - (perfume.price * offer.discount)
-          ELSE perfume.price
-        END`,
+        'CASE WHEN offer.discount IS NOT NULL THEN perfume.price - (perfume.price * offer.discount) ELSE perfume.price END',
         'totalPrice',
       );
 
@@ -190,11 +186,7 @@ export class PerfumeService {
       const totalPriceMax =
         filtersPerfumeDto.totalPriceMax ?? Number.MAX_SAFE_INTEGER;
       queryBuilder = queryBuilder.andWhere(
-        `CASE 
-          WHEN offer.discount IS NOT NULL 
-          THEN perfume.price - (perfume.price * offer.discount)
-          ELSE perfume.price
-        END BETWEEN :totalPriceMin AND :totalPriceMax`,
+        'CASE WHEN offer.discount IS NOT NULL THEN perfume.price - (perfume.price * offer.discount) ELSE perfume.price END BETWEEN :totalPriceMin AND :totalPriceMax',
         { totalPriceMin, totalPriceMax },
       );
     }
@@ -246,13 +238,9 @@ export class PerfumeService {
     // Aplicar ordenamiento
     if (orderBy && sortableFields.includes(orderBy)) {
       if (orderBy === 'totalPrice') {
-        // Ordenar por el campo calculado usando la expresión SQL completa
+        // Ordenar por el campo calculado usando la expresión SQL completa en una línea
         queryBuilder = queryBuilder.orderBy(
-          `CASE 
-            WHEN offer.discount IS NOT NULL 
-            THEN perfume.price - (perfume.price * offer.discount)
-            ELSE perfume.price
-          END`,
+          'CASE WHEN offer.discount IS NOT NULL THEN perfume.price - (perfume.price * offer.discount) ELSE perfume.price END',
           direction,
         );
       } else {
