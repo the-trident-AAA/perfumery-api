@@ -65,6 +65,19 @@ export class PerfumeEntity {
   })
   price: number;
 
+  @Column({
+    name: 'total_price',
+    nullable: true,
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string): number => parseFloat(value),
+    },
+  })
+  totalPrice: number;
+
   @Column({ nullable: true })
   sales: number;
 
