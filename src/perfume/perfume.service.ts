@@ -84,6 +84,13 @@ export class PerfumeService {
     return await this.db.perfumeRepository.save(perfume);
   }
 
+
+  async updateAssociatedPerfumesToOffer (offerId: string, newDiscount: number) {
+     await this.db.perfumeRepository.update({offerId},{ 
+      totalPrice: () => `price - (price * ${newDiscount})`
+    })
+  }
+
   async getBestSellers(limit: number = 10) {
     const perfumesEntities = await this.db.perfumeRepository.find({
       relations: ['brand', 'perfumeType', 'scents', 'offer'],

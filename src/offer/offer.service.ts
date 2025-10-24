@@ -5,12 +5,14 @@ import { OfferResponse } from './responses/offer.response';
 import { OfferDetailsResponse } from './responses/offer-details.response';
 import { DatabaseService } from 'src/database/database.service';
 import { MinioService } from 'src/minio/minio.service';
+import { PerfumeService } from 'src/perfume/perfume.service';
 
 @Injectable()
 export class OfferService {
   constructor(
     private readonly db: DatabaseService,
     private readonly minioService: MinioService,
+    private readonly perfumeService: PerfumeService,
   ) {}
 
   async create(dto: CreateOfferDto) {
@@ -94,6 +96,9 @@ export class OfferService {
     } else {
       offer.image = null;
     }
+
+    // update the associated perfumes
+    await this.perfumeService.updateAssociatedPerfumesToOffer(id, dto.discount);
 
     return await this.db.offerRepository.save(offer);
   }
