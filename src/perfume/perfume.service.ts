@@ -290,6 +290,12 @@ export class PerfumeService {
       where: { id },
       relations: ['offer'],
     });
+
+    if (!perfume)
+      throw new BadRequestException(
+        'No existe un perfume con ese identificador',
+      );
+
     Object.assign(perfume, {
       ...restDTO,
       scents: restDTO.scentsId.map((scentId) => ({ id: scentId })), // update the scents
