@@ -105,95 +105,42 @@ export class PerfumeService {
     orderDto: OrderDto,
   ): Promise<PagintationResponse<PerfumeResponse>> {
     const { page, limit } = paginationDto;
-    const skip = (page - 1) * limit;
     const { order, orderBy } = orderDto;
 
     const sortableFields = ['id', 'name', 'price', 'cant', 'milliliters'];
-
     const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-
     const orderClause: FindOptionsOrder<PerfumeEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
         : { price: 'ASC' };
 
+    // Verificar si necesita filtrado por totalPrice
+    const needsTotalPriceFilter = 
+      filtersPerfumeDto.totalPriceMin !== undefined || 
+      filtersPerfumeDto.totalPriceMax !== undefined;
+
+    if (needsTotalPriceFilter) {
+      return this.findAllWithTotalPriceFilter(
+        filtersPerfumeDto,
+        orderClause,
+        page,
+        limit,
+      );
+    }
+
+    // Lógica original optimizada para filtros normales
+    const skip = (page - 1) * limit;
+    const whereClause = this.buildWhereClause(filtersPerfumeDto);
+    
     const [perfumes, total] = await this.db.perfumeRepository.findAndCount({
-      where: {
-        ...(filtersPerfumeDto.id && { id: filtersPerfumeDto.id }),
-        ...(filtersPerfumeDto.name && {
-          name: ILike(`%${filtersPerfumeDto.name}%`),
-        }),
-        ...(filtersPerfumeDto.description && {
-          description: ILike(`%${filtersPerfumeDto.description}%`),
-        }),
-        ...(filtersPerfumeDto.gender && { gender: filtersPerfumeDto.gender }),
-
-        ...(filtersPerfumeDto.available !== undefined && {
-          available: filtersPerfumeDto.available,
-        }),
-        // ✅ Rango para price
-        ...((filtersPerfumeDto.priceMin !== undefined ||
-          filtersPerfumeDto.priceMax !== undefined) && {
-          price: Between(
-            filtersPerfumeDto.priceMin ?? 0,
-            filtersPerfumeDto.priceMax ?? Number.MAX_SAFE_INTEGER,
-          ),
-        }),
-
-        // ✅ Rango para milliliters
-        ...((filtersPerfumeDto.millilitersMin !== undefined ||
-          filtersPerfumeDto.millilitersMax !== undefined) && {
-          milliliters: Between(
-            filtersPerfumeDto.millilitersMin ?? 0,
-            filtersPerfumeDto.millilitersMax ?? Number.MAX_SAFE_INTEGER,
-          ),
-        }),
-        ...(filtersPerfumeDto.cant && { cant: filtersPerfumeDto.cant }),
-        ...(filtersPerfumeDto.brandId && {
-          brand: { id: filtersPerfumeDto.brandId },
-        }),
-        ...(filtersPerfumeDto.perfumeTypeId && {
-          perfumeType: { id: filtersPerfumeDto.perfumeTypeId },
-        }),
-        ...(filtersPerfumeDto.scentsIds &&
-          filtersPerfumeDto.scentsIds.length > 0 && {
-            scents: { id: In(filtersPerfumeDto.scentsIds) },
-          }),
-        ...(filtersPerfumeDto.offerId && {
-          offer: { id: filtersPerfumeDto.offerId },
-        }),
-      },
+      where: whereClause,
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
       skip,
       take: limit,
       order: orderClause,
     });
 
-    const data = await Promise.all(
-      perfumes.map(async (perfume) => {
-        const image = perfume.image
-          ? await this.minioService.getPresignedUrl(perfume.image)
-          : null;
-
-        return new PerfumeResponse(
-          perfume.id,
-          perfume.name,
-          perfume.description,
-          image,
-          perfume.brand?.name,
-          perfume.gender,
-          perfume.scents?.map((scent) => scent.name),
-          perfume.milliliters,
-          perfume.perfumeType?.name,
-          perfume.available,
-          perfume.price,
-          perfume.sales,
-          perfume.cant,
-          perfume.offer ? perfume.offer.discount : null,
-        );
-      }),
-    );
-
+    const data = await this.mapPerfumesToResponse(perfumes);
     const lastPage = Math.ceil(total / limit);
 
     return new PagintationResponse(
@@ -395,5 +342,119 @@ export class PerfumeService {
     }
 
     return hasAvailability;
+  }
+
+  // Métodos auxiliares para refactorizar el código
+  private buildWhereClause(filtersPerfumeDto: FiltersPerfumeDto) {
+    return {
+      ...(filtersPerfumeDto.id && { id: filtersPerfumeDto.id }),
+      ...(filtersPerfumeDto.name && {
+        name: ILike(`%${filtersPerfumeDto.name}%`),
+      }),
+      ...(filtersPerfumeDto.description && {
+        description: ILike(`%${filtersPerfumeDto.description}%`),
+      }),
+      ...(filtersPerfumeDto.gender && { gender: filtersPerfumeDto.gender }),
+      ...(filtersPerfumeDto.available !== undefined && {
+        available: filtersPerfumeDto.available,
+      }),
+      // ✅ Rango para price
+      ...((filtersPerfumeDto.priceMin !== undefined ||
+        filtersPerfumeDto.priceMax !== undefined) && {
+        price: Between(
+          filtersPerfumeDto.priceMin ?? 0,
+          filtersPerfumeDto.priceMax ?? Number.MAX_SAFE_INTEGER,
+        ),
+      }),
+      // ✅ Rango para milliliters
+      ...((filtersPerfumeDto.millilitersMin !== undefined ||
+        filtersPerfumeDto.millilitersMax !== undefined) && {
+        milliliters: Between(
+          filtersPerfumeDto.millilitersMin ?? 0,
+          filtersPerfumeDto.millilitersMax ?? Number.MAX_SAFE_INTEGER,
+        ),
+      }),
+      ...(filtersPerfumeDto.cant && { cant: filtersPerfumeDto.cant }),
+      ...(filtersPerfumeDto.brandId && {
+        brand: { id: filtersPerfumeDto.brandId },
+      }),
+      ...(filtersPerfumeDto.perfumeTypeId && {
+        perfumeType: { id: filtersPerfumeDto.perfumeTypeId },
+      }),
+      ...(filtersPerfumeDto.scentsIds &&
+        filtersPerfumeDto.scentsIds.length > 0 && {
+          scents: { id: In(filtersPerfumeDto.scentsIds) },
+        }),
+      ...(filtersPerfumeDto.offerId && {
+        offer: { id: filtersPerfumeDto.offerId },
+      }),
+    };
+  }
+
+  private async mapPerfumesToResponse(perfumes: PerfumeEntity[]): Promise<PerfumeResponse[]> {
+    return Promise.all(
+      perfumes.map(async (perfume) => {
+        const image = perfume.image
+          ? await this.minioService.getPresignedUrl(perfume.image)
+          : null;
+
+        return new PerfumeResponse(
+          perfume.id,
+          perfume.name,
+          perfume.description,
+          image,
+          perfume.brand?.name,
+          perfume.gender,
+          perfume.scents?.map((scent) => scent.name),
+          perfume.milliliters,
+          perfume.perfumeType?.name,
+          perfume.available,
+          perfume.price,
+          perfume.sales,
+          perfume.cant,
+          perfume.offer ? perfume.offer.discount : null,
+        );
+      }),
+    );
+  }
+
+  private async findAllWithTotalPriceFilter(
+    filtersPerfumeDto: FiltersPerfumeDto,
+    orderClause: FindOptionsOrder<PerfumeEntity>,
+    page: number,
+    limit: number,
+  ): Promise<PagintationResponse<PerfumeResponse>> {
+    // Obtener todos los perfumes sin paginación para poder filtrar por totalPrice
+    const whereClause = this.buildWhereClause(filtersPerfumeDto);
+    const [perfumes] = await this.db.perfumeRepository.findAndCount({
+      where: whereClause,
+      relations: ['brand', 'perfumeType', 'scents', 'offer'],
+      order: orderClause,
+    });
+
+    // Crear objetos PerfumeResponse para calcular totalPrice
+    const perfumesWithTotalPrice = await this.mapPerfumesToResponse(perfumes);
+
+    // Filtrar por totalPrice
+    const filteredPerfumes = perfumesWithTotalPrice.filter((perfume) => {
+      const totalPrice = perfume.totalPrice;
+      const minPrice = filtersPerfumeDto.totalPriceMin ?? 0;
+      const maxPrice = filtersPerfumeDto.totalPriceMax ?? Number.MAX_SAFE_INTEGER;
+      
+      return totalPrice >= minPrice && totalPrice <= maxPrice;
+    });
+
+    const total = filteredPerfumes.length;
+    
+    // Aplicar paginación
+    const skip = (page - 1) * limit;
+    const paginatedPerfumes = filteredPerfumes.slice(skip, skip + limit);
+    
+    const lastPage = Math.ceil(total / limit);
+
+    return new PagintationResponse(
+      paginatedPerfumes,
+      new PaginationMeta(total, page, limit, lastPage),
+    );
   }
 }
