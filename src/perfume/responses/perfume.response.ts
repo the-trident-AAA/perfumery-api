@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entities/gender.enum';
-import { Expose } from 'class-transformer';
+
 
 export class PerfumeResponse {
   @ApiProperty({
@@ -101,12 +101,12 @@ export class PerfumeResponse {
   })
   cant: number;
 
-  @Expose()
-  get totalPrice(): number {
-    return this.discountOffer
-      ? this.price - this.price * this.discountOffer
-      : this.price;
-  }
+  @ApiProperty({
+    description: 'Representa el precio con los descuentos aplicados',
+    type: 'number',
+    required: true,
+  })
+  totalPrice: number;
 
   constructor(
     id: string,
@@ -122,6 +122,7 @@ export class PerfumeResponse {
     price: number,
     sales: number,
     cant: number,
+    totalPrice: number,
     discountOffer?: number,
   ) {
     this.id = id;
@@ -139,5 +140,6 @@ export class PerfumeResponse {
     this.image = image;
     this.discountOffer = discountOffer;
     this.description = description;
+    this.totalPrice = totalPrice;
   }
 }

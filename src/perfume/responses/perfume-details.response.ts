@@ -4,7 +4,7 @@ import { BrandResponse } from 'src/brand/responses/brand.response';
 import { ScentResponse } from 'src/scent/responses/scent.response';
 import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
 import { OfferResponse } from 'src/offer/responses/offer.response';
-import { Expose } from 'class-transformer';
+
 
 export class PerfumeDetailsResponse {
   @ApiProperty({
@@ -114,16 +114,11 @@ export class PerfumeDetailsResponse {
   cant: number;
 
   @ApiProperty({
-    description: 'Representa el precio del perfume aplicando los descuentos',
+    description: 'Representa el precio con los descuentos aplicados',
     type: 'number',
     required: true,
   })
-  @Expose()
-  get totalPrice(): number {
-    return this.offer
-      ? this.price - this.price * this.offer.discount
-      : this.price;
-  }
+  totalPrice: number;
 
   constructor(
     id: string,
@@ -140,6 +135,7 @@ export class PerfumeDetailsResponse {
     price: number,
     sales: number,
     cant: number,
+    totalPrice: number,
     offer?: OfferResponse,
   ) {
     this.id = id;
@@ -158,5 +154,6 @@ export class PerfumeDetailsResponse {
     this.images = images;
     this.offer = offer;
     this.description = description;
+    this.totalPrice = totalPrice;
   }
 }
