@@ -4,9 +4,14 @@ import { OfferController } from './offer.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OfferEntity } from './entities/offer.entity';
 import { MinioModule } from 'src/minio/minio.module';
+import { PerfumeModule } from 'src/perfume/perfume.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OfferEntity]), MinioModule],
+  imports: [
+    TypeOrmModule.forFeature([OfferEntity]),
+    MinioModule,
+    PerfumeModule,
+  ],
   controllers: [OfferController],
   providers: [OfferService],
 })
