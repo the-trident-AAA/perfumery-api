@@ -84,11 +84,13 @@ export class PerfumeService {
     return await this.db.perfumeRepository.save(perfume);
   }
 
-
-  async updateAssociatedPerfumesToOffer (offerId: string, newDiscount: number) {
-     await this.db.perfumeRepository.update({offerId},{ 
-      totalPrice: () => `price - (price * ${newDiscount})`
-    })
+  async updateAssociatedPerfumesToOffer(offerId: string, newDiscount: number) {
+    await this.db.perfumeRepository.update(
+      { offerId },
+      {
+        totalPrice: () => `price - (price * ${newDiscount})`,
+      },
+    );
   }
 
   async getBestSellers(limit: number = 10) {
@@ -284,10 +286,14 @@ export class PerfumeService {
 
   async update(id: string, dto: UpdatePerfumeDto) {
     const { image, images, ...restDTO } = dto;
-    const perfume = await this.db.perfumeRepository.findOne({ where: { id } });
+    const perfume = await this.db.perfumeRepository.findOne({
+      where: { id },
+      relations: ['offer'],
+    });
     Object.assign(perfume, {
       ...restDTO,
       scents: restDTO.scentsId.map((scentId) => ({ id: scentId })), // update the scents
+      totalPrice: dto.price - dto.price * perfume.offer.discount,
     });
 
     // removed defined relations marked as "undefined"
