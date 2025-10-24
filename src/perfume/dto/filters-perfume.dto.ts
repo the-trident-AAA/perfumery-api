@@ -121,14 +121,16 @@ export class FiltersPerfumeDto {
   millilitersMax?: number;
 
   @ApiProperty({
-    description: 'Representa el límite inferior del precio total (considerando ofertas)',
+    description:
+      'Representa el límite inferior del precio total (con descuento aplicado)',
     type: 'number',
     required: false,
   })
   totalPriceMin?: number;
 
   @ApiProperty({
-    description: 'Representa el límite superior del precio total (considerando ofertas)',
+    description:
+      'Representa el límite superior del precio total (con descuento aplicado)',
     type: 'number',
     required: false,
   })
