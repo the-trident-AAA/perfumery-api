@@ -107,7 +107,14 @@ export class PerfumeService {
     const { page, limit } = paginationDto;
     const { order, orderBy } = orderDto;
 
-    const sortableFields = ['id', 'name', 'price', 'cant', 'milliliters'];
+    const sortableFields = [
+      'id',
+      'name',
+      'price',
+      'cant',
+      'milliliters',
+      'totalPrice',
+    ];
     const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
     const orderClause: FindOptionsOrder<PerfumeEntity> =
       orderBy && sortableFields.includes(orderBy)
@@ -115,8 +122,8 @@ export class PerfumeService {
         : { price: 'ASC' };
 
     // Verificar si necesita filtrado por totalPrice
-    const needsTotalPriceFilter = 
-      filtersPerfumeDto.totalPriceMin !== undefined || 
+    const needsTotalPriceFilter =
+      filtersPerfumeDto.totalPriceMin !== undefined ||
       filtersPerfumeDto.totalPriceMax !== undefined;
 
     if (needsTotalPriceFilter) {
@@ -131,16 +138,23 @@ export class PerfumeService {
     // Lógica original optimizada para filtros normales
     const skip = (page - 1) * limit;
     const whereClause = this.buildWhereClause(filtersPerfumeDto);
-    
+
     const [perfumes, total] = await this.db.perfumeRepository.findAndCount({
       where: whereClause,
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
       skip,
       take: limit,
-      order: orderClause,
+      order: orderClause['totalPrice'] === undefined ? orderClause : {},
     });
 
-    const data = await this.mapPerfumesToResponse(perfumes);
+    let data = await this.mapPerfumesToResponse(perfumes);
+    // order to total price
+    if (orderClause['totalPrice']) {
+      const direction = orderClause['totalPrice'] === 'DESC' ? -1 : 1;
+      data = data.sort((a, b) => {
+        return (a.totalPrice - b.totalPrice) * direction;
+      });
+    }
     const lastPage = Math.ceil(total / limit);
 
     return new PagintationResponse(
@@ -391,7 +405,9 @@ export class PerfumeService {
     };
   }
 
-  private async mapPerfumesToResponse(perfumes: PerfumeEntity[]): Promise<PerfumeResponse[]> {
+  private async mapPerfumesToResponse(
+    perfumes: PerfumeEntity[],
+  ): Promise<PerfumeResponse[]> {
     return Promise.all(
       perfumes.map(async (perfume) => {
         const image = perfume.image
@@ -429,7 +445,7 @@ export class PerfumeService {
     const [perfumes] = await this.db.perfumeRepository.findAndCount({
       where: whereClause,
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
-      order: orderClause,
+      order: orderClause['totalPrice'] === undefined ? orderClause : {},
     });
 
     // Crear objetos PerfumeResponse para calcular totalPrice
@@ -439,21 +455,30 @@ export class PerfumeService {
     const filteredPerfumes = perfumesWithTotalPrice.filter((perfume) => {
       const totalPrice = perfume.totalPrice;
       const minPrice = filtersPerfumeDto.totalPriceMin ?? 0;
-      const maxPrice = filtersPerfumeDto.totalPriceMax ?? Number.MAX_SAFE_INTEGER;
-      
+      const maxPrice =
+        filtersPerfumeDto.totalPriceMax ?? Number.MAX_SAFE_INTEGER;
+
       return totalPrice >= minPrice && totalPrice <= maxPrice;
     });
 
     const total = filteredPerfumes.length;
-    
+
     // Aplicar paginación
     const skip = (page - 1) * limit;
-    const paginatedPerfumes = filteredPerfumes.slice(skip, skip + limit);
-    
+    let data = filteredPerfumes.slice(skip, skip + limit);
+
+    // order to total price
+    if (orderClause['totalPrice']) {
+      const direction = orderClause['totalPrice'] === 'DESC' ? -1 : 1;
+      data = data.sort((a, b) => {
+        return (a.totalPrice - b.totalPrice) * direction;
+      });
+    }
+
     const lastPage = Math.ceil(total / limit);
 
     return new PagintationResponse(
-      paginatedPerfumes,
+      data,
       new PaginationMeta(total, page, limit, lastPage),
     );
   }
