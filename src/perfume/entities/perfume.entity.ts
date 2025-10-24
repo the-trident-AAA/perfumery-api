@@ -35,7 +35,16 @@ export class PerfumeEntity {
   @Column({ enum: Gender })
   gender: Gender;
 
-  @Column({ nullable: true, type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    nullable: true,
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string): number => parseFloat(value),
+    },
+  })
   milliliters: number;
 
   @Column({ name: 'perfume_type_id' })
@@ -44,7 +53,16 @@ export class PerfumeEntity {
   @Column()
   available: boolean;
 
-  @Column({ nullable: true, type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    nullable: true,
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string): number => parseFloat(value),
+    },
+  })
   price: number;
 
   @Column({ nullable: true })
