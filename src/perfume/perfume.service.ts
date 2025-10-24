@@ -53,11 +53,31 @@ export class PerfumeService {
         )
       : [];
 
+    let totalPrice = dto.price;
+
+    if (dto.offerId) {
+      // find the offer
+      const offer = await this.db.offerRepository.findOne({
+        where: {
+          id: dto.offerId,
+        },
+      });
+
+      if (!offer)
+        throw new BadRequestException(
+          'La oferta indicada para el perfume no existe',
+        );
+
+      // calculate the total price
+      totalPrice = dto.price - dto.price * offer.discount;
+    }
+
     const perfume = this.db.perfumeRepository.create({
       ...dto,
       scents,
       image,
       images,
+      totalPrice,
       sales: 0,
     });
 
