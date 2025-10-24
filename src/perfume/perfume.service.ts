@@ -246,8 +246,15 @@ export class PerfumeService {
     // Aplicar ordenamiento
     if (orderBy && sortableFields.includes(orderBy)) {
       if (orderBy === 'totalPrice') {
-        // Ordenar por el campo calculado
-        queryBuilder = queryBuilder.orderBy('totalPrice', direction);
+        // Ordenar por el campo calculado usando la expresión SQL completa
+        queryBuilder = queryBuilder.orderBy(
+          `CASE 
+            WHEN offer.discount IS NOT NULL 
+            THEN perfume.price - (perfume.price * offer.discount)
+            ELSE perfume.price
+          END`,
+          direction,
+        );
       } else {
         queryBuilder = queryBuilder.orderBy(`perfume.${orderBy}`, direction);
       }
