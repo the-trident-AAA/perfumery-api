@@ -35,7 +35,7 @@ export class PerfumeEntity {
   @Column({ enum: Gender })
   gender: Gender;
 
-  @Column({ nullable: true, type: 'double' })
+  @Column({ nullable: true, type: 'decimal', precision: 10, scale: 2 })
   milliliters: number;
 
   @Column({ name: 'perfume_type_id' })
@@ -44,7 +44,7 @@ export class PerfumeEntity {
   @Column()
   available: boolean;
 
-  @Column({ nullable: true, type: 'double' })
+  @Column({ nullable: true, type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
   @Column({ nullable: true })
