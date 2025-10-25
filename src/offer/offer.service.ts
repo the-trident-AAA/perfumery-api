@@ -51,7 +51,7 @@ export class OfferService {
         // ✅ Rango para discount
         ...((filtersOfferDto.minDiscount !== undefined ||
           filtersOfferDto.maxDiscount !== undefined) && {
-          price: Between(
+          discount: Between(
             filtersOfferDto.minDiscount ?? 0,
             filtersOfferDto.maxDiscount ?? Number.MAX_SAFE_INTEGER,
           ),
