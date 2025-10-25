@@ -4,6 +4,8 @@ import { UpdatePerfumeTypeDto } from './dto/update-perfume-type.dto';
 import { PerfumeTypeResponse } from './responses/perfume-type.response';
 import { DatabaseService } from 'src/database/database.service';
 import { MinioService } from 'src/minio/minio.service';
+import { FiltersPerfumeTypeDto } from './dto/filters-perfume-type.dto';
+import { ILike } from 'typeorm';
 
 @Injectable()
 export class PerfumeTypeService {
@@ -27,8 +29,16 @@ export class PerfumeTypeService {
     return await this.db.perfumeTypeRepository.save(perfumeType);
   }
 
-  async findAll(): Promise<PerfumeTypeResponse[]> {
-    const perfumeTypes = await this.db.perfumeTypeRepository.find();
+  async findAll(
+    filtersPerfumeTypeDto: FiltersPerfumeTypeDto,
+  ): Promise<PerfumeTypeResponse[]> {
+    const perfumeTypes = await this.db.perfumeTypeRepository.find({
+      where: {
+        ...(filtersPerfumeTypeDto.name && {
+          name: ILike(`%${filtersPerfumeTypeDto.name}%`),
+        }),
+      },
+    });
     return await Promise.all(
       perfumeTypes.map(async (perfumeType) => {
         const image = perfumeType.image

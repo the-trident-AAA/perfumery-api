@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { PerfumeTypeService } from './perfume-type.service';
 import { CreatePerfumeTypeDto } from './dto/create-perfume-type.dto';
@@ -16,6 +17,7 @@ import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PerfumeTypeResponse } from './responses/perfume-type.response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
+import { FiltersPerfumeTypeDto } from './dto/filters-perfume-type.dto';
 
 @Controller('perfume-type')
 export class PerfumeTypeController {
@@ -60,8 +62,8 @@ export class PerfumeTypeController {
     description:
       'Ocurrió un error en el proceso de obtener la lista de tipo de perfumes',
   })
-  findAll() {
-    return this.perfumeTypeService.findAll();
+  findAll(@Query() filtersPerfumeTypeDto: FiltersPerfumeTypeDto) {
+    return this.perfumeTypeService.findAll(filtersPerfumeTypeDto);
   }
 
   @Get(':id')
