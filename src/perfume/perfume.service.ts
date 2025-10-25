@@ -93,6 +93,15 @@ export class PerfumeService {
     );
   }
 
+  async updateAssociatedPerfumesToDeleteOffer(offerId: string) {
+    await this.db.perfumeRepository.update(
+      { offerId },
+      {
+        totalPrice: () => `price`,
+      },
+    );
+  }
+
   async getBestSellers(limit: number = 10) {
     const perfumesEntities = await this.db.perfumeRepository.find({
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
