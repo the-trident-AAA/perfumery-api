@@ -24,14 +24,14 @@ export class FiltersOfferDto {
 
   @ApiProperty({
     description: 'Representa el intervalo inicial del descuento para filtrar',
-    type: 'string',
+    type: 'number',
     required: false,
   })
   minDiscount: number;
 
   @ApiProperty({
     description: 'Representa el intervalo final del descuento para filtrar',
-    type: 'string',
+    type: 'number',
     required: false,
   })
   maxDiscount: number;
