@@ -146,14 +146,14 @@ export class PerfumeService {
     const skip = (page - 1) * limit;
     const { order, orderBy } = orderDto;
 
-    const sortableFields = ['id', 'name', 'price', 'cant', 'milliliters'];
+    const sortableFields = ['id', 'name', 'price', 'cant', 'milliliters', 'totalPrice'];
 
     const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
 
     const orderClause: FindOptionsOrder<PerfumeEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
-        : { price: 'ASC' };
+        : { totalPrice: 'ASC' };
 
     const [perfumes, total] = await this.db.perfumeRepository.findAndCount({
       where: {
