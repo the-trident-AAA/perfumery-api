@@ -288,7 +288,6 @@ export class PerfumeService {
     const { image, images, ...restDTO } = dto;
     const perfume = await this.db.perfumeRepository.findOne({
       where: { id },
-      relations: ['offer'],
     });
 
     if (!perfume)
@@ -296,10 +295,22 @@ export class PerfumeService {
         'No existe un perfume con ese identificador',
       );
 
+    // get the new offer
+    const newOffer = await this.db.offerRepository.findOne({
+      where: {
+        id: dto.offerId,
+      },
+    });
+
+    if (!newOffer)
+      throw new BadRequestException(
+        'No existe una oferta con ese identificador',
+      );
+
     Object.assign(perfume, {
       ...restDTO,
       scents: restDTO.scentsId.map((scentId) => ({ id: scentId })), // update the scents
-      totalPrice: dto.price - dto.price * perfume.offer.discount,
+      totalPrice: dto.price - dto.price * newOffer.discount,
     });
 
     // removed defined relations marked as "undefined"
