@@ -146,7 +146,14 @@ export class PerfumeService {
     const skip = (page - 1) * limit;
     const { order, orderBy } = orderDto;
 
-    const sortableFields = ['id', 'name', 'price', 'cant', 'milliliters', 'totalPrice'];
+    const sortableFields = [
+      'id',
+      'name',
+      'price',
+      'cant',
+      'milliliters',
+      'totalPrice',
+    ];
 
     const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
 
@@ -177,7 +184,13 @@ export class PerfumeService {
             filtersPerfumeDto.priceMax ?? Number.MAX_SAFE_INTEGER,
           ),
         }),
-
+        ...((filtersPerfumeDto.totalPriceMin !== undefined ||
+          filtersPerfumeDto.totalPriceMax !== undefined) && {
+          totalPrice: Between(
+            filtersPerfumeDto.totalPriceMin ?? 0,
+            filtersPerfumeDto.totalPriceMax ?? Number.MAX_SAFE_INTEGER,
+          ),
+        }),
         // ✅ Rango para milliliters
         ...((filtersPerfumeDto.millilitersMin !== undefined ||
           filtersPerfumeDto.millilitersMax !== undefined) && {
