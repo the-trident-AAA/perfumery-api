@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
@@ -16,6 +17,7 @@ import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OfferResponse } from './responses/offer.response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
+import { FiltersOfferDto } from './dto/filters-offer.dto';
 
 @Controller('offer')
 export class OfferController {
@@ -55,8 +57,8 @@ export class OfferController {
     description:
       'Ocurrió un error en el proceso de obtener la lista de ofertas',
   })
-  findAll() {
-    return this.offerService.findAll();
+  findAll(@Query() filtersOfferDto: FiltersOfferDto) {
+    return this.offerService.findAll(filtersOfferDto);
   }
 
   @Get(':id')

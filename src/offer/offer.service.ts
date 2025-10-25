@@ -6,6 +6,8 @@ import { OfferDetailsResponse } from './responses/offer-details.response';
 import { DatabaseService } from 'src/database/database.service';
 import { MinioService } from 'src/minio/minio.service';
 import { PerfumeService } from 'src/perfume/perfume.service';
+import { FiltersOfferDto } from './dto/filters-offer.dto';
+import { Between, ILike } from 'typeorm';
 
 @Injectable()
 export class OfferService {
@@ -31,8 +33,31 @@ export class OfferService {
     return await this.db.offerRepository.save(offer);
   }
 
-  async findAll(): Promise<OfferResponse[]> {
-    const offers = await this.db.offerRepository.find();
+  async findAll(filtersOfferDto: FiltersOfferDto): Promise<OfferResponse[]> {
+    const offers = await this.db.offerRepository.find({
+      where: {
+        ...(filtersOfferDto.name && {
+          name: ILike(`%${filtersOfferDto.name}%`),
+        }),
+        ...(filtersOfferDto.description && {
+          description: ILike(`%${filtersOfferDto.description}%`),
+        }),
+        ...(filtersOfferDto.offerType && {
+          offerType: ILike(`%${filtersOfferDto.offerType}%`),
+        }),
+        ...(filtersOfferDto.scope && {
+          scope: ILike(`%${filtersOfferDto.scope}%`),
+        }),
+        // ✅ Rango para discount
+        ...((filtersOfferDto.minDiscount !== undefined ||
+          filtersOfferDto.maxDiscount !== undefined) && {
+          price: Between(
+            filtersOfferDto.minDiscount ?? 0,
+            filtersOfferDto.maxDiscount ?? Number.MAX_SAFE_INTEGER,
+          ),
+        }),
+      },
+    });
     return Promise.all(
       offers.map(async (offer) => {
         const image = offer.image
