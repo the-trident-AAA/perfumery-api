@@ -109,6 +109,9 @@ export class OfferService {
     if (!offer)
       throw new BadRequestException('No se encontró una oferta con ese ID');
 
+    // update the associated perfumes
+    await this.perfumeService.updateAssociatedPerfumesToDeleteOffer(id);
+
     if (offer.image)
       // delete the image from Minio
       await this.minioService.deleteFile(offer.image);
