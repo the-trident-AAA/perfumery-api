@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class FiltersPerfumeTypeDto {
+export class FiltersScentDto {
   @ApiProperty({
     description: 'Representa el nombre de la esencia',
     type: 'string',
