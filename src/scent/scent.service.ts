@@ -3,9 +3,10 @@ import { CreateScentDto } from './dto/create-scent.dto';
 import { UpdateScentDto } from './dto/update-scent.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ScentEntity } from './entities/scent.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { ScentResponse } from './responses/scent.response';
 import { DatabaseService } from 'src/database/database.service';
+import { FiltersScentDto } from './dto/filters-scent.dto';
 
 @Injectable()
 export class ScentService {
@@ -16,8 +17,14 @@ export class ScentService {
     return await this.db.scentRepository.save(scent);
   }
 
-  async findAll(): Promise<ScentResponse[]> {
-    const scents = await this.db.scentRepository.find();
+  async findAll(filtersScentDto: FiltersScentDto): Promise<ScentResponse[]> {
+    const scents = await this.db.scentRepository.find({
+      where: {
+        ...(filtersScentDto.name && {
+          name: ILike(`%${filtersScentDto.name}%`),
+        }),
+      },
+    });
     return scents.map((scent) => new ScentResponse(scent.id, scent.name));
   }
 

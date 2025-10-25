@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ScentService } from './scent.service';
 import { CreateScentDto } from './dto/create-scent.dto';
 import { UpdateScentDto } from './dto/update-scent.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ScentResponse } from './responses/scent.response';
+import { FiltersScentDto } from './dto/filters-scent.dto';
 
 @Controller('scent')
 export class ScentController {
@@ -44,8 +46,8 @@ export class ScentController {
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener la lista de aromas',
   })
-  findAll() {
-    return this.scentService.findAll();
+  findAll(@Query() filtersScentDto: FiltersScentDto) {
+    return this.scentService.findAll(filtersScentDto);
   }
 
   @Get(':id')
