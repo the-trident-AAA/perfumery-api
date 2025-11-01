@@ -202,6 +202,9 @@ export function generateOTPEmailHTML(otp: string, currentYear: number): string {
     <body>
         <div class="container">
             <div class="header">
+            <div class="logo">
+                    Perfumes del Puro
+            </div>
                 <div class="subtitle">Tu tienda de fragancias favorita</div>
             </div>
             
