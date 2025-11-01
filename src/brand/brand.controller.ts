@@ -13,16 +13,20 @@ import {
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BrandResponse } from './responses/brand.response';
 import { FiltersBrandDto } from './dto/filters-brand.dto';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { ApiPaginationdResponse } from 'src/utils/api-responses';
+import { Auth } from 'src/auth/decorators/auth.decorators';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('brand')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Post()
   @ApiOperation({
     summary: 'Este endpoint agrega una marca a la base de datos',
@@ -73,6 +77,8 @@ export class BrandController {
     return this.brandService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiOperation({
     summary: 'Este endpoint edita una marca de la base de datos',
@@ -86,6 +92,8 @@ export class BrandController {
     return this.brandService.update(id, dto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Delete(':id')
   @ApiOperation({
     summary: 'Este endpoint elimina una marca de la base de datos',

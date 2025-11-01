@@ -13,16 +13,25 @@ import {
 import { PerfumeTypeService } from './perfume-type.service';
 import { CreatePerfumeTypeDto } from './dto/create-perfume-type.dto';
 import { UpdatePerfumeTypeDto } from './dto/update-perfume-type.dto';
-import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { PerfumeTypeResponse } from './responses/perfume-type.response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 import { FiltersPerfumeTypeDto } from './dto/filters-perfume-type.dto';
+import { Auth } from 'src/auth/decorators/auth.decorators';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('perfume-type')
 export class PerfumeTypeController {
   constructor(private readonly perfumeTypeService: PerfumeTypeService) {}
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Post()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
@@ -84,6 +93,8 @@ export class PerfumeTypeController {
     return this.perfumeTypeService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
@@ -108,6 +119,8 @@ export class PerfumeTypeController {
     return this.perfumeTypeService.update(id, updatePerfumeTypeDto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Delete(':id')
   @ApiOperation({
     summary: 'Este endpoint elimina un tipo de perfume de la base de datos',

@@ -11,14 +11,18 @@ import {
 import { ScentService } from './scent.service';
 import { CreateScentDto } from './dto/create-scent.dto';
 import { UpdateScentDto } from './dto/update-scent.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ScentResponse } from './responses/scent.response';
 import { FiltersScentDto } from './dto/filters-scent.dto';
+import { Auth } from 'src/auth/decorators/auth.decorators';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('scent')
 export class ScentController {
   constructor(private readonly scentService: ScentService) {}
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Post()
   @ApiOperation({
     summary: 'Este endpoint agrega un aroma a la base de datos',
@@ -67,6 +71,8 @@ export class ScentController {
     return this.scentService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiOperation({
     summary: 'Este endpoint edita un aroma de la base de datos',
@@ -80,6 +86,8 @@ export class ScentController {
     return this.scentService.update(id, updateScentDto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Delete(':id')
   @ApiOperation({
     summary: 'Este endpoint elimina un aroma de la base de datos',

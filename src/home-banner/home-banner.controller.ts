@@ -13,16 +13,25 @@ import {
 import { HomeBannerService } from './home-banner.service';
 import { CreateHomeBannerDto } from './dto/create-home-banner.dto';
 import { UpdateHomeBannerDto } from './dto/update-home-banner.dto';
-import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { HomeBannerResponse } from './responses/home-banner.response';
 import { HomeBannerDetailsResponse } from './responses/home-banner-details.response';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { OrderDto } from 'src/utils/dto/order.dto';
+import { Auth } from 'src/auth/decorators/auth.decorators';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('home-banner')
 export class HomeBannerController {
   constructor(private readonly homeBannerService: HomeBannerService) {}
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Post()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
@@ -102,6 +111,8 @@ export class HomeBannerController {
     return this.homeBannerService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
@@ -127,6 +138,8 @@ export class HomeBannerController {
     return this.homeBannerService.update(id, updateHomeBannerDto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Delete(':id')
   @ApiOperation({
     summary: 'Este endpoint elimina un banner del home de la base de datos',
@@ -144,6 +157,8 @@ export class HomeBannerController {
     return this.homeBannerService.remove(id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Post('marked-as-active/:id')
   @ApiOperation({
     summary: 'Este endpoint marca como principal a un home banner específico',

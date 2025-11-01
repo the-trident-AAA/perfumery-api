@@ -16,6 +16,7 @@ import { PerfumeService } from './perfume.service';
 import { CreatePerfumeDto } from './dto/create-perfume.dto';
 import { UpdatePerfumeDto } from './dto/update-perfume.dto';
 import {
+  ApiBearerAuth,
   ApiConsumes,
   ApiOperation,
   ApiQuery,
@@ -34,11 +35,15 @@ import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { FiltersPerfumeDto } from './dto/filters-perfume.dto';
 import { OrderDto } from 'src/utils/dto/order.dto';
 import { ImagesFileValidationPipe } from 'src/utils/pipes/images-file-validation.pipe';
+import { Auth } from 'src/auth/decorators/auth.decorators';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('perfume')
 export class PerfumeController {
   constructor(private readonly perfumeService: PerfumeService) {}
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Post()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
@@ -144,6 +149,8 @@ export class PerfumeController {
     return this.perfumeService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
@@ -171,6 +178,8 @@ export class PerfumeController {
     return this.perfumeService.update(id, updatePerfumeDto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Delete(':id')
   @ApiOperation({
     summary: 'Este endpoint elimina un perfume de la base de datos',
