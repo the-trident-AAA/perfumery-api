@@ -91,7 +91,7 @@ export class AuthController {
   }
 
   @Get('admin-profile')
-  @Roles([Role.USER])
+  @Roles([Role.USER, Role.ADMIN])
   @UseGuards(AuthGuard, RolesGuard)
   profileClient(
     @Request()
@@ -101,7 +101,7 @@ export class AuthController {
   }
 
   @Get('client-profile')
-  @Auth([Role.ADMIN])
+  @Auth([Role.ADMIN, Role.USER])
   profileAdmin(
     @Request()
     req: RequestWithUser,
