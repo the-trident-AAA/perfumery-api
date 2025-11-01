@@ -29,7 +29,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @ApiBearerAuth()
-  @Auth([Role.USER])
+  @Auth([Role.USER, Role.ADMIN])
   @Post()
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
@@ -43,6 +43,8 @@ export class OrderController {
     return this.orderService.create(user);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({
@@ -67,7 +69,7 @@ export class OrderController {
   }
 
   @ApiBearerAuth()
-  @Auth([Role.USER])
+  @Auth([Role.USER, Role.ADMIN])
   @Get('user-total-orders')
   @ApiOperation({
     summary:
@@ -91,23 +93,29 @@ export class OrderController {
     return this.orderService.userTotalOrders(user.id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('get-order-perfumes/:id')
   getOrderPerfumes(@Param('id') id: string) {
     return this.orderService.getOrderPerfumes(id);
   }
-
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor)
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(id);
   }
-
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
     return this.orderService.update(id, updateOrderDto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.orderService.remove(+id);
