@@ -1,4 +1,4 @@
-export function generateOTPEmailHTML(otp: string, currentYear: number, logoUrl?: string): string {
+export function generateOTPEmailHTML(otp: string, currentYear: number): string {
   return `
     <!DOCTYPE html>
     <html lang="es">
@@ -202,9 +202,6 @@ export function generateOTPEmailHTML(otp: string, currentYear: number, logoUrl?:
     <body>
         <div class="container">
             <div class="header">
-                <div class="logo">
-                    ${logoUrl ? `<img src="${logoUrl}" alt="Perfumery" />` : 'Perfumery'}
-                </div>
                 <div class="subtitle">Tu tienda de fragancias favorita</div>
             </div>
             
@@ -241,7 +238,7 @@ export function generateOTPEmailHTML(otp: string, currentYear: number, logoUrl?:
                 <div class="footer-text">
                     <strong>Perfumery</strong><br>
                     Tu tienda de fragancias de confianza<br>
-                    © ${currentYear} Perfumery. Todos los derechos reservados.
+                    © ${currentYear} Perfumes del Puro. Todos los derechos reservados.
                 </div>
             </div>
         </div>
