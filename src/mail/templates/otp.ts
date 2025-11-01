@@ -5,7 +5,7 @@ export function generateOTPEmailHTML(otp: string, currentYear: number): string {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Código de Verificación - Perfumery</title>
+        <title>Código de Verificación - Perfumes del Puro</title>
         <style>
             * {
                 margin: 0;
