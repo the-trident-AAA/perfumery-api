@@ -45,4 +45,8 @@ export class OrderEntity extends BaseEntity {
     onDelete: 'CASCADE',
   })
   orderPerfumes: OrderPerfumeEntity[];
+  @Column({
+    name: 'is_viewed',
+  })
+  isViewed: boolean;
 }
