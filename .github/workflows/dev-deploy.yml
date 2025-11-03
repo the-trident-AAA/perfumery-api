@@ -48,6 +48,7 @@ jobs:
             echo 'MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}' >> .env &&
             echo 'MINIO_SECRET_KEY=${{ secrets.MINIO_SECRET_KEY }}' >> .env &&
             echo 'MINIO_BUCKET=${{ secrets.MINIO_BUCKET }}' >> .env &&
+            echo 'MINIO_SSL=${{ secrets.MINIO_SSL }}' >> .env &&
             echo 'SECRET_KEY=${{ secrets.SECRET_KEY }}' >> .env &&
             echo 'EMAIL_HOST=${{ secrets.EMAIL_HOST }}' >> .env &&
             echo 'EMAIL_PORT=${{ secrets.EMAIL_PORT }}' >> .env &&
