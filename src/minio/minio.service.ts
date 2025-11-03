@@ -24,7 +24,7 @@ export class MinioService {
         endPoint: this.config.get<string>('MINIO_URL'),
         secretKey: this.config.get<string>('MINIO_SECRET_KEY'),
         port: parseInt(this.config.get<string>('MINIO_PORT')),
-        useSSL: this.config.get<string>('MINIO_SSL') === 'true' ? true : false,
+        useSSL: false
       });
       const bucketExist = await this.minioClient.bucketExists(
         this.config.get<string>('MINIO_BUCKET'),
@@ -72,11 +72,20 @@ export class MinioService {
   async getPresignedUrl(objectName: string): Promise<string> {
     try {
       const expiryTime = 10 * 60;
-      return await this.minioClient.presignedGetObject(
+      const url = await this.minioClient.presignedGetObject(
         this.config.get<string>('MINIO_BUCKET'),
         objectName,
         expiryTime,
       );
+  
+      // Reemplazamos la URL interna (sin SSL) por la pública (con HTTPS)
+      const publicUrl = new URL(url);
+      const publicDomain = this.config.get<string>('MINIO_PUBLIC_URL');
+  
+      publicUrl.protocol = 'https:';
+      publicUrl.host = publicDomain;
+  
+      return publicUrl.toString();
     } catch (error) {
       this.logger.error(error);
       return null;
