@@ -119,6 +119,27 @@ export class OrderController {
 
   @ApiBearerAuth()
   @Auth([Role.USER, Role.ADMIN])
+  @Patch('update-user-orders-as-views')
+  @ApiOperation({
+    summary: 'Este endpoint actualiza las vistas de las órdenes',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Actualización realizada con éxito',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error enla actualización',
+  })
+  updateUserOrdersAsViews(
+    @ActiveUser()
+    user: ActiveUserInterface,
+  ) {
+    return this.orderService.updateUserOrdersAsViews(user.id);
+  }
+
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('get-order-perfumes/:id')
   getOrderPerfumes(@Param('id') id: string) {

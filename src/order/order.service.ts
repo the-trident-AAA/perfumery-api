@@ -220,6 +220,13 @@ export class OrderService {
     );
   }
 
+  async updateUserOrdersAsViews(userId: string) {
+    return await this.db.orderRespository.update(
+      { userId },
+      { isViewed: true },
+    );
+  }
+
   async update(id: string, updateOrderDto: UpdateOrderDto) {
     const orderEntity = await this.db.orderRespository.findOne({
       where: {
