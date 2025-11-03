@@ -95,6 +95,30 @@ export class OrderController {
 
   @ApiBearerAuth()
   @Auth([Role.USER, Role.ADMIN])
+  @Get('orders-not-seen-by-user')
+  @ApiOperation({
+    summary:
+      'Este endpoint devuelve la cantidad de orders no vistas por un usuario en esepecífico',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Cantidad de items obtenida con éxito',
+    type: UserTotalOrdersResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de obtener la cantidad orders no vistas por el usuario',
+  })
+  ordersNotSeenByUser(
+    @ActiveUser()
+    user: ActiveUserInterface,
+  ) {
+    return this.orderService.ordersNotSeenByUser(user.id);
+  }
+
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('get-order-perfumes/:id')
   getOrderPerfumes(@Param('id') id: string) {

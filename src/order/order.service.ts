@@ -212,6 +212,14 @@ export class OrderService {
     );
   }
 
+  async ordersNotSeenByUser(userId: string) {
+    return new UserTotalOrdersResponse(
+      await this.db.orderRespository.count({
+        where: { userId, isViewed: false },
+      }),
+    );
+  }
+
   async update(id: string, updateOrderDto: UpdateOrderDto) {
     const orderEntity = await this.db.orderRespository.findOne({
       where: {
