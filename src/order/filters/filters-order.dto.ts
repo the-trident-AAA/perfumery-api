@@ -25,7 +25,8 @@ export class FiltersOrderDto {
   userId: string;
 
   @ApiProperty({
-    description: 'Fecha de inicio para filtrar por fecha de última actualización',
+    description:
+      'Fecha de inicio para filtrar por fecha de última actualización',
     type: 'string',
     format: 'date-time',
     required: false,
@@ -45,4 +46,11 @@ export class FiltersOrderDto {
   @IsOptional()
   @IsDateString()
   lastUpdateDateMax?: string;
+
+  @ApiProperty({
+    description: 'Excluir órdenes con este estado',
+    required: false,
+  })
+  @IsOptional()
+  excludeState?: State;
 }

@@ -14,7 +14,7 @@ import { UserTotalOrdersResponse } from './responses/user-total-orders.respose';
 import { OrderEntity } from './entities/order.entity';
 import { State } from './entities/state.enum';
 import { OrderDto } from 'src/utils/dto/order.dto';
-import { FindOptionsOrder, Between } from 'typeorm';
+import { FindOptionsOrder, Between, Not } from 'typeorm';
 import { generateOrderCode } from './utils/general-utils';
 
 @Injectable()
@@ -97,24 +97,31 @@ export class OrderService {
         ? { [orderBy]: direction }
         : { lastUpdateDate: 'DESC' };
 
+    const whereClause: any = {
+      ...(filtersOrderDto.id && { id: filtersOrderDto.id }),
+      ...(filtersOrderDto.userId && { userId: filtersOrderDto.userId }),
+      ...((filtersOrderDto.lastUpdateDateMin !== undefined ||
+        filtersOrderDto.lastUpdateDateMax !== undefined) && {
+        lastUpdateDate: Between(
+          filtersOrderDto.lastUpdateDateMin
+            ? new Date(filtersOrderDto.lastUpdateDateMin)
+            : new Date(0),
+          filtersOrderDto.lastUpdateDateMax
+            ? new Date(filtersOrderDto.lastUpdateDateMax)
+            : new Date(),
+        ),
+      }),
+    };
+
+    // Filtro de estado (inclusión o exclusión)
+    if (filtersOrderDto.excludeState) {
+      whereClause.state = Not(filtersOrderDto.excludeState);
+    } else if (filtersOrderDto.state) {
+      whereClause.state = filtersOrderDto.state;
+    }
+
     const [ordersEntity, total] = await this.db.orderRespository.findAndCount({
-      where: {
-        ...(filtersOrderDto.id && { id: filtersOrderDto.id }),
-        ...(filtersOrderDto.state && { state: filtersOrderDto.state }),
-        ...(filtersOrderDto.userId && { userId: filtersOrderDto.userId }),
-        // ✅ Rango para lastUpdateDate
-        ...((filtersOrderDto.lastUpdateDateMin !== undefined ||
-          filtersOrderDto.lastUpdateDateMax !== undefined) && {
-          lastUpdateDate: Between(
-            filtersOrderDto.lastUpdateDateMin
-              ? new Date(filtersOrderDto.lastUpdateDateMin)
-              : new Date(0),
-            filtersOrderDto.lastUpdateDateMax
-              ? new Date(filtersOrderDto.lastUpdateDateMax)
-              : new Date(),
-          ),
-        }),
-      },
+      where: whereClause,
       relations: ['orderPerfumes', 'orderPerfumes.perfume'],
       skip,
       take: limit,
