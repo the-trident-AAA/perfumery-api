@@ -114,10 +114,10 @@ export class OrderService {
     };
 
     // Filtro de estado (inclusión o exclusión)
-    if (filtersOrderDto.excludeState) {
-      whereClause.state = Not(filtersOrderDto.excludeState);
-    } else if (filtersOrderDto.state) {
+    if (filtersOrderDto.state) {
       whereClause.state = filtersOrderDto.state;
+    } else if (filtersOrderDto.excludeState) {
+      whereClause.state = Not(filtersOrderDto.excludeState);
     }
 
     const [ordersEntity, total] = await this.db.orderRespository.findAndCount({
