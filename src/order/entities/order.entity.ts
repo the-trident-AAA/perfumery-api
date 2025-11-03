@@ -47,6 +47,7 @@ export class OrderEntity extends BaseEntity {
   orderPerfumes: OrderPerfumeEntity[];
   @Column({
     name: 'is_viewed',
+    nullable: true,
   })
   isViewed: boolean;
 }
