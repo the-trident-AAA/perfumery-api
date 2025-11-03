@@ -24,7 +24,7 @@ export class MinioService {
         endPoint: this.config.get<string>('MINIO_URL'),
         secretKey: this.config.get<string>('MINIO_SECRET_KEY'),
         port: parseInt(this.config.get<string>('MINIO_PORT')),
-        useSSL: false,
+        useSSL: this.config.get<string>('MINIO_SSL') === 'true' ? true : false,
       });
       const bucketExist = await this.minioClient.bucketExists(
         this.config.get<string>('MINIO_BUCKET'),
