@@ -199,6 +199,13 @@ export class PerfumeService {
             filtersPerfumeDto.millilitersMax ?? Number.MAX_SAFE_INTEGER,
           ),
         }),
+        ...((filtersPerfumeDto.salesMin !== undefined ||
+          filtersPerfumeDto.salesMax !== undefined) && {
+          sales: Between(
+            filtersPerfumeDto.salesMin ?? 0,
+            filtersPerfumeDto.salesMax ?? Number.MAX_SAFE_INTEGER,
+          ),
+        }),
         ...(filtersPerfumeDto.cant && { cant: filtersPerfumeDto.cant }),
         ...(filtersPerfumeDto.brandId && {
           brand: { id: filtersPerfumeDto.brandId },

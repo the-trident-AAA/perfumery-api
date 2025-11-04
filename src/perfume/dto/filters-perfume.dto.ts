@@ -135,4 +135,16 @@ export class FiltersPerfumeDto {
     required: false,
   })
   totalPriceMax?: number;
+  @ApiProperty({
+    description: 'Representa el límite inferior de las ventas del perfume',
+    type: 'number',
+    required: false,
+  })
+  salesMin?: number;
+  @ApiProperty({
+    description: 'Representa el límite superior de las ventas del perfume',
+    type: 'number',
+    required: false,
+  })
+  salesMax?: number;
 }
