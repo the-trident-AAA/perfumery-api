@@ -153,6 +153,7 @@ export class PerfumeService {
       'cant',
       'milliliters',
       'totalPrice',
+      'sales',
     ];
 
     const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
