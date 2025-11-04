@@ -50,6 +50,7 @@ export class OrderService {
       creationDate: new Date(),
       lastUpdateDate: new Date(),
       userId: user.id,
+      isViewed: false,
     });
     const savedOrder = await this.db.orderRespository.save(order);
 
