@@ -39,13 +39,15 @@ export class PerfumeTypeService {
         }),
       },
     });
-    return await Promise.all(
-      perfumeTypes.map(async (perfumeType) => {
-        const image = perfumeType.image
-          ? await this.minioService.getPresignedUrl(perfumeType.image)
-          : null;
-        return new PerfumeTypeResponse(perfumeType.id, perfumeType.name, image);
-      }),
+    return perfumeTypes.map(
+      (perfumeType) =>
+        new PerfumeTypeResponse(
+          perfumeType.id,
+          perfumeType.name,
+          perfumeType.image
+            ? this.minioService.getPublicUrl(perfumeType.image)
+            : undefined,
+        ),
     );
   }
 
@@ -62,8 +64,8 @@ export class PerfumeTypeService {
       perfumeType.id,
       perfumeType.name,
       perfumeType.image
-        ? await this.minioService.getPresignedUrl(perfumeType.image)
-        : null,
+        ? this.minioService.getPublicUrl(perfumeType.image)
+        : undefined,
     );
   }
 
