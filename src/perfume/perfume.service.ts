@@ -75,8 +75,8 @@ export class PerfumeService {
     const perfume = this.db.perfumeRepository.create({
       ...dto,
       scents,
-      image: this.minioService.getPublicUrl(image),
-      images: images.map((image) => this.minioService.getPublicUrl(image)),
+      image,
+      images,
       totalPrice,
       sales: 0,
     });
@@ -114,7 +114,7 @@ export class PerfumeService {
         perfume.id,
         perfume.name,
         perfume.description,
-        perfume.image,
+        this.minioService.getPublicUrl(perfume.image),
         perfume.brand?.name,
         perfume.gender,
         perfume.scents?.map((scent) => scent.name),
@@ -227,7 +227,7 @@ export class PerfumeService {
         perfume.id,
         perfume.name,
         perfume.description,
-        perfume.image,
+        this.minioService.getPublicUrl(perfume.image),
         perfume.brand?.name,
         perfume.gender,
         perfume.scents?.map((scent) => scent.name),
@@ -264,8 +264,8 @@ export class PerfumeService {
       perfume.id,
       perfume.name,
       perfume.description,
-      perfume.image,
-      perfume.images,
+      this.minioService.getPublicUrl(perfume.image),
+      perfume.images.map((image) => this.minioService.getPublicUrl(image)),
       new BrandResponse(perfume.brand.id, perfume.brand.name),
       perfume.gender,
       perfume.scents.map((scent) => new ScentResponse(scent.id, scent.name)),
@@ -342,7 +342,7 @@ export class PerfumeService {
         image.originalname.split('.').pop(),
         image.mimetype,
       );
-      perfume.image = this.minioService.getPublicUrl(minioImage);
+      perfume.image = minioImage;
     }
 
     // delete all images for minio
@@ -365,9 +365,7 @@ export class PerfumeService {
             ),
         ),
       );
-      perfume.images = imagesMinio.map((minioImage) =>
-        this.minioService.getPublicUrl(minioImage),
-      );
+      perfume.images = imagesMinio;
     } else perfume.images = [];
 
     return await this.db.perfumeRepository.save(perfume);
