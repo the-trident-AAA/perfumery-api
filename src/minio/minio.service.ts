@@ -105,8 +105,13 @@ export class MinioService {
     }
   }
 
-  async deleteFile(fileName: string): Promise<boolean> {
+  async deleteFile(filePath: string): Promise<boolean> {
     try {
+      // Si recibe una URL completa, extrae solo el nombre del archivo
+      const fileName = filePath.includes('/')
+        ? filePath.split('/').pop()!
+        : filePath;
+
       const exists = await this.checkIfExist(fileName);
       if (!exists) {
         this.logger.warn(`El archivo ${fileName} no existe en el bucket`);
@@ -121,7 +126,7 @@ export class MinioService {
       this.logger.log(`Archivo ${fileName} eliminado correctamente`);
       return true;
     } catch (error) {
-      this.logger.error(`Error al eliminar el archivo ${fileName}`, error);
+      this.logger.error(`Error al eliminar el archivo ${filePath}`, error);
       throw error;
     }
   }
