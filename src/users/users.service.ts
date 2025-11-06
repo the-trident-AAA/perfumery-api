@@ -91,20 +91,16 @@ export class UsersService {
   async find() {
     const users = await this.db.userRepository.find();
 
-    return await Promise.all(
-      users.map(
-        async (user) =>
-          new UserResponse(
-            user.id,
-            user.username,
-            user.avatar
-              ? await this.minioService.getPresignedUrl(user.avatar)
-              : null,
-            user.email,
-            user.role,
-            user.isActive,
-          ),
-      ),
+    return users.map(
+      (user) =>
+        new UserResponse(
+          user.id,
+          user.username,
+          user.avatar ? this.minioService.getPublicUrl(user.avatar) : undefined,
+          user.email,
+          user.role,
+          user.isActive,
+        ),
     );
   }
 
@@ -116,14 +112,10 @@ export class UsersService {
         'No existe un usuario con ese identificador',
       );
 
-    const avatar = user.avatar
-      ? await this.minioService.getPresignedUrl(user.avatar)
-      : null;
-
     return new UserDetailsResponse(
       user.id,
       user.username,
-      avatar,
+      user.avatar ? this.minioService.getPublicUrl(user.avatar) : undefined,
       user.email,
       user.role,
       user.isActive,
@@ -151,14 +143,10 @@ export class UsersService {
         'No existe un usuario con ese identificador',
       );
 
-    const avatar = user.avatar
-      ? await this.minioService.getPresignedUrl(user.avatar)
-      : null;
-
     return new UserResponse(
       user.id,
       user.username,
-      avatar,
+      user.avatar ? this.minioService.getPublicUrl(user.avatar) : undefined,
       user.email,
       user.role,
       user.isActive,
