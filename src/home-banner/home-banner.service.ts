@@ -51,23 +51,19 @@ export class HomeBannerService {
       order: orderClause,
     });
 
-    return Promise.all(
-      homeBanners.map(async (homeBanner) => {
-        const images = await Promise.all(
-          homeBanner.images.map(
-            async (image) => await this.minioService.getPresignedUrl(image),
-          ),
-        );
-        return new HomeBannerResponse(
+    return homeBanners.map(
+      (homeBanner) =>
+        new HomeBannerResponse(
           homeBanner.id,
           homeBanner.title,
           homeBanner.description,
           homeBanner.isMain,
-          images,
+          homeBanner.images.map((homeBannerImage) =>
+            this.minioService.getPublicUrl(homeBannerImage),
+          ),
           homeBanner.statisticalTips,
           homeBanner.infoTips,
-        );
-      }),
+        ),
     );
   }
 
@@ -81,18 +77,14 @@ export class HomeBannerService {
         'No existe un home banner con ese identificador',
       );
 
-    const images = await Promise.all(
-      homeBanner.images.map(
-        async (image) => await this.minioService.getPresignedUrl(image),
-      ),
-    );
-
     return new HomeBannerDetailsResponse(
       homeBanner.id,
       homeBanner.title,
       homeBanner.description,
       homeBanner.isMain,
-      images,
+      homeBanner.images.map((homeBannerImage) =>
+        this.minioService.getPublicUrl(homeBannerImage),
+      ),
       homeBanner.statisticalTips,
       homeBanner.infoTips,
     );
@@ -108,18 +100,14 @@ export class HomeBannerService {
         'No existe un home banner con ese identificador',
       );
 
-    const images = await Promise.all(
-      homeBanner.images.map(
-        async (image) => await this.minioService.getPresignedUrl(image),
-      ),
-    );
-
     return new HomeBannerDetailsResponse(
       homeBanner.id,
       homeBanner.title,
       homeBanner.description,
       homeBanner.isMain,
-      images,
+      homeBanner.images.map((homeBannerImage) =>
+        this.minioService.getPublicUrl(homeBannerImage),
+      ),
       homeBanner.statisticalTips,
       homeBanner.infoTips,
     );
