@@ -69,6 +69,16 @@ export class MinioService {
     return fileName;
   }
 
+  getPublicUrl(objectName: string): string {
+    const bucket = this.config.get<string>('MINIO_BUCKET');
+    const endpoint = this.config.get<string>('MINIO_URL');
+    const port = this.config.get<string>('MINIO_PORT');
+    const ssl = this.config.get<string>('MINIO_SSL') === 'true';
+
+    const protocol = ssl ? 'https' : 'http';
+    return `${protocol}://${endpoint}:${port}/${bucket}/${objectName}`;
+  }
+
   async getPresignedUrl(objectName: string): Promise<string> {
     try {
       const expiryTime = 10 * 60;
