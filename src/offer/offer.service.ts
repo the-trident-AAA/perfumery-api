@@ -58,21 +58,17 @@ export class OfferService {
         }),
       },
     });
-    return Promise.all(
-      offers.map(async (offer) => {
-        const image = offer.image
-          ? await this.minioService.getPresignedUrl(offer.image)
-          : null;
-        return new OfferResponse(
+    return offers.map(
+      (offer) =>
+        new OfferResponse(
           offer.id,
           offer.discount,
           offer.offerType,
           offer.name,
           offer.description,
           offer.scope,
-          image,
-        );
-      }),
+          offer.image ? this.minioService.getPublicUrl(offer.image) : undefined,
+        ),
     );
   }
 
@@ -85,10 +81,6 @@ export class OfferService {
       throw new Error(`offer con ID ${id} no encontrado`);
     }
 
-    const image = offer.image
-      ? await this.minioService.getPresignedUrl(offer.image)
-      : null;
-
     return new OfferDetailsResponse(
       offer.id,
       offer.discount,
@@ -96,7 +88,7 @@ export class OfferService {
       offer.name,
       offer.description,
       offer.scope,
-      image,
+      offer.image ? this.minioService.getPublicUrl(offer.image) : undefined,
     );
   }
 
