@@ -22,5 +22,5 @@ export class OrderDto {
   })
   @IsOptional()
   @IsIn(['ASC', 'DESC'])
-  order: 'ASC' | 'DESC' = 'ASC';
+  order?: 'ASC' | 'DESC';
 }
