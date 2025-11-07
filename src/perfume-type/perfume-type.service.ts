@@ -44,7 +44,7 @@ export class PerfumeTypeService {
     const orderClause: FindOptionsOrder<PerfumeTypeEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
-        : { name: 'DESC' };
+        : { name: 'ASC' };
 
     const perfumeTypes = await this.db.perfumeTypeRepository.find({
       where: {

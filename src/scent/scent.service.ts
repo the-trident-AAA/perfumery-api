@@ -31,7 +31,7 @@ export class ScentService {
     const orderClause: FindOptionsOrder<ScentEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
-        : { name: 'DESC' };
+        : { name: 'ASC' };
 
     const scents = await this.db.scentRepository.find({
       where: {

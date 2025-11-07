@@ -52,7 +52,7 @@ export class OfferService {
     const orderClause: FindOptionsOrder<OfferEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
-        : { name: 'DESC' };
+        : { name: 'ASC' };
 
     const offers = await this.db.offerRepository.find({
       where: {

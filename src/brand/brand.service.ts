@@ -38,7 +38,7 @@ export class BrandService {
     const orderClause: FindOptionsOrder<BrandEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
-        : { name: 'DESC' };
+        : { name: 'ASC' };
 
     const [brands, total] = await this.db.brandRepository.findAndCount({
       where: {
