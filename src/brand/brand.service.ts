@@ -6,7 +6,9 @@ import { DatabaseService } from 'src/database/database.service';
 import { FiltersBrandDto } from './dto/filters-brand.dto';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { PaginationMeta, PagintationResponse } from 'src/utils/api-responses';
-import { ILike } from 'typeorm';
+import { FindOptionsOrder, ILike } from 'typeorm';
+import { BrandEntity } from './entities/brand.entity';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Injectable()
 export class BrandService {
@@ -26,7 +28,18 @@ export class BrandService {
     return await this.db.brandRepository.save(brand);
   }
 
-  async findAll(filtersBrandDto: FiltersBrandDto) {
+  async findAll(filtersBrandDto: FiltersBrandDto, orderDto: OrderDto) {
+    const { order, orderBy } = orderDto;
+
+    const sortableFields = ['id', 'name'];
+
+    const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+    const orderClause: FindOptionsOrder<BrandEntity> =
+      orderBy && sortableFields.includes(orderBy)
+        ? { [orderBy]: direction }
+        : { name: 'DESC' };
+
     const [brands, total] = await this.db.brandRepository.findAndCount({
       where: {
         ...(filtersBrandDto.id && { id: filtersBrandDto.id }),
@@ -34,6 +47,7 @@ export class BrandService {
           name: ILike(`%${filtersBrandDto.name}%`),
         }),
       },
+      order: orderClause,
     });
 
     const brandResponses = brands.map(

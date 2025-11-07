@@ -20,6 +20,7 @@ import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { ApiPaginationdResponse } from 'src/utils/api-responses';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Controller('brand')
 export class BrandController {
@@ -55,8 +56,11 @@ export class BrandController {
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener la lista de marcas',
   })
-  findAll(@Query() filtersBrandDto: FiltersBrandDto) {
-    return this.brandService.findAll(filtersBrandDto);
+  findAll(
+    @Query() filtersBrandDto: FiltersBrandDto,
+    @Query() orderDto: OrderDto,
+  ) {
+    return this.brandService.findAll(filtersBrandDto, orderDto);
   }
 
   @Get(':id')
