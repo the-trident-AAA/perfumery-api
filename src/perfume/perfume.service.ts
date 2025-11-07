@@ -124,6 +124,7 @@ export class PerfumeService {
         perfume.price,
         perfume.sales,
         perfume.cant,
+        perfume.totalPrice,
         perfume.offer ? perfume.offer.discount : null,
       );
     });
