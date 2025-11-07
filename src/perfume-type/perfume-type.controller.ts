@@ -25,6 +25,7 @@ import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.p
 import { FiltersPerfumeTypeDto } from './dto/filters-perfume-type.dto';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Controller('perfume-type')
 export class PerfumeTypeController {
@@ -71,8 +72,11 @@ export class PerfumeTypeController {
     description:
       'Ocurrió un error en el proceso de obtener la lista de tipo de perfumes',
   })
-  findAll(@Query() filtersPerfumeTypeDto: FiltersPerfumeTypeDto) {
-    return this.perfumeTypeService.findAll(filtersPerfumeTypeDto);
+  findAll(
+    @Query() filtersPerfumeTypeDto: FiltersPerfumeTypeDto,
+    @Query() orderDto: OrderDto,
+  ) {
+    return this.perfumeTypeService.findAll(filtersPerfumeTypeDto, orderDto);
   }
 
   @Get(':id')

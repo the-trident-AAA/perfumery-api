@@ -5,7 +5,9 @@ import { PerfumeTypeResponse } from './responses/perfume-type.response';
 import { DatabaseService } from 'src/database/database.service';
 import { MinioService } from 'src/minio/minio.service';
 import { FiltersPerfumeTypeDto } from './dto/filters-perfume-type.dto';
-import { ILike } from 'typeorm';
+import { FindOptionsOrder, ILike } from 'typeorm';
+import { OrderDto } from 'src/utils/dto/order.dto';
+import { PerfumeTypeEntity } from './entities/perfume-type.entity';
 
 @Injectable()
 export class PerfumeTypeService {
@@ -31,13 +33,26 @@ export class PerfumeTypeService {
 
   async findAll(
     filtersPerfumeTypeDto: FiltersPerfumeTypeDto,
+    orderDto: OrderDto,
   ): Promise<PerfumeTypeResponse[]> {
+    const { order, orderBy } = orderDto;
+
+    const sortableFields = ['id', 'name'];
+
+    const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+    const orderClause: FindOptionsOrder<PerfumeTypeEntity> =
+      orderBy && sortableFields.includes(orderBy)
+        ? { [orderBy]: direction }
+        : { name: 'DESC' };
+
     const perfumeTypes = await this.db.perfumeTypeRepository.find({
       where: {
         ...(filtersPerfumeTypeDto.name && {
           name: ILike(`%${filtersPerfumeTypeDto.name}%`),
         }),
       },
+      order: orderClause,
     });
     return perfumeTypes.map(
       (perfumeType) =>
