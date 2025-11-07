@@ -16,6 +16,7 @@ import { ScentResponse } from './responses/scent.response';
 import { FiltersScentDto } from './dto/filters-scent.dto';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Controller('scent')
 export class ScentController {
@@ -50,8 +51,11 @@ export class ScentController {
     status: 500,
     description: 'Ocurrió un error en el proceso de obtener la lista de aromas',
   })
-  findAll(@Query() filtersScentDto: FiltersScentDto) {
-    return this.scentService.findAll(filtersScentDto);
+  findAll(
+    @Query() filtersScentDto: FiltersScentDto,
+    @Query() orderDto: OrderDto,
+  ) {
+    return this.scentService.findAll(filtersScentDto, orderDto);
   }
 
   @Get(':id')
