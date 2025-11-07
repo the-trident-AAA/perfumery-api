@@ -7,7 +7,9 @@ import { DatabaseService } from 'src/database/database.service';
 import { MinioService } from 'src/minio/minio.service';
 import { PerfumeService } from 'src/perfume/perfume.service';
 import { FiltersOfferDto } from './dto/filters-offer.dto';
-import { Between, ILike } from 'typeorm';
+import { Between, FindOptionsOrder, ILike } from 'typeorm';
+import { OfferEntity } from './entities/offer.entity';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Injectable()
 export class OfferService {
@@ -33,7 +35,25 @@ export class OfferService {
     return await this.db.offerRepository.save(offer);
   }
 
-  async findAll(filtersOfferDto: FiltersOfferDto): Promise<OfferResponse[]> {
+  async findAll(
+    filtersOfferDto: FiltersOfferDto,
+    orderDto: OrderDto,
+  ): Promise<OfferResponse[]> {
+    const { order, orderBy } = orderDto;
+    const sortableFields = [
+      'id',
+      'name',
+      'description',
+      'scope',
+      'discount',
+      'offerType',
+    ];
+    const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+    const orderClause: FindOptionsOrder<OfferEntity> =
+      orderBy && sortableFields.includes(orderBy)
+        ? { [orderBy]: direction }
+        : { name: 'DESC' };
+
     const offers = await this.db.offerRepository.find({
       where: {
         ...(filtersOfferDto.name && {
@@ -57,6 +77,7 @@ export class OfferService {
           ),
         }),
       },
+      order: orderClause,
     });
     return offers.map(
       (offer) =>

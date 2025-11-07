@@ -25,6 +25,7 @@ import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.p
 import { FiltersOfferDto } from './dto/filters-offer.dto';
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Controller('offer')
 export class OfferController {
@@ -66,8 +67,11 @@ export class OfferController {
     description:
       'Ocurrió un error en el proceso de obtener la lista de ofertas',
   })
-  findAll(@Query() filtersOfferDto: FiltersOfferDto) {
-    return this.offerService.findAll(filtersOfferDto);
+  findAll(
+    @Query() filtersOfferDto: FiltersOfferDto,
+    @Query() orderDto: OrderDto,
+  ) {
+    return this.offerService.findAll(filtersOfferDto, orderDto);
   }
 
   @Get(':id')
