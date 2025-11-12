@@ -34,7 +34,7 @@ export class HomeBannerController {
   @Auth([Role.ADMIN])
   @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   @ApiOperation({
     summary: 'Este endpoint agrega un banner del home a la base de datos',
   })
@@ -49,9 +49,9 @@ export class HomeBannerController {
   create(
     @Body() createHomeBannerDto: CreateHomeBannerDto,
     @UploadedFiles()
-    files: { images: Express.Multer.File[] },
+    files: { image: Express.Multer.File[] },
   ) {
-    createHomeBannerDto.images = files.images;
+    createHomeBannerDto.image = files.image[0];
     return this.homeBannerService.create(createHomeBannerDto);
   }
 
@@ -115,7 +115,7 @@ export class HomeBannerController {
   @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   @ApiOperation({
     summary: 'Este endpoint edita un banner del home de la base de datos',
   })
@@ -132,9 +132,9 @@ export class HomeBannerController {
     @Param('id') id: string,
     @Body() updateHomeBannerDto: UpdateHomeBannerDto,
     @UploadedFiles()
-    files: { images: Express.Multer.File[] },
+    files: { image: Express.Multer.File[] },
   ) {
-    updateHomeBannerDto.images = files.images;
+    updateHomeBannerDto.image = files.image[0];
     return this.homeBannerService.update(id, updateHomeBannerDto);
   }
 

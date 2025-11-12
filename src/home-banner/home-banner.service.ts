@@ -16,21 +16,17 @@ export class HomeBannerService {
     private readonly minioService: MinioService,
   ) {}
   async create(createHomeBannerDto: CreateHomeBannerDto) {
-    // Upload the images of the perfume
-    const images = await Promise.all(
-      createHomeBannerDto.images.map(
-        async (image) =>
-          await this.minioService.uploadFile(
-            undefined,
-            image.buffer,
-            image.originalname.split('.').pop(),
-            image.mimetype,
-          ),
-      ),
+    // Upload the image of the home banner
+    const image = await this.minioService.uploadFile(
+      undefined,
+      createHomeBannerDto.image.buffer,
+      createHomeBannerDto.image.originalname.split('.').pop(),
+      createHomeBannerDto.image.mimetype,
     );
+
     const homeBanner = this.db.homeBannerRepository.create({
       ...createHomeBannerDto,
-      images: images,
+      image,
       isMain: false,
     });
 
@@ -58,9 +54,7 @@ export class HomeBannerService {
           homeBanner.title,
           homeBanner.description,
           homeBanner.isMain,
-          homeBanner.images.map((homeBannerImage) =>
-            this.minioService.getPublicUrl(homeBannerImage),
-          ),
+          this.minioService.getPublicUrl(homeBanner.image),
           homeBanner.statisticalTips,
           homeBanner.infoTips,
         ),
@@ -82,9 +76,7 @@ export class HomeBannerService {
       homeBanner.title,
       homeBanner.description,
       homeBanner.isMain,
-      homeBanner.images.map((homeBannerImage) =>
-        this.minioService.getPublicUrl(homeBannerImage),
-      ),
+      this.minioService.getPublicUrl(homeBanner.image),
       homeBanner.statisticalTips,
       homeBanner.infoTips,
     );
@@ -105,36 +97,31 @@ export class HomeBannerService {
       homeBanner.title,
       homeBanner.description,
       homeBanner.isMain,
-      homeBanner.images.map((homeBannerImage) =>
-        this.minioService.getPublicUrl(homeBannerImage),
-      ),
+      this.minioService.getPublicUrl(homeBanner.image),
       homeBanner.statisticalTips,
       homeBanner.infoTips,
     );
   }
 
   async update(id: string, updateHomeBannerDto: UpdateHomeBannerDto) {
-    const { images, ...restDTO } = updateHomeBannerDto;
+    const { image, ...restDTO } = updateHomeBannerDto;
     const homeBanner = await this.db.homeBannerRepository.findOne({
       where: { id },
     });
     Object.assign(homeBanner, restDTO);
 
-    if (images && images.length > 0) {
-      // upload the new images
-      const imagesMinio = await Promise.all(
-        images.map(
-          async (image) =>
-            await this.minioService.uploadFile(
-              undefined,
-              image.buffer,
-              image.originalname.split('.').pop(),
-              image.mimetype,
-            ),
-        ),
+    if (image) {
+      // delete the old image from Minio
+      await this.minioService.deleteFile(homeBanner.image);
+      // upload the new image
+      const minioImage = await this.minioService.uploadFile(
+        undefined,
+        image.buffer,
+        image.originalname.split('.').pop(),
+        image.mimetype,
       );
-      homeBanner.images = imagesMinio;
-    } else homeBanner.images = [];
+      homeBanner.image = minioImage;
+    }
 
     return await this.db.homeBannerRepository.save(homeBanner);
   }
@@ -176,12 +163,8 @@ export class HomeBannerService {
     if (!homeBanner)
       throw new BadRequestException('No existe un home banner con ese id');
 
-    // delete the images from Minio
-    await Promise.all(
-      homeBanner.images.map(
-        async (image) => await this.minioService.deleteFile(image),
-      ),
-    );
+    // delete the image from Minio
+    await this.minioService.deleteFile(homeBanner.image);
 
     return await this.db.homeBannerRepository.delete({ id });
   }

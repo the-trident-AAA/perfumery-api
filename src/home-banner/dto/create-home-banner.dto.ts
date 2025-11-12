@@ -36,12 +36,12 @@ export class CreateHomeBannerDto {
   description?: string;
 
   @ApiProperty({
-    description: 'Representa las imágenes que se promocionarán en el banner',
-    type: 'array',
-    items: { type: 'string', format: 'binary' },
+    description: 'Representa la imagen del Banner del Home',
+    type: 'string',
+    format: 'binary',
     required: true,
   })
-  images: Express.Multer.File[];
+  image: Express.Multer.File;
 
   @ApiProperty({
     description:

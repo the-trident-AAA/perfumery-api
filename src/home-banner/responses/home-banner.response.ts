@@ -41,11 +41,11 @@ export class HomeBannerResponse {
   })
   isMain: boolean;
   @ApiProperty({
-    description: 'Representa las imagenes promocionales del Banner del Home',
+    description: 'Representa la promocional del Banner del Home',
     type: 'array',
     required: true,
   })
-  images: string[];
+  image: string;
   @ApiProperty({
     description:
       'Representa la lista de tips sobre estadísticas que tiene el banner',
@@ -65,7 +65,7 @@ export class HomeBannerResponse {
     title: string,
     description: string,
     isMain: boolean,
-    images: string[],
+    image: string,
     statisticalTips: StatisticalTip[],
     infoTips: string[],
   ) {
@@ -73,7 +73,7 @@ export class HomeBannerResponse {
     this.title = title;
     this.description = description;
     this.isMain = isMain;
-    this.images = images;
+    this.image = image;
     this.statisticalTips = statisticalTips;
     this.infoTips = infoTips;
   }

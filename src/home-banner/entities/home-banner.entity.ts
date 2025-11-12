@@ -10,13 +10,8 @@ export class HomeBannerEntity {
   description?: string;
   @Column()
   isMain: boolean;
-  @Column({
-    name: 'images',
-    type: 'json',
-    nullable: true,
-    default: [],
-  })
-  images: string[];
+  @Column({ name: 'image', nullable: true })
+  image: string;
   @Column({
     name: 'statistical_tips',
     type: 'json',
