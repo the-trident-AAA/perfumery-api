@@ -1,11 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTapeDto } from './dto/create-tape.dto';
 import { UpdateTapeDto } from './dto/update-tape.dto';
+import { DatabaseService } from 'src/database/database.service';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class TapeService {
-  create(createTapeDto: CreateTapeDto) {
-    return 'This action adds a new tape';
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly minioService: MinioService,
+  ) {}
+  async create(createTapeDto: CreateTapeDto) {
+    // Upload the image of the tape
+    const image = await this.minioService.uploadFile(
+      undefined,
+      createTapeDto.image.buffer,
+      createTapeDto.image.originalname.split('.').pop(),
+      createTapeDto.image.mimetype,
+    );
+
+    const tape = this.db.tapeRepository.create({
+      ...createTapeDto,
+      image,
+      isMain: false,
+    });
+
+    return await this.db.tapeRepository.save(tape);
   }
 
   findAll() {
