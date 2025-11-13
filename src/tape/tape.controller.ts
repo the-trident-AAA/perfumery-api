@@ -61,9 +61,30 @@ export class TapeController {
     return this.tapeService.findOne(+id);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTapeDto: UpdateTapeDto) {
-    return this.tapeService.update(+id, updateTapeDto);
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
+  @ApiOperation({
+    summary: 'Este endpoint edita un tape de la base de datos',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tape editado exitosamente',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de edición del tape',
+  })
+  update(
+    @Param('id') id: string,
+    @Body() updateTapeDto: UpdateTapeDto,
+    @UploadedFiles()
+    files: { image: Express.Multer.File[] },
+  ) {
+    updateTapeDto.image = files.image[0];
+    return this.tapeService.update(id, updateTapeDto);
   }
 
   @Delete(':id')

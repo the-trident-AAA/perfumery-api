@@ -36,8 +36,27 @@ export class TapeService {
     return `This action returns a #${id} tape`;
   }
 
-  update(id: number, updateTapeDto: UpdateTapeDto) {
-    return `This action updates a #${id} tape`;
+  async update(id: string, updateTapeDto: UpdateTapeDto) {
+    const { image, ...restDTO } = updateTapeDto;
+    const tape = await this.db.tapeRepository.findOne({
+      where: { id },
+    });
+    Object.assign(tape, restDTO);
+
+    if (image) {
+      // delete the old image from Minio
+      await this.minioService.deleteFile(tape.image);
+      // upload the new image
+      const minioImage = await this.minioService.uploadFile(
+        undefined,
+        image.buffer,
+        image.originalname.split('.').pop(),
+        image.mimetype,
+      );
+      tape.image = minioImage;
+    }
+
+    return await this.db.tapeRepository.save(tape);
   }
 
   remove(id: number) {
