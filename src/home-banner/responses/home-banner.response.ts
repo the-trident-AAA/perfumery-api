@@ -42,7 +42,7 @@ export class HomeBannerResponse {
   isMain: boolean;
   @ApiProperty({
     description: 'Representa la promocional del Banner del Home',
-    type: 'array',
+    type: 'string',
     required: true,
   })
   image: string;
