@@ -3,6 +3,10 @@ import { CreateTapeDto } from './dto/create-tape.dto';
 import { UpdateTapeDto } from './dto/update-tape.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { MinioService } from 'src/minio/minio.service';
+import { OrderDto } from 'src/utils/dto/order.dto';
+import { FindOptionsOrder } from 'typeorm';
+import { TapeEntity } from './entities/tape.entity';
+import { TapeResponse } from './responses/tape.response';
 
 @Injectable()
 export class TapeService {
@@ -28,8 +32,29 @@ export class TapeService {
     return await this.db.tapeRepository.save(tape);
   }
 
-  findAll() {
-    return `This action returns all tape`;
+  async findAll(orderDto: OrderDto) {
+    const { order, orderBy } = orderDto;
+
+    const sortableFields = ['id', 'name', 'isMain'];
+    const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+    const orderClause: FindOptionsOrder<TapeEntity> =
+      orderBy && sortableFields.includes(orderBy)
+        ? { [orderBy]: direction }
+        : { name: 'ASC' };
+
+    const tapes = await this.db.tapeRepository.find({
+      order: orderClause,
+    });
+
+    return tapes.map(
+      (tape) =>
+        new TapeResponse(
+          tape.id,
+          tape.name,
+          tape.isMain,
+          tape.image ? this.minioService.getPublicUrl(tape.image) : undefined,
+        ),
+    );
   }
 
   findOne(id: number) {

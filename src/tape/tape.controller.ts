@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { TapeService } from './tape.service';
 import { CreateTapeDto } from './dto/create-tape.dto';
@@ -21,6 +22,8 @@ import {
 import { Auth } from 'src/auth/decorators/auth.decorators';
 import { Role } from 'src/common/enums/role.enum';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { TapeResponse } from './responses/tape.response';
+import { OrderDto } from 'src/utils/dto/order.dto';
 
 @Controller('tape')
 export class TapeController {
@@ -52,8 +55,21 @@ export class TapeController {
   }
 
   @Get()
-  findAll() {
-    return this.tapeService.findAll();
+  @ApiOperation({
+    summary: 'Este endpoint obtiene una lista de tapes de la base de datos',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de tapese obtenida exitosamente',
+    type: TapeResponse,
+    isArray: true,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de obtener la lista de tapes',
+  })
+  findAll(@Query() orderDto: OrderDto) {
+    return this.tapeService.findAll(orderDto);
   }
 
   @Get(':id')
