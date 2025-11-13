@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTapeDto } from './dto/create-tape.dto';
 import { UpdateTapeDto } from './dto/update-tape.dto';
 import { DatabaseService } from 'src/database/database.service';
@@ -59,7 +59,16 @@ export class TapeService {
     return await this.db.tapeRepository.save(tape);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tape`;
+  async remove(id: string) {
+    const tape = await this.db.tapeRepository.findOne({
+      where: { id },
+    });
+
+    if (!tape) throw new BadRequestException('No existe un tape con ese id');
+
+    // delete the image from Minio
+    await this.minioService.deleteFile(tape.image);
+
+    return await this.db.tapeRepository.delete({ id });
   }
 }

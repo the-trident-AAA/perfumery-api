@@ -87,8 +87,21 @@ export class TapeController {
     return this.tapeService.update(id, updateTapeDto);
   }
 
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Delete(':id')
+  @ApiOperation({
+    summary: 'Este endpoint elimina un tape de la base de datos',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tape eliminado exitosamente',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de eliminación del tape',
+  })
   remove(@Param('id') id: string) {
-    return this.tapeService.remove(+id);
+    return this.tapeService.remove(id);
   }
 }
