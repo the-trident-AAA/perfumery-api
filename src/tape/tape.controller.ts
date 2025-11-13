@@ -73,8 +73,20 @@ export class TapeController {
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Este endpoint obtiene un tape en específico de la base de datos',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tape obtenida exitosamente',
+    type: TapeResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de obtener el tape',
+  })
   findOne(@Param('id') id: string) {
-    return this.tapeService.findOne(+id);
+    return this.tapeService.findOne(id);
   }
 
   @ApiBearerAuth()
