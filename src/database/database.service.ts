@@ -13,6 +13,7 @@ import { ShopCartEntity } from 'src/shop-cart/entities/shop-cart.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { OtpEntity } from 'src/otp/entities/otp.entity';
 import { Repository } from 'typeorm';
+import { TapeEntity } from 'src/tape/entities/tape.entity';
 
 @Injectable()
 export class DatabaseService {
@@ -41,5 +42,7 @@ export class DatabaseService {
     public readonly orderPerfumeRepository: Repository<OrderPerfumeEntity>,
     @InjectRepository(OtpEntity)
     public readonly otpRepository: Repository<OtpEntity>,
+    @InjectRepository(TapeEntity)
+    public readonly tapeRepository: Repository<TapeEntity>,
   ) {}
 }

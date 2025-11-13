@@ -15,8 +15,7 @@ import { ShopCartPerfumeEntity } from 'src/shop-cart-perfume/entities/shop-cart-
 import { OrderEntity } from 'src/order/entities/order.entity';
 import { OrderPerfumeEntity } from 'src/order/entities/order-perfume.entity';
 import { OtpEntity } from 'src/otp/entities/otp.entity';
-
-
+import { TapeEntity } from 'src/tape/entities/tape.entity';
 
 @Global()
 @Module({
@@ -54,6 +53,7 @@ import { OtpEntity } from 'src/otp/entities/otp.entity';
       OrderEntity,
       OrderPerfumeEntity,
       OtpEntity,
+      TapeEntity,
     ]),
   ],
   providers: [DatabaseService],
