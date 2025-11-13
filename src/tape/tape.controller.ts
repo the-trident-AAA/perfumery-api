@@ -149,4 +149,23 @@ export class TapeController {
   remove(@Param('id') id: string) {
     return this.tapeService.remove(id);
   }
+
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
+  @Post('marked-as-active/:id')
+  @ApiOperation({
+    summary: 'Este endpoint marca como principal a un tape específico',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tape marcado como principal exitosamente',
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de marcar como principal el tape',
+  })
+  markedAsActive(@Param('id') id: string) {
+    return this.tapeService.markedAsMainTape(id);
+  }
 }

@@ -112,6 +112,32 @@ export class TapeService {
     return await this.db.tapeRepository.save(tape);
   }
 
+  async markedAsMainTape(id: string) {
+    const tape = await this.db.tapeRepository.findOne({
+      where: { id },
+    });
+
+    if (!tape)
+      throw new BadRequestException('No existe un tape con ese identificador');
+
+    if (tape.isMain) tape.isMain = false;
+    else {
+      // find the last principal tape
+      const lastPrincipalTape = await this.db.tapeRepository.findOne({
+        where: {
+          isMain: true,
+        },
+      });
+      if (lastPrincipalTape && lastPrincipalTape.id !== id) {
+        lastPrincipalTape.isMain = false;
+        await this.db.tapeRepository.save(lastPrincipalTape);
+      }
+      tape.isMain = true;
+    }
+
+    return await this.db.tapeRepository.save(tape);
+  }
+
   async remove(id: string) {
     const tape = await this.db.tapeRepository.findOne({
       where: { id },
