@@ -72,6 +72,23 @@ export class TapeController {
     return this.tapeService.findAll(orderDto);
   }
 
+  @Get('find-main-tape')
+  @ApiOperation({
+    summary: 'Este endpoint obtiene el tape principal',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tape principal obtenido exitosamente',
+    type: TapeResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de obtener el tape principal',
+  })
+  findMainTape() {
+    return this.tapeService.findMainTape();
+  }
+
   @Get(':id')
   @ApiOperation({
     summary: 'Este endpoint obtiene un tape en específico de la base de datos',

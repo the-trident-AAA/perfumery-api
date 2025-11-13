@@ -73,6 +73,22 @@ export class TapeService {
     );
   }
 
+  async findMainTape() {
+    const tape = await this.db.tapeRepository.findOne({
+      where: { isMain: true },
+    });
+
+    if (!tape)
+      throw new BadRequestException('No existe un tape con ese identificador');
+
+    return new TapeResponse(
+      tape.id,
+      tape.name,
+      tape.isMain,
+      tape.image ? this.minioService.getPublicUrl(tape.image) : undefined,
+    );
+  }
+
   async update(id: string, updateTapeDto: UpdateTapeDto) {
     const { image, ...restDTO } = updateTapeDto;
     const tape = await this.db.tapeRepository.findOne({
