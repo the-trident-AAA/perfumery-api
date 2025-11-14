@@ -52,6 +52,15 @@ export class CreateHomeBannerDto {
   description?: string;
 
   @ApiProperty({
+    description: 'Representa el texto del botón del banner',
+    type: 'string',
+    required: true,
+  })
+  @IsOptional()
+  @IsString()
+  buttonText: string;
+
+  @ApiProperty({
     description: 'Representa la imagen del Banner del Home',
     type: 'string',
     format: 'binary',
