@@ -15,6 +15,20 @@ export class StatisticalTip {
   info: string;
 }
 
+export class HomeBannerFilter {
+  @ApiProperty({
+    description: 'Representa el nombre del filtro',
+    type: 'string',
+  })
+  name: string;
+
+  @ApiProperty({
+    description: 'Representa el valor del filtro',
+    type: 'string',
+  })
+  value: string;
+}
+
 export class HomeBannerResponse {
   @ApiProperty({
     description: 'Representa el identificador único del Banner del Home',
@@ -59,6 +73,12 @@ export class HomeBannerResponse {
     required: true,
   })
   infoTips: string[];
+  @ApiProperty({
+    description: 'Representa la lista filtros del banner',
+    type: HomeBannerFilter,
+    required: true,
+  })
+  filters: HomeBannerFilter[];
 
   constructor(
     id: string,
@@ -68,6 +88,7 @@ export class HomeBannerResponse {
     image: string,
     statisticalTips: StatisticalTip[],
     infoTips: string[],
+    filters: HomeBannerFilter[],
   ) {
     this.id = id;
     this.title = title;
@@ -76,5 +97,6 @@ export class HomeBannerResponse {
     this.image = image;
     this.statisticalTips = statisticalTips;
     this.infoTips = infoTips;
+    this.filters = filters;
   }
 }
