@@ -18,6 +18,22 @@ export class StatisticalTip {
   info: string;
 }
 
+export class HomeBannerFilter {
+  @ApiProperty({
+    description: 'Representa el nombre del filtro',
+    type: 'string',
+  })
+  @IsString()
+  name: string;
+
+  @ApiProperty({
+    description: 'Representa el valor del filtro',
+    type: 'string',
+  })
+  @IsString()
+  value: string;
+}
+
 export class CreateHomeBannerDto {
   @ApiProperty({
     description: 'Representa el titulo del Banner del Home',
@@ -98,4 +114,36 @@ export class CreateHomeBannerDto {
   @IsArray()
   @IsString({ each: true })
   infoTips: string[];
+  @ApiProperty({
+    description: 'Representa la lista de filtros del banner',
+    type: HomeBannerFilter,
+    isArray: true,
+    required: false,
+  })
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (!value) return []; // si no viene, devolver []
+    if (Array.isArray(value)) {
+      return value
+        .map((v) => {
+          try {
+            return JSON.parse(v);
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+    }
+    if (typeof value === 'string') {
+      try {
+        return [JSON.parse(value)];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  })
+  @ValidateNested({ each: true })
+  @Type(() => HomeBannerFilter)
+  filters: HomeBannerFilter[];
 }
