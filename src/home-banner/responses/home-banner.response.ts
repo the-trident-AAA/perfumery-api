@@ -49,6 +49,12 @@ export class HomeBannerResponse {
   })
   description: string;
   @ApiProperty({
+    description: 'Representa el texto del botón del banner',
+    type: 'string',
+    required: false,
+  })
+  buttonText: string;
+  @ApiProperty({
     description: 'Indica si el Banner es el principal o no',
     type: 'boolean',
     required: true,
@@ -84,6 +90,7 @@ export class HomeBannerResponse {
     id: string,
     title: string,
     description: string,
+    buttonText: string,
     isMain: boolean,
     image: string,
     statisticalTips: StatisticalTip[],
@@ -93,6 +100,7 @@ export class HomeBannerResponse {
     this.id = id;
     this.title = title;
     this.description = description;
+    this.buttonText = buttonText;
     this.isMain = isMain;
     this.image = image;
     this.statisticalTips = statisticalTips;
