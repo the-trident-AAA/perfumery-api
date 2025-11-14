@@ -120,7 +120,12 @@ export class HomeBannerService {
     const homeBanner = await this.db.homeBannerRepository.findOne({
       where: { id },
     });
-    Object.assign(homeBanner, restDTO);
+    Object.assign(homeBanner, {
+      ...restDTO,
+      infoTips: restDTO.infoTips || [],
+      statisticalTips: restDTO.statisticalTips || [],
+      filters: restDTO.filters || [],
+    });
 
     if (image) {
       // delete the old image from Minio
