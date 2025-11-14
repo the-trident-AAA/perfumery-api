@@ -8,6 +8,8 @@ export class HomeBannerEntity {
   title: string;
   @Column({ nullable: true })
   description?: string;
+  @Column({ name: 'button_text', nullable: true })
+  buttonText?: string;
   @Column()
   isMain: boolean;
   @Column({ name: 'image', nullable: true })
@@ -29,4 +31,14 @@ export class HomeBannerEntity {
     default: [],
   })
   infoTips: string[];
+  @Column({
+    name: 'filters',
+    type: 'json',
+    nullable: false,
+    default: [],
+  })
+  filters: {
+    name: string;
+    value: string;
+  }[];
 }
