@@ -17,6 +17,7 @@ import { OtpService } from 'src/otp/otp.service';
 import { MailService } from 'src/mail/mail.service';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
 import { OauthService } from 'src/oauth/oauth.service';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -51,8 +52,31 @@ export class AuthService {
     return await this.usersService.create(dto);
   }
 
-  async loginWithGoogle(idToken: string) {
-    const googleUserPayload = await this.oauthService.getGoogleIdToken(idToken)
+  async loginWithGoogle(idToken: string, sessionId?: string) {
+    const googleUserPayload = await this.oauthService.getGoogleIdToken(idToken);
+
+    // chequear si el usuario existe en la bd
+    let user = await this.usersService.findOneByUsername(
+      googleUserPayload.email,
+    );
+
+    // si no existe creamos al usuario
+    if (!user) {
+      user = await this.usersService.create(
+        {
+          email: googleUserPayload.email,
+          username: googleUserPayload.name,
+          avatar: googleUserPayload.picture,
+          role: Role.USER,
+        },
+        true,
+      );
+    }
+
+    return await this.login({
+      username: user.email,
+      sessionId: sessionId,
+    });
   }
 
   async login(
