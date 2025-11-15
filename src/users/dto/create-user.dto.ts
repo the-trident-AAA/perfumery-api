@@ -26,4 +26,10 @@ export class CreateUserDto {
     required: false,
   })
   role?: Role;
+  @ApiProperty({
+    description: 'Representa el avatar del usuario',
+    type: 'string',
+    required: false,
+  })
+  avatar?: string;
 }
