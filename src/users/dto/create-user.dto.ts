@@ -17,9 +17,9 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Representa la contraseña del usuario',
     type: 'string',
-    required: true,
+    required: false,
   })
-  password: string;
+  password?: string;
   @ApiProperty({
     description: 'Representa el rol del usuario a crear',
     type: 'string',
