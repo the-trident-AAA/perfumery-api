@@ -153,9 +153,9 @@ export class UsersService {
     );
   }
 
-  async findOneByUsername(username: string) {
-    return this.db.userRepository.findOne({
-      where: { username },
+  async findOneByUsername(credential: string) {
+    const userByUserName = this.db.userRepository.findOne({
+      where: { username: credential },
       select: [
         'id',
         'username',
@@ -166,6 +166,25 @@ export class UsersService {
         'isActive',
       ],
     });
+
+    if (userByUserName) return userByUserName;
+
+    const userByEmail = this.db.userRepository.findOne({
+      where: { email: credential },
+      select: [
+        'id',
+        'username',
+        'email',
+        'password',
+        'role',
+        'shopCartId',
+        'isActive',
+      ],
+    });
+
+    if (userByEmail) return userByEmail;
+
+    return null;
   }
 
   async findOneByEmail(email: string) {
