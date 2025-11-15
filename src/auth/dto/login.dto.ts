@@ -11,10 +11,11 @@ export class loginDto {
 
   @ApiProperty({
     description: 'Representa la contraseña del usuario',
-    required: true,
+    required: false,
   })
+  @IsOptional()
   @IsString()
-  password: string;
+  password?: string;
   @ApiProperty({
     description: 'ID de sesión del carrito anónimo a fusionar',
     required: false,
