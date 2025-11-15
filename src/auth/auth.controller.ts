@@ -22,6 +22,7 @@ import { SendOtpDto } from './dto/send-otp.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
+import { loginWithGoogleDto } from './dto/login-with-google.dto';
 
 interface RequestWithUser extends Request {
   user: { user: string; role: string };
@@ -53,6 +54,24 @@ export class AuthController {
   })
   changePasswordUser(@Param('id') id: string, @Body() dto: ChangePasswordDto) {
     return this.authService.changePasswordUser(id, dto);
+  }
+
+  @Post('login-with-google')
+  @ApiOperation({
+    summary:
+      'Este endpoint se encaraga de la autenticación usando a google como proveedor',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Logeo realizado con éxito',
+    type: LoginResponse,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Ocurrió un error en el proceso de logeo',
+  })
+  loginWithGoogle(@Body() dto: loginWithGoogleDto) {
+    return this.authService.loginWithGoogle(dto.idToken, dto.sessionId);
   }
 
   @Post('login')
