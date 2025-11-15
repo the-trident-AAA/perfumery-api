@@ -20,13 +20,13 @@ export class UsersService {
     private readonly minioService: MinioService,
   ) {}
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto, isActiveAccount: boolean = false) {
     // created a shop cart
     const shopCart = await this.shopCartService.create({});
     return await this.db.userRepository.save({
       ...dto,
       shopCartId: shopCart.id,
-      isActive: false,
+      isActive: isActiveAccount,
       role: dto.role || Role.USER,
     });
   }
