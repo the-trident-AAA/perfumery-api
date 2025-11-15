@@ -54,12 +54,12 @@ export class AuthService {
 
   async loginWithGoogle(idToken: string, sessionId?: string) {
     const googleUserPayload = await this.oauthService.getGoogleIdToken(idToken);
-
+    console.log(googleUserPayload);
     // chequear si el usuario existe en la bd
     let user = await this.usersService.findOneByUsername(
       googleUserPayload.email,
     );
-
+    console.log(user);
     // si no existe creamos al usuario
     if (!user) {
       user = await this.usersService.create(
