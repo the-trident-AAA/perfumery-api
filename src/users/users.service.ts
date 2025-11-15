@@ -11,6 +11,7 @@ import { MinioService } from 'src/minio/minio.service';
 import { UserDetailsResponse } from './responses/user-details.response';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from 'src/common/enums/role.enum';
+import { isGoogleAvatar } from 'src/utils/images';
 
 @Injectable()
 export class UsersService {
@@ -96,7 +97,11 @@ export class UsersService {
         new UserResponse(
           user.id,
           user.username,
-          user.avatar ? this.minioService.getPublicUrl(user.avatar) : undefined,
+          user.avatar
+            ? !isGoogleAvatar(user.avatar)
+              ? this.minioService.getPublicUrl(user.avatar)
+              : user.avatar
+            : undefined,
           user.email,
           user.role,
           user.isActive,
@@ -115,7 +120,11 @@ export class UsersService {
     return new UserDetailsResponse(
       user.id,
       user.username,
-      user.avatar ? this.minioService.getPublicUrl(user.avatar) : undefined,
+      user.avatar
+        ? !isGoogleAvatar(user.avatar)
+          ? this.minioService.getPublicUrl(user.avatar)
+          : user.avatar
+        : undefined,
       user.email,
       user.role,
       user.isActive,
@@ -146,7 +155,11 @@ export class UsersService {
     return new UserResponse(
       user.id,
       user.username,
-      user.avatar ? this.minioService.getPublicUrl(user.avatar) : undefined,
+      user.avatar
+        ? !isGoogleAvatar(user.avatar)
+          ? this.minioService.getPublicUrl(user.avatar)
+          : user.avatar
+        : undefined,
       user.email,
       user.role,
       user.isActive,
