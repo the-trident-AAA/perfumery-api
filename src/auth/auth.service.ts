@@ -73,10 +73,13 @@ export class AuthService {
       );
     }
 
-    return await this.login({
-      username: user.email,
-      sessionId: sessionId,
-    });
+    return await this.login(
+      {
+        username: user.email,
+        sessionId: sessionId,
+      },
+      true,
+    );
   }
 
   async login(
