@@ -154,7 +154,7 @@ export class UsersService {
   }
 
   async findOneByUsername(credential: string) {
-    const userByUserName = this.db.userRepository.findOne({
+    const userByUserName = await this.db.userRepository.findOne({
       where: { username: credential },
       select: [
         'id',
@@ -169,7 +169,7 @@ export class UsersService {
 
     if (userByUserName) return userByUserName;
 
-    const userByEmail = this.db.userRepository.findOne({
+    const userByEmail = await this.db.userRepository.findOne({
       where: { email: credential },
       select: [
         'id',
