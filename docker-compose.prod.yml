@@ -29,9 +29,10 @@ services:
       EMAIL_PASS: ${EMAIL_PASS:-tfya rzig ybwt puwt}
       OTP_SECRET: ${OTP_SECRET:-secret}
       EMAIL_FROM: ${EMAIL_FROM:-perfumery}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-googleid}
 
     ports:
-      - '${APP_PORT:-4000}:${APP_PORT:-4000}'
+      - "${APP_PORT:-4000}:${APP_PORT:-4000}"
 
     networks:
       - perfumery-network

@@ -57,6 +57,7 @@ jobs:
             echo 'EMAIL_PASS=${{ secrets.EMAIL_PASS }}' >> .env &&
             echo 'OTP_SECRET=${{ secrets.OTP_SECRET }}' >> .env &&
             echo 'EMAIL_FROM=${{ secrets.EMAIL_FROM }}' >> .env &&
+            echo 'GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}' >> .env &&
             git checkout main &&
             git pull origin main &&
             docker-compose -f docker-compose.prod.yml pull &&
