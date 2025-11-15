@@ -16,6 +16,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { OtpService } from 'src/otp/otp.service';
 import { MailService } from 'src/mail/mail.service';
 import { ShopCartService } from 'src/shop-cart/shop-cart.service';
+import { OauthService } from 'src/oauth/oauth.service';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +26,7 @@ export class AuthService {
     private readonly otpService: OtpService,
     private readonly mailService: MailService,
     private readonly shopCartService: ShopCartService,
+    private readonly oauthService: OauthService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -47,6 +49,10 @@ export class AuthService {
     dto.password = await bcrypt.hash(dto.password, 10);
 
     return await this.usersService.create(dto);
+  }
+
+  async loginWithGoogle(idToken: string) {
+    const googleUserPayload = await this.oauthService.getGoogleIdToken(idToken)
   }
 
   async login(

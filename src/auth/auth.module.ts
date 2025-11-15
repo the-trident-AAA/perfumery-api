@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailModule } from 'src/mail/mail.module';
 import { OtpModule } from 'src/otp/otp.module';
 import { ShopCartModule } from 'src/shop-cart/shop-cart.module';
+import { OauthModule } from 'src/oauth/oauth.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ShopCartModule } from 'src/shop-cart/shop-cart.module';
     MailModule,
     OtpModule,
     ShopCartModule,
+    OauthModule,
   ],
   providers: [AuthService],
   controllers: [AuthController],
