@@ -18,6 +18,7 @@ import { OtpModule } from './otp/otp.module';
 import { AssetsModule } from './assets/assets.module';
 import { SessionModule } from './session/session.module';
 import { TapeModule } from './tape/tape.module';
+import { OauthModule } from './oauth/oauth.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { TapeModule } from './tape/tape.module';
     AssetsModule,
     SessionModule,
     TapeModule,
+    OauthModule,
   ],
 })
 export class AppModule {}
