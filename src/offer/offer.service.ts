@@ -97,6 +97,9 @@ export class OfferService {
           offer.description,
           offer.scope,
           offer.image ? this.minioService.getPublicUrl(offer.image) : undefined,
+          offer.mobileImage
+            ? this.minioService.getPublicUrl(offer.mobileImage)
+            : undefined,
         ),
     );
   }
@@ -118,6 +121,9 @@ export class OfferService {
       offer.description,
       offer.scope,
       offer.image ? this.minioService.getPublicUrl(offer.image) : undefined,
+      offer.mobileImage
+        ? this.minioService.getPublicUrl(offer.mobileImage)
+        : undefined,
     );
   }
 
