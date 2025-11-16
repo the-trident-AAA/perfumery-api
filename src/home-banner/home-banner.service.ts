@@ -28,6 +28,7 @@ export class HomeBannerService {
       ...createHomeBannerDto,
       image,
       isMain: false,
+      creationDate: new Date(),
     });
 
     return await this.db.homeBannerRepository.save(homeBanner);
