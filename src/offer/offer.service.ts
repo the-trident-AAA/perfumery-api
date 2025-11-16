@@ -175,7 +175,11 @@ export class OfferService {
   }
 
   async remove(id: string) {
-    const offer = await this.findOne(id);
+    const offer = await this.db.offerRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     if (!offer)
       throw new BadRequestException('No se encontró una oferta con ese ID');
@@ -186,6 +190,9 @@ export class OfferService {
     if (offer.image)
       // delete the image from Minio
       await this.minioService.deleteFile(offer.image);
+    if (offer.mobileImage)
+      // delete the mobile image from Minio
+      await this.minioService.deleteFile(offer.mobileImage);
 
     return await this.db.offerRepository.delete({ id });
   }
