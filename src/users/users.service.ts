@@ -105,6 +105,7 @@ export class UsersService {
           user.email,
           user.role,
           user.isActive,
+          user.password ? true : false,
         ),
     );
   }
@@ -129,6 +130,7 @@ export class UsersService {
       user.role,
       user.isActive,
       await this.shopCartService.findOne(user.shopCartId),
+      user.password ? true : false,
     );
   }
 
@@ -163,6 +165,7 @@ export class UsersService {
       user.email,
       user.role,
       user.isActive,
+      user.password ? true : false,
     );
   }
 
