@@ -18,8 +18,9 @@ export class UserDetailsResponse extends UserResponse {
     role: string,
     isActive: boolean,
     shopCart: ShopCartResponse,
+    hasPassword: boolean,
   ) {
-    super(id, username, avatar, email, role, isActive);
+    super(id, username, avatar, email, role, isActive, hasPassword);
     this.shopCart = shopCart;
   }
 }

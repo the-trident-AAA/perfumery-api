@@ -38,6 +38,13 @@ export class UserResponse {
   })
   isActive: boolean;
 
+  @ApiProperty({
+    description:
+      'Indica si la cuenta del usuario ya cuenta con contraseña o no',
+    type: 'boolean',
+  })
+  hasPassword: boolean;
+
   constructor(
     id: string,
     username: string,
@@ -45,6 +52,7 @@ export class UserResponse {
     email: string,
     role: string,
     isActive: boolean,
+    hasPassword: boolean,
   ) {
     this.id = id;
     this.username = username;
@@ -52,5 +60,6 @@ export class UserResponse {
     this.email = email;
     this.role = role;
     this.isActive = isActive;
+    this.hasPassword = hasPassword;
   }
 }
