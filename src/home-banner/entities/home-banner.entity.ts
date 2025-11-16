@@ -1,5 +1,9 @@
-import { PerfumeEntity } from 'src/perfume/entities/perfume.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+export enum TextColor {
+  DARK = 'oscuro',
+  LIGHT = 'claro',
+}
 @Entity({ name: 'home_banner' })
 export class HomeBannerEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -10,6 +14,8 @@ export class HomeBannerEntity {
   description?: string;
   @Column({ name: 'button_text', nullable: true })
   buttonText?: string;
+  @Column({ name: 'text_color', enum: TextColor })
+  textColor: TextColor;
   @Column()
   isMain: boolean;
   @Column({
