@@ -169,6 +169,9 @@ export class TapeService {
     // delete the image from Minio
     await this.minioService.deleteFile(tape.image);
 
+    // delete the mobile image from Minio
+    await this.minioService.deleteFile(tape.mobileImage);
+
     return await this.db.tapeRepository.delete({ id });
   }
 }
