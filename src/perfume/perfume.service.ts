@@ -79,6 +79,7 @@ export class PerfumeService {
       images,
       totalPrice,
       sales: 0,
+      isHidden: false,
     });
 
     return await this.db.perfumeRepository.save(perfume);
