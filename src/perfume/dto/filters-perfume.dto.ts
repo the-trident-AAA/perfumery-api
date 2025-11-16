@@ -147,4 +147,11 @@ export class FiltersPerfumeDto {
     required: false,
   })
   salesMax?: number;
+
+  @ApiProperty({
+    description: 'Representa si el perfume está oculto para ver o no',
+    type: 'boolean',
+    required: false,
+  })
+  isHidden: boolean;
 }
