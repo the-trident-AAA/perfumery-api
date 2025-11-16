@@ -73,6 +73,9 @@ export class HomeBannerService {
           homeBanner.image
             ? this.minioService.getPublicUrl(homeBanner.image)
             : undefined,
+          homeBanner.mobileImage
+            ? this.minioService.getPublicUrl(homeBanner.mobileImage)
+            : undefined,
           homeBanner.statisticalTips,
           homeBanner.infoTips,
           homeBanner.filters,
@@ -99,6 +102,9 @@ export class HomeBannerService {
       homeBanner.image
         ? this.minioService.getPublicUrl(homeBanner.image)
         : undefined,
+      homeBanner.mobileImage
+        ? this.minioService.getPublicUrl(homeBanner.mobileImage)
+        : undefined,
       homeBanner.statisticalTips,
       homeBanner.infoTips,
       homeBanner.filters,
@@ -123,6 +129,9 @@ export class HomeBannerService {
       homeBanner.isMain,
       homeBanner.image
         ? this.minioService.getPublicUrl(homeBanner.image)
+        : undefined,
+      homeBanner.mobileImage
+        ? this.minioService.getPublicUrl(homeBanner.mobileImage)
         : undefined,
       homeBanner.statisticalTips,
       homeBanner.infoTips,
