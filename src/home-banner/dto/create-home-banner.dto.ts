@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { TextColor } from '../entities/home-banner.entity';
 
 export class StatisticalTip {
   @ApiProperty({
@@ -59,6 +66,14 @@ export class CreateHomeBannerDto {
   @IsOptional()
   @IsString()
   buttonText: string;
+
+  @ApiProperty({
+    description: 'Representa el color del texto del banner',
+    enum: TextColor,
+    required: true,
+  })
+  @IsEnum(TextColor)
+  textColor: TextColor;
 
   @ApiProperty({
     description: 'Representa la imagen del Banner del Home',
