@@ -44,6 +44,9 @@ export class UserEntity {
   @JoinColumn({ name: 'shop_cart_id' })
   shopCart: ShopCartEntity;
 
-  @OneToMany(() => OrderEntity, (order) => order.user)
-  orders: OrderEntity;
+  @OneToMany(() => OrderEntity, (order) => order.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  orders: OrderEntity[];
 }

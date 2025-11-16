@@ -36,7 +36,9 @@ export class OrderEntity extends BaseEntity {
   })
   lastUpdateDate: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.orders)
+  @ManyToOne(() => UserEntity, (user) => user.orders, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
