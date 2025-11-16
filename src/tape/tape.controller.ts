@@ -33,7 +33,12 @@ export class TapeController {
   @Auth([Role.ADMIN])
   @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'image', maxCount: 1 },
+      { name: 'mobileImage', maxCount: 1 },
+    ]),
+  )
   @ApiOperation({
     summary: 'Este endpoint agrega un listón a la base de datos',
   })
@@ -48,9 +53,10 @@ export class TapeController {
   create(
     @Body() createTapeDto: CreateTapeDto,
     @UploadedFiles()
-    files: { image: Express.Multer.File[] },
+    files: { image: Express.Multer.File[]; mobileImage: Express.Multer.File[] },
   ) {
     createTapeDto.image = files.image[0];
+    createTapeDto.mobileImage = files.mobileImage[0];
     return this.tapeService.create(createTapeDto);
   }
 
@@ -110,7 +116,12 @@ export class TapeController {
   @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'image', maxCount: 1 },
+      { name: 'mobileImage', maxCount: 1 },
+    ]),
+  )
   @ApiOperation({
     summary: 'Este endpoint edita un tape de la base de datos',
   })
@@ -126,9 +137,10 @@ export class TapeController {
     @Param('id') id: string,
     @Body() updateTapeDto: UpdateTapeDto,
     @UploadedFiles()
-    files: { image: Express.Multer.File[] },
+    files: { image: Express.Multer.File[]; mobileImage: Express.Multer.File[] },
   ) {
     updateTapeDto.image = files.image[0];
+    updateTapeDto.mobileImage = files.mobileImage[0];
     return this.tapeService.update(id, updateTapeDto);
   }
 

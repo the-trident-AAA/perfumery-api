@@ -22,10 +22,18 @@ export class TapeService {
       createTapeDto.image.originalname.split('.').pop(),
       createTapeDto.image.mimetype,
     );
+    // Upload the mobile image of the tape
+    const mobileImage = await this.minioService.uploadFile(
+      undefined,
+      createTapeDto.mobileImage.buffer,
+      createTapeDto.mobileImage.originalname.split('.').pop(),
+      createTapeDto.mobileImage.mimetype,
+    );
 
     const tape = this.db.tapeRepository.create({
       ...createTapeDto,
       image,
+      mobileImage,
       isMain: false,
     });
 
@@ -90,7 +98,7 @@ export class TapeService {
   }
 
   async update(id: string, updateTapeDto: UpdateTapeDto) {
-    const { image, ...restDTO } = updateTapeDto;
+    const { image, mobileImage, ...restDTO } = updateTapeDto;
     const tape = await this.db.tapeRepository.findOne({
       where: { id },
     });
@@ -107,6 +115,19 @@ export class TapeService {
         image.mimetype,
       );
       tape.image = minioImage;
+    }
+
+    if (mobileImage) {
+      // delete the old mmobile image from Minio
+      await this.minioService.deleteFile(tape.mobileImage);
+      // upload the new mobile image
+      const minioImage = await this.minioService.uploadFile(
+        undefined,
+        mobileImage.buffer,
+        mobileImage.originalname.split('.').pop(),
+        mobileImage.mimetype,
+      );
+      tape.mobileImage = minioImage;
     }
 
     return await this.db.tapeRepository.save(tape);
