@@ -61,6 +61,9 @@ export class TapeService {
           tape.name,
           tape.isMain,
           tape.image ? this.minioService.getPublicUrl(tape.image) : undefined,
+          tape.mobileImage
+            ? this.minioService.getPublicUrl(tape.mobileImage)
+            : undefined,
         ),
     );
   }
@@ -78,6 +81,9 @@ export class TapeService {
       tape.name,
       tape.isMain,
       tape.image ? this.minioService.getPublicUrl(tape.image) : undefined,
+      tape.mobileImage
+        ? this.minioService.getPublicUrl(tape.mobileImage)
+        : undefined,
     );
   }
 
@@ -94,6 +100,9 @@ export class TapeService {
       tape.name,
       tape.isMain,
       tape.image ? this.minioService.getPublicUrl(tape.image) : undefined,
+      tape.mobileImage
+        ? this.minioService.getPublicUrl(tape.mobileImage)
+        : undefined,
     );
   }
 
