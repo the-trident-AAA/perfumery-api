@@ -69,6 +69,14 @@ export class CreateHomeBannerDto {
   image: Express.Multer.File;
 
   @ApiProperty({
+    description: 'Representa la imagen en versión mobile del Banner del Home',
+    type: 'string',
+    format: 'binary',
+    required: true,
+  })
+  mobileImage: Express.Multer.File;
+
+  @ApiProperty({
     description:
       'Representa la lista de tips sobre estadísticas que tendrá el banner',
     type: StatisticalTip,

@@ -24,9 +24,17 @@ export class HomeBannerService {
       createHomeBannerDto.image.mimetype,
     );
 
+    const mobileImage = await this.minioService.uploadFile(
+      undefined,
+      createHomeBannerDto.mobileImage.buffer,
+      createHomeBannerDto.mobileImage.originalname.split('.').pop(),
+      createHomeBannerDto.mobileImage.mimetype,
+    );
+
     const homeBanner = this.db.homeBannerRepository.create({
       ...createHomeBannerDto,
       image,
+      mobileImage,
       isMain: false,
       creationDate: new Date(),
     });
@@ -123,7 +131,7 @@ export class HomeBannerService {
   }
 
   async update(id: string, updateHomeBannerDto: UpdateHomeBannerDto) {
-    const { image, ...restDTO } = updateHomeBannerDto;
+    const { image, mobileImage, ...restDTO } = updateHomeBannerDto;
     const homeBanner = await this.db.homeBannerRepository.findOne({
       where: { id },
     });
@@ -145,6 +153,19 @@ export class HomeBannerService {
         image.mimetype,
       );
       homeBanner.image = minioImage;
+    }
+
+    if (mobileImage) {
+      // delete the old mobile image from Minio
+      await this.minioService.deleteFile(homeBanner.mobileImage);
+      // upload the new mobile image
+      const minioImage = await this.minioService.uploadFile(
+        undefined,
+        mobileImage.buffer,
+        mobileImage.originalname.split('.').pop(),
+        mobileImage.mimetype,
+      );
+      homeBanner.mobileImage = minioImage;
     }
 
     return await this.db.homeBannerRepository.save(homeBanner);
