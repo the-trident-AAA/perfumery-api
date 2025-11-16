@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
+  UploadedFiles,
 } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
@@ -20,7 +21,10 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { OfferResponse } from './responses/offer.response';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 import { ImageFileValidationPipe } from 'src/utils/pipes/image-file-validation.pipe';
 import { FiltersOfferDto } from './dto/filters-offer.dto';
 import { Auth } from 'src/auth/decorators/auth.decorators';
@@ -35,7 +39,12 @@ export class OfferController {
   @Auth([Role.ADMIN])
   @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'image', maxCount: 1 },
+      { name: 'mobileImage', maxCount: 1 },
+    ]),
+  )
   @ApiOperation({
     summary: 'Este endpoint agrega una oferta a la base de datos',
   })
@@ -46,9 +55,11 @@ export class OfferController {
   })
   create(
     @Body() createOfferDto: CreateOfferDto,
-    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+    @UploadedFiles()
+    files: { image: Express.Multer.File[]; mobileImage: Express.Multer.File[] },
   ) {
-    createOfferDto.image = image;
+    createOfferDto.image = files.image[0];
+    createOfferDto.mobileImage = files.mobileImage[0];
     return this.offerService.create(createOfferDto);
   }
 
@@ -96,7 +107,12 @@ export class OfferController {
   @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'image', maxCount: 1 },
+      { name: 'mobileImage', maxCount: 1 },
+    ]),
+  )
   @ApiOperation({
     summary: 'Este endpoint edita una oferta de la base de datos',
   })
@@ -108,9 +124,11 @@ export class OfferController {
   update(
     @Param('id') id: string,
     @Body() updateOfferDto: UpdateOfferDto,
-    @UploadedFile(new ImageFileValidationPipe()) image: Express.Multer.File,
+    @UploadedFiles()
+    files: { image: Express.Multer.File[]; mobileImage: Express.Multer.File[] },
   ) {
-    updateOfferDto.image = image;
+    updateOfferDto.image = files.image[0];
+    updateOfferDto.mobileImage = files.mobileImage[0];
     return this.offerService.update(id, updateOfferDto);
   }
 

@@ -30,6 +30,14 @@ export class OfferService {
             dto.image.mimetype,
           )
         : null,
+      mobileImage: dto.mobileImage
+        ? await this.minioService.uploadFile(
+            undefined,
+            dto.mobileImage.buffer,
+            dto.mobileImage.originalname.split('.').pop(),
+            dto.mobileImage.mimetype,
+          )
+        : null,
     });
 
     return await this.db.offerRepository.save(offer);
@@ -114,13 +122,26 @@ export class OfferService {
   }
 
   async update(id: string, dto: UpdateOfferDto) {
-    const { image, ...restDTO } = dto;
-    const offer = await this.findOne(id);
+    const { image, mobileImage, ...restDTO } = dto;
+    const offer = await this.db.offerRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!offer)
+      throw new BadRequestException(
+        'No existe una oferta con ese identificador',
+      );
+
     Object.assign(offer, restDTO);
 
     if (offer.image)
       // delete the old image from Minio
       await this.minioService.deleteFile(offer.image);
+    if (offer.mobileImage)
+      // delete the old mobile image from Minio
+      await this.minioService.deleteFile(offer.mobileImage);
 
     if (image) {
       // upload the new image
@@ -135,6 +156,18 @@ export class OfferService {
       offer.image = null;
     }
 
+    if (mobileImage) {
+      // upload the new mobile image
+      const minioImage = await this.minioService.uploadFile(
+        undefined,
+        mobileImage.buffer,
+        mobileImage.originalname.split('.').pop(),
+        mobileImage.mimetype,
+      );
+      offer.mobileImage = minioImage;
+    } else {
+      offer.mobileImage = null;
+    }
     // update the associated perfumes
     await this.perfumeService.updateAssociatedPerfumesToOffer(id, dto.discount);
 
