@@ -376,6 +376,22 @@ export class PerfumeService {
     return await this.db.perfumeRepository.save(perfume);
   }
 
+  async makeHiddenPerfume(id: string) {
+    const perfume = await this.db.perfumeRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!perfume)
+      throw new BadRequestException(
+        'No existe un perfume con ese identificador',
+      );
+    return await this.db.perfumeRepository.save({
+      ...perfume,
+      isHidden: !perfume.isHidden,
+    });
+  }
+
   async remove(id: string) {
     const perfume = await this.findOne(id);
 

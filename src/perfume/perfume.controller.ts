@@ -151,6 +151,25 @@ export class PerfumeController {
 
   @ApiBearerAuth()
   @Auth([Role.ADMIN])
+  @Patch('make-hidden/:id')
+  @ApiOperation({
+    summary: 'Este endpoint marca como oculto un perfume en específico',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Perfume marcado como oculto exitosamente',
+  })
+  @ApiResponse({
+    status: 500,
+    description:
+      'Ocurrió un error en el proceso de marcar al perfume como oculto',
+  })
+  makeHiddenPerfume(@Param('id') id: string) {
+    return this.perfumeService.makeHiddenPerfume(id);
+  }
+
+  @ApiBearerAuth()
+  @Auth([Role.ADMIN])
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
