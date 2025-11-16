@@ -219,6 +219,8 @@ export class HomeBannerService {
 
     // delete the image from Minio
     await this.minioService.deleteFile(homeBanner.image);
+    // delete the mobile image from Minio
+    await this.minioService.deleteFile(homeBanner.mobileImage);
 
     return await this.db.homeBannerRepository.delete({ id });
   }
