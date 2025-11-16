@@ -134,4 +134,7 @@ export class PerfumeEntity {
 
   @OneToMany(() => OrderPerfumeEntity, (orderPerfume) => orderPerfume.perfume)
   orderPerfumes: OrderPerfumeEntity[];
+
+  @Column({ name: 'is_hidden', nullable: true })
+  isHidden: boolean;
 }
