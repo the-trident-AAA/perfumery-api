@@ -15,4 +15,11 @@ export class CreateTapeDto {
     required: true,
   })
   image: Express.Multer.File;
+  @ApiProperty({
+    description: 'Representa la imagen del listón en versión mobile',
+    type: 'string',
+    format: 'binary',
+    required: true,
+  })
+  mobileImage: Express.Multer.File;
 }
