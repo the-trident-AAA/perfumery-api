@@ -12,6 +12,11 @@ export class HomeBannerEntity {
   buttonText?: string;
   @Column()
   isMain: boolean;
+  @Column({
+    name: 'creation_date',
+    nullable: true
+  })
+  creationDate: Date;
   @Column({ name: 'image', nullable: true })
   image: string;
   @Column({
