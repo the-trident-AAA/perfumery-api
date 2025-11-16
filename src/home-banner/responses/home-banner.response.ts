@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { TextColor } from '../entities/home-banner.entity';
 
 export class StatisticalTip {
   @ApiProperty({
@@ -55,6 +56,12 @@ export class HomeBannerResponse {
   })
   buttonText: string;
   @ApiProperty({
+    description: 'Representa el color del texto del banner',
+    type: 'string',
+    required: true,
+  })
+  textColor: TextColor;
+  @ApiProperty({
     description: 'Indica si el Banner es el principal o no',
     type: 'boolean',
     required: true,
@@ -98,6 +105,7 @@ export class HomeBannerResponse {
     title: string,
     description: string,
     buttonText: string,
+    textColor: TextColor,
     isMain: boolean,
     image: string,
     mobileImage: string,
@@ -115,5 +123,6 @@ export class HomeBannerResponse {
     this.statisticalTips = statisticalTips;
     this.infoTips = infoTips;
     this.filters = filters;
+    this.textColor = textColor;
   }
 }

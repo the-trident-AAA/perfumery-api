@@ -1,3 +1,4 @@
+import { TextColor } from '../entities/home-banner.entity';
 import {
   HomeBannerFilter,
   HomeBannerResponse,
@@ -10,6 +11,7 @@ export class HomeBannerDetailsResponse extends HomeBannerResponse {
     title: string,
     description: string,
     buttonText: string,
+    textColor: TextColor,
     isMain: boolean,
     image: string,
     mobileImage: string,
@@ -22,6 +24,7 @@ export class HomeBannerDetailsResponse extends HomeBannerResponse {
       title,
       description,
       buttonText,
+      textColor,
       isMain,
       image,
       mobileImage,
