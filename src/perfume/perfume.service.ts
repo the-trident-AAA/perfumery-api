@@ -173,6 +173,9 @@ export class PerfumeService {
         ...(filtersPerfumeDto.available !== undefined && {
           available: filtersPerfumeDto.available,
         }),
+        ...(filtersPerfumeDto.isHidden !== undefined && {
+          isHidden: filtersPerfumeDto.isHidden,
+        }),
         // ✅ Rango para price
         ...((filtersPerfumeDto.priceMin !== undefined ||
           filtersPerfumeDto.priceMax !== undefined) && {
