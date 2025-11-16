@@ -11,6 +11,8 @@ export class OfferEntity {
   description: string;
   @Column({ nullable: true })
   image?: string;
+  @Column({ name: 'mobile_image', nullable: true })
+  mobileImage?: string;
   @Column()
   scope: string;
   @Column({ type: 'double precision' })
