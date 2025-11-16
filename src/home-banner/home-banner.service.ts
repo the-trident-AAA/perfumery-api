@@ -37,12 +37,18 @@ export class HomeBannerService {
   async findAll(orderDto: OrderDto) {
     const { order, orderBy } = orderDto;
 
-    const sortableFields = ['id', 'title', 'description', 'isMain'];
+    const sortableFields = [
+      'id',
+      'title',
+      'description',
+      'isMain',
+      'creationDate',
+    ];
     const direction = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
     const orderClause: FindOptionsOrder<HomeBannerEntity> =
       orderBy && sortableFields.includes(orderBy)
         ? { [orderBy]: direction }
-        : { title: 'ASC' };
+        : { creationDate: 'ASC' };
 
     const homeBanners = await this.db.homeBannerRepository.find({
       order: orderClause,
