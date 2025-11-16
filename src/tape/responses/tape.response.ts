@@ -26,11 +26,24 @@ export class TapeResponse {
     required: true,
   })
   image: string;
+  @ApiProperty({
+    description: 'Representa la promocional del Tape en versión mobile',
+    type: 'string',
+    required: true,
+  })
+  mobileImage: string;
 
-  constructor(id: string, name: string, isMain: boolean, image: string) {
+  constructor(
+    id: string,
+    name: string,
+    isMain: boolean,
+    image: string,
+    mobileImage: string,
+  ) {
     this.id = id;
     this.name = name;
     this.isMain = isMain;
     this.image = image;
+    this.mobileImage = mobileImage;
   }
 }
