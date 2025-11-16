@@ -10,4 +10,6 @@ export class TapeEntity {
   isMain: boolean;
   @Column({ name: 'image', nullable: true })
   image: string;
+  @Column({ name: 'mobile_image', nullable: true })
+  mobileImage: string;
 }
