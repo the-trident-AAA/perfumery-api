@@ -108,6 +108,9 @@ export class PerfumeService {
       relations: ['brand', 'perfumeType', 'scents', 'offer'],
       take: limit,
       order: { sales: 'DESC' },
+      where: {
+        isHidden: false,
+      },
     });
 
     const perfumes = perfumesEntities.map((perfume) => {
