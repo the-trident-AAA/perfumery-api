@@ -69,6 +69,7 @@ export class HomeBannerService {
           homeBanner.title,
           homeBanner.description,
           homeBanner.buttonText,
+          homeBanner.textColor,
           homeBanner.isMain,
           homeBanner.image
             ? this.minioService.getPublicUrl(homeBanner.image)
@@ -98,6 +99,7 @@ export class HomeBannerService {
       homeBanner.title,
       homeBanner.description,
       homeBanner.buttonText,
+      homeBanner.textColor,
       homeBanner.isMain,
       homeBanner.image
         ? this.minioService.getPublicUrl(homeBanner.image)
@@ -126,6 +128,7 @@ export class HomeBannerService {
       homeBanner.title,
       homeBanner.description,
       homeBanner.buttonText,
+      homeBanner.textColor,
       homeBanner.isMain,
       homeBanner.image
         ? this.minioService.getPublicUrl(homeBanner.image)
