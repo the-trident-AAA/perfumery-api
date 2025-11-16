@@ -40,4 +40,11 @@ export class CreateOfferDto {
     required: false,
   })
   image?: Express.Multer.File;
+  @ApiProperty({
+    description: 'Representa la imagen de la oferta en versión mobile',
+    type: 'string',
+    format: 'binary',
+    required: false,
+  })
+  mobileImage?: Express.Multer.File;
 }
