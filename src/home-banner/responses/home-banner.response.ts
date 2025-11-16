@@ -68,6 +68,13 @@ export class HomeBannerResponse {
   image: string;
   @ApiProperty({
     description:
+      'Representa la promocional del Banner del Home en versión mobile',
+    type: 'string',
+    required: true,
+  })
+  mobileImage: string;
+  @ApiProperty({
+    description:
       'Representa la lista de tips sobre estadísticas que tiene el banner',
     type: StatisticalTip,
     required: true,
@@ -93,6 +100,7 @@ export class HomeBannerResponse {
     buttonText: string,
     isMain: boolean,
     image: string,
+    mobileImage: string,
     statisticalTips: StatisticalTip[],
     infoTips: string[],
     filters: HomeBannerFilter[],
@@ -103,6 +111,7 @@ export class HomeBannerResponse {
     this.buttonText = buttonText;
     this.isMain = isMain;
     this.image = image;
+    this.mobileImage = mobileImage;
     this.statisticalTips = statisticalTips;
     this.infoTips = infoTips;
     this.filters = filters;
