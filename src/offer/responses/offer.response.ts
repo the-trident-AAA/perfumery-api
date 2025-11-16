@@ -26,6 +26,12 @@ export class OfferResponse {
   })
   image?: string;
   @ApiProperty({
+    description: 'Representa la imagen de la oferta en versión mobile',
+    type: 'string',
+    required: true,
+  })
+  mobileImage?: string;
+  @ApiProperty({
     description: 'Representa el alcance de la oferta',
     type: 'string',
     required: true,
@@ -54,6 +60,7 @@ export class OfferResponse {
     description: string,
     scope: string,
     image?: string,
+    mobileImage?: string,
   ) {
     this.id = id;
     this.discount = discount;
@@ -61,6 +68,7 @@ export class OfferResponse {
     this.name = name;
     this.description = description;
     this.image = image;
+    this.mobileImage = mobileImage;
     this.scope = scope;
   }
 }
