@@ -14,11 +14,13 @@ export class HomeBannerEntity {
   isMain: boolean;
   @Column({
     name: 'creation_date',
-    nullable: true
+    nullable: true,
   })
   creationDate: Date;
   @Column({ name: 'image', nullable: true })
   image: string;
+  @Column({ name: 'mobile_image', nullable: true })
+  mobileImage: string;
   @Column({
     name: 'statistical_tips',
     type: 'json',
