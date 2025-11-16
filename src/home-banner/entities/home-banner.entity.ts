@@ -14,7 +14,7 @@ export class HomeBannerEntity {
   description?: string;
   @Column({ name: 'button_text', nullable: true })
   buttonText?: string;
-  @Column({ name: 'text_color', enum: TextColor })
+  @Column({ name: 'text_color', enum: TextColor, nullable: true })
   textColor: TextColor;
   @Column()
   isMain: boolean;
