@@ -56,9 +56,7 @@ export class AuthService {
     const googleUserPayload = await this.oauthService.getGoogleIdToken(idToken);
     console.log(googleUserPayload);
     // chequear si el usuario existe en la bd
-    let user = await this.usersService.findOneByUsername(
-      googleUserPayload.email,
-    );
+    let user = await this.usersService.findOneByEmail(googleUserPayload.email);
     console.log(user);
     // si no existe creamos al usuario
     if (!user) {
@@ -131,7 +129,7 @@ export class AuthService {
   }
 
   async verifyStateAccount(dto: loginDto) {
-    const user = await this.usersService.findOneByUsername(dto.username);
+    const user = await this.usersService.findOneByEmail(dto.username);
     if (!user) {
       throw new BadRequestException('Credenciales incorrectas');
     }
