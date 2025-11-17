@@ -240,7 +240,10 @@ export class AuthService {
   }
 
   async createNewPassordUser(id: string, newPassword: string) {
-    return await this.usersService.createNewPasswordUser(id, newPassword);
+    return await this.usersService.createNewPasswordUser(
+      id,
+      await bcrypt.hash(newPassword, 10),
+    );
   }
 
   async verifyEmail(email: string) {
