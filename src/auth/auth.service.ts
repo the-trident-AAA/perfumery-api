@@ -84,7 +84,7 @@ export class AuthService {
     dto: loginDto,
     withGoogle: boolean = false,
   ): Promise<LoginResponse> {
-    const user = await this.usersService.findOneByUsername(dto.username);
+    const user = await this.usersService.findOneByEmail(dto.username);
     if (!user) {
       throw new BadRequestException('Credenciales incorrectas');
     }
