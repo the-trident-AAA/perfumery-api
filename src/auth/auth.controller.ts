@@ -10,7 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { loginDto } from './dto/login.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginResponse } from './responses/login.response';
 import { AuthGuard } from './auth.guard';
 import { Roles } from './decorators/roles.decorator';
@@ -23,6 +23,10 @@ import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { loginWithGoogleDto } from './dto/login-with-google.dto';
+import { ActiveUser } from 'src/common/decorators/active-user.decorator';
+import { ActiveUserInterface } from 'src/common/interfaces/active-user.interface';
+import { CreateNewPasswordDto } from './dto/create-new-password.dto';
+import { dot } from 'node:test/reporters';
 
 interface RequestWithUser extends Request {
   user: { user: string; role: string };
@@ -206,6 +210,28 @@ export class AuthController {
   })
   async resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto);
+  }
+
+  @ApiBearerAuth()
+  @Auth([Role.USER, Role.ADMIN])
+  @Post('create-new-password')
+  @ApiOperation({
+    summary: 'Crear nueva contraseña para usuario logeado sin contraseña',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Contraseña creada exitosamente',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Problemas en la creación de la contreaseña del usuario',
+  })
+  async createNewPassword(
+    @Body() dto: CreateNewPasswordDto,
+    @ActiveUser()
+    user: ActiveUserInterface,
+  ) {
+    return this.authService.createNewPassordUser(user.id, dto.newPassword);
   }
 
   @Post('verify-email')

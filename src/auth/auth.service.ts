@@ -241,6 +241,10 @@ export class AuthService {
     return { message: 'Contraseña cambiada exitosamente' };
   }
 
+  async createNewPassordUser(id: string, newPassword: string) {
+    return await this.usersService.createNewPasswordUser(id, newPassword);
+  }
+
   async verifyEmail(email: string) {
     const userByEmail = await this.usersService.findOneByEmail(email);
 
