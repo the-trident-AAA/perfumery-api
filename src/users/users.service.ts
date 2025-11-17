@@ -223,7 +223,7 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string) {
-    return this.db.userRepository.findOne({
+    return await this.db.userRepository.findOne({
       where: { email },
       select: [
         'id',
