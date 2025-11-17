@@ -2,6 +2,7 @@ import {
   BadGatewayException,
   BadRequestException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { DatabaseService } from 'src/database/database.service';
@@ -144,6 +145,24 @@ export class UsersService {
 
   async changePasswordUser(id: string, newPassword: string) {
     return await this.db.userRepository.update(id, { password: newPassword });
+  }
+
+  async createNewPasswordUser(id: string, newPassword: string) {
+    const user = await this.db.userRepository.findOne({ where: { id } });
+
+    if (!user)
+      throw new BadRequestException(
+        'No existe un usuario con ese identificador',
+      );
+
+    if (user.password)
+      throw new UnauthorizedException(
+        'Usted no cuenta con permisos para realizar esta acción',
+      );
+    return await this.db.userRepository.save({
+      ...user,
+      password: newPassword,
+    });
   }
 
   async findOneWithOutRelations(id: string) {
