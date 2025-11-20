@@ -128,6 +128,7 @@ export class PerfumeService {
         perfume.sales,
         perfume.cant,
         perfume.totalPrice,
+        perfume.isHidden,
         perfume.offer ? perfume.offer.discount : null,
       );
     });
@@ -245,6 +246,7 @@ export class PerfumeService {
         perfume.sales,
         perfume.cant,
         perfume.totalPrice,
+        perfume.isHidden,
         perfume.offer ? perfume.offer.discount : null,
       );
     });
@@ -283,6 +285,7 @@ export class PerfumeService {
       perfume.sales,
       perfume.cant,
       perfume.totalPrice,
+      perfume.isHidden,
       perfume.offer
         ? new OfferDetailsResponse(
             perfume.offer.id,
