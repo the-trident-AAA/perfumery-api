@@ -97,6 +97,14 @@ export class CreatePerfumeDto {
   available: boolean;
 
   @ApiProperty({
+    description: 'Representa si el perfume está oculto o no',
+    required: true,
+  })
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  isHidden: boolean;
+
+  @ApiProperty({
     description: 'Representa el precio del perfume',
     required: true,
   })
