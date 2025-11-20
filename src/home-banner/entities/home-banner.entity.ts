@@ -8,7 +8,7 @@ export enum TextColor {
 export class HomeBannerEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-  @Column()
+  @Column({ nullable: true })
   title: string;
   @Column({ nullable: true })
   description?: string;

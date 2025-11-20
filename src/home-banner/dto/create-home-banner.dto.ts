@@ -45,16 +45,18 @@ export class CreateHomeBannerDto {
   @ApiProperty({
     description: 'Representa el titulo del Banner del Home',
     type: 'string',
-    required: true,
+    required: false,
   })
+  @IsOptional()
   @IsString()
-  title: string;
+  title?: string;
 
   @ApiProperty({
     description: 'Representa la descripción del Banner del Home',
     type: 'string',
-    required: true,
+    required: false,
   })
+  @IsOptional()
   @IsString()
   description?: string;
 
