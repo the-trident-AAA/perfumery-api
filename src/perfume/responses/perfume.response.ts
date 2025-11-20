@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entities/gender.enum';
 
-
 export class PerfumeResponse {
   @ApiProperty({
     description: 'Representa el identificador único del perfume',
@@ -108,6 +107,13 @@ export class PerfumeResponse {
   })
   totalPrice: number;
 
+  @ApiProperty({
+    description: 'Representa si el perfume está oculto o no',
+    type: 'boolean',
+    required: true,
+  })
+  isHidden: boolean;
+
   constructor(
     id: string,
     name: string,
@@ -123,6 +129,7 @@ export class PerfumeResponse {
     sales: number,
     cant: number,
     totalPrice: number,
+    isHidden: boolean,
     discountOffer?: number,
   ) {
     this.id = id;
@@ -141,5 +148,6 @@ export class PerfumeResponse {
     this.discountOffer = discountOffer;
     this.description = description;
     this.totalPrice = totalPrice;
+    this.isHidden = isHidden;
   }
 }

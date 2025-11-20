@@ -5,7 +5,6 @@ import { ScentResponse } from 'src/scent/responses/scent.response';
 import { PerfumeTypeResponse } from 'src/perfume-type/responses/perfume-type.response';
 import { OfferResponse } from 'src/offer/responses/offer.response';
 
-
 export class PerfumeDetailsResponse {
   @ApiProperty({
     description: 'Representa el identificador único del perfume',
@@ -120,6 +119,13 @@ export class PerfumeDetailsResponse {
   })
   totalPrice: number;
 
+  @ApiProperty({
+    description: 'Representa si el perfume está oculto o no',
+    type: 'boolean',
+    required: true,
+  })
+  isHidden: boolean;
+
   constructor(
     id: string,
     name: string,
@@ -136,6 +142,7 @@ export class PerfumeDetailsResponse {
     sales: number,
     cant: number,
     totalPrice: number,
+    isHidden: boolean,
     offer?: OfferResponse,
   ) {
     this.id = id;
@@ -155,5 +162,6 @@ export class PerfumeDetailsResponse {
     this.offer = offer;
     this.description = description;
     this.totalPrice = totalPrice;
+    this.isHidden = isHidden;
   }
 }
